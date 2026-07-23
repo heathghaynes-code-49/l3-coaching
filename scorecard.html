@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Liberating Leader Scorecard | L3 Leadership Coaching</title>
+<style>
+  /* ============================================================
+     L3 LEADERSHIP — LIBERATING LEADER SCORECARD
+     Single-file embed. Drop on Wix as an HTML element, or host
+     standalone. Configure WEBHOOK_URL in the script section to
+     post results to Airtable / Make / your endpoint of choice.
+     ============================================================ */
+  :root {
+    --navy: #1B3A5C;
+    --blue: #2E75B6;
+    --blue-soft: #E8F0F7;
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --line: #E5E1D8;
+    --success: #2D6A4F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.55;
+    min-height: 100vh;
+    padding: 32px 16px;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .progress {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--navy);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 40px 36px;
+    box-shadow: 0 2px 16px rgba(27, 58, 92, 0.05);
+  }
+  .step { display: none; }
+  .step.active { display: block; animation: fade 0.4s ease; }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    line-height: 1.25;
+    color: var(--navy);
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    line-height: 1.3;
+    color: var(--navy);
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 11px;
+    color: var(--blue);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  p { margin-bottom: 14px; color: var(--text); font-size: 16px; }
+  p.muted { color: var(--muted); font-size: 14px; }
+
+  .btn {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .btn:hover { background: #122A45; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--line);
+    margin-left: 12px;
+  }
+  .btn-ghost:hover { background: var(--blue-soft); }
+
+  /* Question */
+  .qmeta { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .qtext { font-size: 19px; line-height: 1.5; margin-bottom: 28px; color: var(--text); font-weight: 500; }
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .scale-btn {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px 8px;
+    cursor: pointer;
+    text-align: center;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .scale-btn:hover {
+    border-color: var(--navy);
+    background: var(--blue-soft);
+  }
+  .scale-num {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .scale-label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.2;
+    min-height: 28px;
+  }
+  .scale-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+  .back-link {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 0;
+    font-family: inherit;
+  }
+  .back-link:hover { color: var(--navy); }
+
+  /* Form fields */
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  input, select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--card);
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(27, 58, 92, 0.1);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Result */
+  .result-score {
+    text-align: center;
+    padding: 24px 0 12px;
+  }
+  .score-num {
+    font-family: Georgia, serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .score-of {
+    font-size: 18px;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+  .tier-name {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    color: var(--navy);
+    text-align: center;
+    margin: 16px 0 32px;
+    font-weight: 700;
+  }
+  .shift-box {
+    background: var(--blue-soft);
+    border-left: 3px solid var(--blue);
+    padding: 18px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .shift-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .cta-row {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .footnote {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  /* small screens */
+  @media (max-width: 520px) {
+    .card { padding: 28px 22px; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    .scale { gap: 4px; }
+    .scale-btn { padding: 12px 4px; }
+    .scale-num { font-size: 18px; }
+    .scale-label { font-size: 10px; min-height: 36px; }
+    .score-num { font-size: 52px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="card">
+
+    <!-- INTRO -->
+    <div class="step active" data-step="intro">
+      <div class="eyebrow">L3 Leadership Coaching</div>
+      <h1>The Liberating Leader Scorecard</h1>
+      <p>A 12-question diagnostic that reveals where your leadership liberates your team — and where it quietly dominates them.</p>
+      <p>Takes about three minutes. You'll get a personalized result with the single highest-leverage shift to make next.</p>
+      <p class="muted" style="margin: 24px 0; padding: 16px 20px; border-left: 3px solid var(--blue); background: var(--blue-soft); font-style: italic;">
+        Most teams operate well below their potential. Not because they lack talent — but because the leadership above them creates control instead of clarity. This short diagnostic measures how much liberation your team actually feels right now. Answer honestly. The result is only useful if you do.
+      </p>
+      <button class="btn" onclick="next()">Begin the Scorecard →</button>
+    </div>
+
+    <!-- QUESTIONS (rendered by JS) -->
+    <div class="step" data-step="question" id="q-step">
+      <div class="qmeta" id="q-meta"></div>
+      <div class="qtext" id="q-text"></div>
+      <div class="scale-ends">
+        <span>Strongly Disagree</span>
+        <span>Strongly Agree</span>
+      </div>
+      <div class="scale" id="scale">
+        <button class="scale-btn" data-val="1"><span class="scale-num">1</span><span class="scale-label">Strongly Disagree</span></button>
+        <button class="scale-btn" data-val="2"><span class="scale-num">2</span><span class="scale-label">Disagree</span></button>
+        <button class="scale-btn" data-val="3"><span class="scale-num">3</span><span class="scale-label">Neutral</span></button>
+        <button class="scale-btn" data-val="4"><span class="scale-num">4</span><span class="scale-label">Agree</span></button>
+        <button class="scale-btn" data-val="5"><span class="scale-num">5</span><span class="scale-label">Strongly Agree</span></button>
+      </div>
+      <div class="nav">
+        <button class="back-link" onclick="prevQuestion()">← Back</button>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- CAPTURE -->
+    <div class="step" data-step="capture">
+      <div class="eyebrow">Almost done</div>
+      <h2>Where should we send your result?</h2>
+      <p class="muted">Your personalized scorecard with diagnosis and recommended next step is one click away.</p>
+      <form id="capture-form" onsubmit="submitForm(event)" style="margin-top: 20px;">
+        <label for="firstName">First name *</label>
+        <input id="firstName" type="text" required autocomplete="given-name">
+
+        <label for="email">Work email *</label>
+        <input id="email" type="email" required autocomplete="email">
+
+        <label for="company">Company / organization *</label>
+        <input id="company" type="text" required autocomplete="organization">
+
+        <label for="role">Your role *</label>
+        <select id="role" required>
+          <option value="">Select…</option>
+          <option>CEO / Owner</option>
+          <option>VP / Director</option>
+          <option>Manager</option>
+          <option>Other</option>
+        </select>
+
+        <label for="teamSize">Team size you lead *</label>
+        <select id="teamSize" required>
+          <option value="">Select…</option>
+          <option>1–5</option>
+          <option>6–15</option>
+          <option>16–50</option>
+          <option>51+</option>
+        </select>
+
+        <label for="challenge">What's the one leadership challenge you'd most like to solve in the next 90 days? <span style="color: var(--muted); font-weight: 400;">(optional)</span></label>
+        <textarea id="challenge" rows="3"></textarea>
+
+        <button class="btn" type="submit">See My Result →</button>
+      </form>
+    </div>
+
+    <!-- RESULT -->
+    <div class="step" data-step="result">
+      <div class="eyebrow" id="result-eyebrow">Your scorecard</div>
+      <div class="result-score">
+        <span class="score-num" id="score-num">--</span><span class="score-of"> / 60</span>
+      </div>
+      <div class="tier-name" id="tier-name">--</div>
+      <div id="tier-diagnosis"></div>
+      <div class="shift-box">
+        <div class="shift-eyebrow">The single highest-leverage shift</div>
+        <div id="tier-shift"></div>
+      </div>
+      <p id="tier-closer"></p>
+      <div class="cta-row">
+        <p style="margin-bottom: 16px;"><strong>Want a 30-minute conversation about your specific situation?</strong></p>
+        <p class="muted" style="margin-bottom: 20px;">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
+        <a class="btn" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
+        <p class="footnote">A copy of your result has been emailed to you.</p>
+      </div>
+    </div>
+
+  </div>
+  <p class="footnote" style="margin-top: 24px;">L3 Leadership Coaching • Liberating Leaders That Last</p>
+</div>
+
+<script>
+  // ============================================================
+  // CONFIGURATION
+  // Set this to your Airtable / Make / Zapier webhook URL.
+  // Leave empty ("") to disable submission — useful for testing.
+  // ============================================================
+  const WEBHOOK_URL = ""; // e.g. "https://hooks.airtable.com/workflows/v1/genericWebhook/..."
+
+  const QUESTIONS = [
+    { dim: "Self-Awareness",       text: "I can name the specific leadership tendencies that energize my team — and the ones that drain it." },
+    { dim: "Self-Awareness",       text: "When I'm under pressure, I default to behaviors I've consciously chosen, not ones that just happen to me." },
+    { dim: "Self-Awareness",       text: "I've received candid feedback on how I lead in the last 90 days, and I made a specific change because of it." },
+    { dim: "Team Clarity",         text: "Every person on my team can articulate what success in their role looks like this quarter without checking a document." },
+    { dim: "Team Clarity",         text: "My team can predict how I'll respond to common situations because my standards and decisions are consistent." },
+    { dim: "Team Clarity",         text: "We have a shared language for hard conversations — and we actually use it." },
+    { dim: "Liberation vs. Control", text: "The people I lead bring me problems, ideas, and bad news without first calculating how I'll react." },
+    { dim: "Liberation vs. Control", text: "Decisions get made at the lowest level where the information lives — they don't get pushed up to me." },
+    { dim: "Liberation vs. Control", text: "When someone on my team disagrees with me, they say it directly, in real time, rather than working around me later." },
+    { dim: "Sustainability",       text: "If I were unavailable for 30 days, my team's performance would be steady — not dependent on my presence." },
+    { dim: "Sustainability",       text: "There are at least two people on my team I'm actively developing to replace or surpass me in key responsibilities." },
+    { dim: "Sustainability",       text: "The culture we've built reflects shared values that are written down, talked about, and lived — not just assumed." }
+  ];
+
+  const TIERS = [
+    {
+      min: 12, max: 30, name: "The Bottleneck Leader",
+      diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw — it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`,
+      shift: `Stop being the answer. For the next 30 days, when someone brings you a problem, ask "what do you recommend?" before you say anything else. If their recommendation is workable — even 70% as good as yours — let them run with it. The short-term cost in quality is the long-term price of building a team that can think.`,
+      closer: `This is the exact pattern Heath helps leaders break in 1:1 coaching.`
+    },
+    {
+      min: 31, max: 44, name: "The Capable Manager",
+      diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden — the company runs, the numbers look fine — and the cost of breaking through (giving real authority away) feels disproportionate.`,
+      shift: `Identify the three decisions you currently own that you shouldn't, and transfer them this month. Not delegate — transfer. Owned by someone else, including the right to be wrong. You will hate this. That hatred is the proof it's the right move.`,
+      closer: `Heath works with leaders at this exact stage in Core Groups, where peer accountability makes the transfer actually stick.`
+    },
+    {
+      min: 45, max: 54, name: "The Emerging Liberator",
+      diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more — they're about doing fewer things at higher resolution.`,
+      shift: `Pick the dimension where you scored lowest and treat it as a system, not a behavior. If your weakness is feedback, build a feedback ritual into your operating cadence. If it's succession, name your successors publicly and let the team see you train them. The leaders who break out of this tier do it by making their growth visible to the people they lead.`,
+      closer: `This is the territory Heath spends most of his time in — leaders who are good and want to compound that into something durable.`
+    },
+    {
+      min: 55, max: 60, name: "The Liberating Leader",
+      diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously — most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`,
+      shift: `Build a deliberate channel for hard feedback you can't ignore. A peer group. An outside coach. A 360 you actually act on. The next decade of your leadership will be shaped less by what you build and more by what you choose not to defend.`,
+      closer: `Heath runs Core Groups specifically for leaders in this air — peer accountability with people who can match your altitude.`
+    }
+  ];
+
+  let currentQ = 0;
+  let answers = new Array(12).fill(null);
+  const stepEls = document.querySelectorAll('.step');
+  const progress = document.getElementById('progress-fill');
+
+  function show(stepName) {
+    stepEls.forEach(el => el.classList.remove('active'));
+    document.querySelector(`.step[data-step="${stepName}"]`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgress(stepName);
+  }
+
+  function updateProgress(stepName) {
+    let pct = 0;
+    if (stepName === 'intro') pct = 0;
+    else if (stepName === 'question') pct = ((currentQ) / (QUESTIONS.length + 2)) * 100;
+    else if (stepName === 'capture') pct = (QUESTIONS.length / (QUESTIONS.length + 2)) * 100;
+    else if (stepName === 'result') pct = 100;
+    progress.style.width = pct + '%';
+  }
+
+  function next() {
+    currentQ = 0;
+    renderQuestion();
+    show('question');
+  }
+
+  function renderQuestion() {
+    const q = QUESTIONS[currentQ];
+    document.getElementById('q-meta').textContent = `Question ${currentQ + 1} of ${QUESTIONS.length}  •  ${q.dim}`;
+    document.getElementById('q-text').textContent = q.text;
+    // highlight previously selected
+    document.querySelectorAll('.scale-btn').forEach(btn => {
+      btn.style.background = '';
+      btn.style.borderColor = '';
+      if (answers[currentQ] && +btn.dataset.val === answers[currentQ]) {
+        btn.style.background = 'var(--blue-soft)';
+        btn.style.borderColor = 'var(--navy)';
+      }
+    });
+    updateProgress('question');
+  }
+
+  document.getElementById('scale').addEventListener('click', e => {
+    const btn = e.target.closest('.scale-btn');
+    if (!btn) return;
+    const val = +btn.dataset.val;
+    answers[currentQ] = val;
+    if (currentQ < QUESTIONS.length - 1) {
+      currentQ++;
+      setTimeout(renderQuestion, 150);
+    } else {
+      setTimeout(() => show('capture'), 150);
+    }
+  });
+
+  function prevQuestion() {
+    if (currentQ === 0) {
+      show('intro');
+    } else {
+      currentQ--;
+      renderQuestion();
+    }
+  }
+
+  function getTier(score) {
+    return TIERS.find(t => score >= t.min && score <= t.max);
+  }
+
+  async function submitForm(e) {
+    e.preventDefault();
+    const score = answers.reduce((sum, v) => sum + (v || 0), 0);
+    const tier = getTier(score);
+    const payload = {
+      firstName: document.getElementById('firstName').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      company: document.getElementById('company').value.trim(),
+      role: document.getElementById('role').value,
+      teamSize: document.getElementById('teamSize').value,
+      challenge: document.getElementById('challenge').value.trim(),
+      score: score,
+      tier: tier.name,
+      answers: answers,
+      utmSource: new URLSearchParams(window.location.search).get('utm_source') || '',
+      utmCampaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
+      submittedAt: new Date().toISOString()
+    };
+
+    // Render the result screen first so user sees it instantly
+    document.getElementById('score-num').textContent = score;
+    document.getElementById('tier-name').textContent = tier.name;
+    document.getElementById('tier-diagnosis').innerHTML = `<p>${tier.diagnosis}</p>`;
+    document.getElementById('tier-shift').textContent = tier.shift;
+    document.getElementById('tier-closer').textContent = tier.closer;
+    show('result');
+
+    // Fire-and-forget POST to webhook (don't block UI on failure)
+    if (WEBHOOK_URL) {
+      try {
+        await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.warn('Webhook submission failed:', err);
+      }
+    } else {
+      console.log('Scorecard payload (WEBHOOK_URL not set):', payload);
+    }
+  }
+</script>
+</body>
+</html>

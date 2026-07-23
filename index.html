@@ -1,0 +1,3473 @@
+<!--
+  L3 Coaching — Single-page marketing site
+  ────────────────────────────────────────────────────────────────
+  Sections (top → bottom):
+    1.  Sticky nav (appears after hero)
+    2.  Hero
+    3.  Diagnostic ("A few honest questions…")
+    4.  Vision / Reframe
+    5.  About / Why L3
+    6.  Offer stack
+    7.  The L3 Promise band
+    8.  Objection handling (accordion)
+    9.  Three CTA block
+    10. GiANT ecosystem logo marquee (flicker)
+    11. Footer
+    12. Assessment modal (auto-open + sticky tab)
+
+  Tech: Tailwind CDN, GSAP + ScrollTrigger CDN, Google Fonts (Fraunces / Inter).
+  No build step. Pure HTML + embedded CSS/JS. All assessment logic is client-side.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#E3DAD0" />
+  <title>L3 Coaching — Liberating Leaders that Last.</title>
+  <meta name="description" content="L3 Coaching develops leaders who develop other leaders. Licensed GiANT Worldwide partner. Take the free leadership assessment, join a free workshop, or book a consultation." />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bone: '#E3DAD0',
+            ink:  '#344960',
+            tan:  '#5a7390',
+            clay: '#344960',
+            sage: '#A8B5A0',
+          },
+          fontFamily: {
+            serif: ['Syne', 'ui-serif', 'Georgia', 'serif'],
+            sans:  ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: {
+            tightish: '-0.02em',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root {
+      --bone:#E3DAD0;
+      --ink:#344960;
+      --tan:#5a7390;
+      --clay:#344960;
+      --sage:#A8B5A0;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bone);
+      color: var(--ink);
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-weight: 500;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .font-serif { font-family: 'Syne', Georgia, serif; }
+
+    /* Editorial display sizing */
+    .display {
+      font-family: 'Syne', Georgia, serif;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.02;
+    }
+
+    /* Hand-drawn underline under "Last." */
+    .underline-stroke {
+      position: relative;
+      display: inline-block;
+    }
+    .underline-stroke svg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.15em;
+      width: 100%;
+      height: 0.35em;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .underline-stroke svg path {
+      stroke: var(--clay);
+      stroke-width: 4;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+    }
+    .underline-stroke.in-view svg path {
+      animation: drawStroke 1.6s ease-out 0.6s forwards;
+    }
+    @keyframes drawStroke {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Hero with backdrop photo */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      color: #fff;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(180deg, rgba(52,73,96,.85) 0%, rgba(52,73,96,.78) 60%, rgba(52,73,96,.92) 100%),
+        url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2200&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
+      filter: saturate(0.85);
+    }
+    .hero-bg::after {
+      content:"";
+      position: absolute; inset: 0;
+      background: radial-gradient(80% 60% at 75% 40%, transparent 0%, rgba(52,73,96,.55) 100%);
+    }
+    .hero .badge { color: rgba(255,255,255,.65); }
+    .hero .display { color: #fff; }
+    .hero p { color: rgba(255,255,255,.8); }
+    .hero .btn-outline { color: #fff; border-color: rgba(255,255,255,.5); }
+    .hero .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.06); }
+    .hero .underline-stroke svg path { stroke: var(--tan); }
+
+    /* Sticky vision scroll */
+    .sticky-vision { position: relative; }
+    .sv-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .sv-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: saturate(.85);
+    }
+    .sv-bg::after {
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(15,15,15,.72), rgba(15,15,15,.85));
+    }
+    .sv-content {
+      position: relative;
+      max-width: 1240px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+      width: 100%;
+      color: #fff;
+    }
+
+    /* Process diagram */
+    .process-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 0;
+      align-items: center;
+    }
+    @media (max-width: 880px) {
+      .process-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .process-arrow { display: none; }
+    }
+    .process-circle {
+      aspect-ratio: 1 / 1;
+      border-radius: 9999px;
+      border: 3px solid;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      transition: transform .35s ease, box-shadow .35s ease;
+      max-width: 320px;
+      margin: 0 auto;
+      background: #fff;
+    }
+    .process-circle:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 24px 50px -24px rgba(28,28,28,.25);
+    }
+    .pc-1 { border-color: #344960; }
+    .pc-1 .pc-num { color: #344960; }
+    .pc-2 { border-color: #5a7390; }
+    .pc-2 .pc-num { color: #344960; }
+    .pc-3 { border-color: #344960; }
+    .pc-3 .pc-num { color: #344960; }
+    .pc-num {
+      font-family: 'Syne', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: .15em;
+      margin-bottom: .65rem;
+    }
+    .pc-title {
+      font-family: 'Syne', serif;
+      font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: .65rem;
+      color: var(--ink);
+    }
+    .pc-desc {
+      font-size: .85rem;
+      color: rgba(28,28,28,.7);
+      line-height: 1.45;
+      max-width: 22ch;
+    }
+    .process-arrow {
+      width: 56px;
+      color: var(--ink);
+      opacity: .55;
+    }
+    .process-arrow svg { width: 100%; height: auto; }
+
+    /* Diagnostic flip cards — reuses .flip-card mechanics with denser styling */
+    .diag-grid { max-width: 1100px; margin-inline: auto; }
+    .diag-cta {
+      max-width: 640px;
+      margin-inline: auto;
+      padding: 2rem 1.5rem 0;
+    }
+    .diag-cta-text {
+      font-family: 'Syne', serif;
+      font-weight: 600;
+      font-size: clamp(1.15rem, 2vw, 1.5rem);
+      line-height: 1.35;
+      letter-spacing: -.01em;
+      color: var(--ink);
+    }
+
+    /* ── Testimonial callout (About section) ─────────────────────── */
+    .testimonial {
+      position: relative;
+      max-width: 820px;
+      margin: clamp(3.5rem, 7vw, 5.5rem) auto 0;
+      padding: clamp(2.25rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+      background: var(--bone);
+      border-radius: 20px;
+      box-shadow: 0 20px 44px -32px rgba(52,73,96,.35);
+      overflow: hidden;
+    }
+    .testimonial::before {
+      content: "\201C";       /* “ */
+      position: absolute;
+      top: -0.9rem;
+      left: 1.2rem;
+      font-family: 'Syne', Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(8rem, 14vw, 11rem);
+      line-height: 1;
+      color: var(--tan);
+      opacity: 0.22;
+      pointer-events: none;
+    }
+    .testimonial-body {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-family: 'Syne', serif;
+      font-weight: 500;
+      font-style: italic;
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      line-height: 1.4;
+      letter-spacing: -.005em;
+      color: var(--ink);
+      max-width: 60ch;
+    }
+    .testimonial-attr {
+      position: relative;
+      z-index: 1;
+      margin-top: 1.6rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(52,73,96,.18);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: .55rem;
+    }
+    .testimonial-attr-name {
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      color: var(--ink);
+    }
+    .testimonial-attr-sub {
+      font-size: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--tan);
+    }
+    @media (max-width: 640px) {
+      .testimonial { border-radius: 16px; }
+    }
+
+    /* ── Certification badges (under Heath's portrait) ───────────── */
+    .cert-badges {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(52,73,96,.15);
+      text-align: center;
+    }
+    @media (min-width: 768px) {
+      .cert-badges { text-align: left; }
+    }
+    .cert-badges-label {
+      display: block;
+      font-family: 'Syne', serif;
+      font-size: .68rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .cert-badges-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+    }
+    @media (min-width: 768px) {
+      .cert-badges-row { justify-content: flex-start; gap: 1.15rem; }
+    }
+    .cert-badge {
+      height: 62px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.85;
+      transition: opacity .3s ease, transform .3s ease, filter .3s ease;
+      cursor: help;
+    }
+    .cert-badge:hover {
+      opacity: 1;
+      transform: translateY(-3px) scale(1.05);
+      filter: drop-shadow(0 8px 14px rgba(52,73,96,.25));
+    }
+
+    .flip-card.diag-card {
+      min-height: 380px;
+      cursor: pointer;
+    }
+    .flip-card.diag-card .flip-inner { min-height: 380px; }
+    .flip-card.diag-card .flip-front,
+    .flip-card.diag-card .flip-back {
+      padding: 2rem 1.9rem 1.75rem;
+      background: var(--bone);
+      border-color: rgba(52,73,96,.10);
+      box-shadow: 0 14px 32px -22px rgba(52,73,96,.25);
+    }
+    .flip-card.diag-card:hover:not(.flipped) .flip-front {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 44px -22px rgba(52,73,96,.35);
+      border-color: var(--tan);
+    }
+
+    .diag-num-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid rgba(52,73,96,.18);
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      margin-bottom: 1.1rem;
+    }
+    .diag-front-label,
+    .diag-back-label {
+      font-size: .68rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--tan);
+      margin-bottom: .65rem;
+    }
+    .diag-back-label-sol { margin-top: 1rem; }
+    .diag-q-text {
+      font-family: 'Syne', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+      line-height: 1.35;
+      color: var(--ink);
+      letter-spacing: -.005em;
+      flex: 1;
+      margin-bottom: 1.25rem;
+    }
+    .diag-principle {
+      font-family: 'Syne', serif;
+      font-weight: 600;
+      font-size: clamp(1.1rem, 1.7vw, 1.3rem);
+      line-height: 1.3;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin: 0 0 .5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--tan);
+    }
+    .diag-solution-text {
+      color: rgba(52,73,96,.82);
+      font-size: .95rem;
+      line-height: 1.55;
+      flex: 1;
+    }
+    .flip-card.diag-card .flip-back-link {
+      margin-top: 1rem;
+      align-self: flex-start;
+    }
+
+    /* ── Testimonial flip cards ─────────────────────────────────── */
+    .tst-grid { max-width: 1100px; margin-inline: auto; }
+    .flip-card.tst-card {
+      min-height: 480px;
+      cursor: pointer;
+    }
+    .flip-card.tst-card .flip-inner { min-height: 480px; }
+    .flip-card.tst-card .flip-front,
+    .flip-card.tst-card .flip-back {
+      padding: 2.5rem 1.75rem 1.6rem;
+      background: var(--bone);
+      border-color: rgba(52,73,96,.10);
+      box-shadow: 0 14px 32px -22px rgba(52,73,96,.25);
+      text-align: center;
+    }
+    .flip-card.tst-card:hover:not(.flipped) .flip-front {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 44px -22px rgba(52,73,96,.35);
+      border-color: var(--tan);
+    }
+
+    /* Phone-contact style circular avatar with initials */
+    .tst-avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+    .tst-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: 1.55rem;
+      color: #fff;
+      letter-spacing: .04em;
+      border: 3px solid #fff;
+      box-shadow: 0 8px 18px -8px rgba(52,73,96,.45);
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .tst-avatar-sm {
+      width: 52px;
+      height: 52px;
+      font-size: 1rem;
+      border-width: 2px;
+      box-shadow: 0 4px 10px -4px rgba(52,73,96,.35);
+    }
+    /* Per-person gradients so each contact is visually distinct */
+    .tst-avatar-dc { background: linear-gradient(135deg, #344960 0%, #5a7390 100%); }
+    .tst-avatar-cw { background: linear-gradient(135deg, #4a6580 0%, #7a95b0 100%); }
+    .tst-avatar-km { background: linear-gradient(135deg, #2a3a4d 0%, #4a6580 55%, #6b7f9a 100%); }
+
+    /* Decorative quote mark above the pull-quote */
+    .tst-quote-mark {
+      width: 26px;
+      height: 26px;
+      margin: 0 auto .5rem;
+      display: block;
+      color: var(--tan);
+    }
+    .tst-quote {
+      font-family: 'Syne', serif;
+      font-weight: 500;
+      font-style: italic;
+      font-size: clamp(1.02rem, 1.7vw, 1.18rem);
+      line-height: 1.4;
+      letter-spacing: -.005em;
+      color: var(--ink);
+      margin: 0 0 1.5rem;
+      flex: 1;
+    }
+    .tst-attr {
+      padding-top: 1.1rem;
+      border-top: 1px solid rgba(52,73,96,.15);
+      margin-bottom: 1rem;
+    }
+    .tst-name {
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink);
+      margin: 0 0 .2rem;
+      letter-spacing: -.005em;
+    }
+    .tst-role {
+      font-size: .68rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* Back of the card */
+    .flip-card.tst-card .flip-back { text-align: left; }
+    .tst-back-header {
+      display: flex;
+      align-items: center;
+      gap: .95rem;
+      padding-bottom: 1.1rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(52,73,96,.15);
+    }
+    .tst-back-header .tst-name,
+    .tst-back-header .tst-role { text-align: left; }
+    .tst-quote-full {
+      font-family: 'Syne', serif;
+      font-weight: 500;
+      font-style: italic;
+      font-size: .93rem;
+      line-height: 1.55;
+      color: var(--ink);
+      margin: 0 0 1rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .flip-card.tst-card .flip-back-link {
+      margin-top: auto;
+      align-self: flex-start;
+    }
+
+    /* Massive offer hero cards */
+    .massive-offer {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0;
+      background: #fff;
+      border: 1px solid rgba(28,28,28,.10);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+      color: var(--ink);
+      isolation: isolate;
+    }
+    .massive-offer:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 36px 70px -32px rgba(28,28,28,.32);
+      border-color: var(--tan);
+    }
+    .massive-offer .mo-img {
+      position: relative;
+      min-height: 320px;
+      overflow: hidden;
+      background: var(--bone);
+    }
+    .massive-offer .mo-img img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .8s ease;
+    }
+    .massive-offer:hover .mo-img img { transform: scale(1.05); }
+    .massive-offer .mo-body {
+      padding: 2.75rem 2.75rem 2.5rem;
+      display: flex; flex-direction: column;
+      justify-content: center;
+    }
+    .massive-offer .mo-eyebrow {
+      display: inline-block;
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--clay);
+      padding: .4rem .9rem;
+      border-radius: 999px;
+      margin-bottom: 1.4rem;
+      align-self: flex-start;
+    }
+    .massive-offer .mo-title {
+      font-family: 'Syne', serif;
+      font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+    }
+    .massive-offer .mo-desc {
+      color: rgba(28,28,28,.72);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin-bottom: 1.8rem;
+      max-width: 40ch;
+    }
+    .massive-offer .mo-cta {
+      display: inline-flex; align-items: center; gap: .6rem;
+      align-self: flex-start;
+      padding: 1rem 1.6rem;
+      background: var(--ink);
+      color: var(--bone);
+      border-radius: 999px;
+      font-weight: 500;
+      transition: background .25s ease, transform .25s ease;
+    }
+    .massive-offer:hover .mo-cta { background: var(--clay); transform: translateX(2px); }
+    .massive-offer.mo-flip { grid-template-columns: 1fr 1.1fr; }
+    .massive-offer.mo-flip .mo-img { order: 2; }
+    .massive-offer.mo-flip .mo-body { order: 1; }
+    @media (max-width: 880px) {
+      .massive-offer, .massive-offer.mo-flip { grid-template-columns: 1fr; }
+      .massive-offer.mo-flip .mo-img { order: 0; }
+      .massive-offer.mo-flip .mo-body { order: 0; }
+      .massive-offer .mo-img { min-height: 220px; }
+      .massive-offer .mo-body { padding: 2rem 1.75rem; }
+    }
+
+    /* ── Flip cards (3 offering packages) ───────────────────────── */
+    .flip-card {
+      position: relative;
+      perspective: 1600px;
+      min-height: 540px;
+      cursor: pointer;
+      outline: none;
+    }
+    .flip-card:focus-visible { box-shadow: 0 0 0 3px var(--tan); border-radius: 22px; }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 540px;
+      transform-style: preserve-3d;
+      transition: transform .7s cubic-bezier(.2,.8,.2,1);
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-front,
+    .flip-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 22px;
+      padding: 2.5rem 2rem 2rem;
+      background: #fff;
+      border: 1px solid rgba(52,73,96,.12);
+      box-shadow: 0 18px 38px -28px rgba(52,73,96,.35);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
+      overflow: hidden;
+    }
+    .flip-card:hover:not(.flipped) .flip-front {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 56px -28px rgba(52,73,96,.45);
+      border-color: var(--tan);
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* Featured (middle) styling */
+    .flip-card.featured .flip-front,
+    .flip-card.featured .flip-back {
+      background: linear-gradient(165deg, #3d556f 0%, var(--ink) 55%, #2a3a4d 100%);
+      color: var(--bone);
+      border-color: rgba(255,255,255,.10);
+      box-shadow: 0 24px 48px -22px rgba(52,73,96,.55);
+    }
+    .flip-card.featured .flip-eyebrow,
+    .flip-card.featured .flip-tagline,
+    .flip-card.featured .flip-back-label,
+    .flip-card.featured .flip-best-for,
+    .flip-card.featured .flip-list li { color: rgba(227,218,208,.88); }
+    .flip-card.featured .flip-best-for strong { color: #fff; }
+    .flip-card.featured .flip-title,
+    .flip-card.featured .flip-title-sm { color: #fff; }
+    .flip-card.featured .flip-price-num { color: #fff; }
+    .flip-card.featured .flip-price-from,
+    .flip-card.featured .flip-price-per { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-list li::before { color: var(--bone); }
+    .flip-card.featured .flip-cue { color: rgba(227,218,208,.9); }
+    .flip-card.featured .flip-back-link { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-back-link:hover { color: #fff; }
+
+    /* Ribbon — floating pill that overhangs the top edge of the card.
+       Sits OUTSIDE .flip-inner so it's never clipped and doesn't rotate
+       with the flip.                                                     */
+    .flip-ribbon {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--ink);
+      color: #fff;
+      padding: .6rem 1.4rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-radius: 999px;
+      box-shadow: 0 12px 24px -8px rgba(52,73,96,.45);
+      z-index: 5;
+    }
+    .flip-ribbon.ribbon-gold {
+      background: linear-gradient(135deg, #d4a93c 0%, #b88a1f 100%);
+      color: #fff;
+    }
+    .flip-card.featured .flip-ribbon {
+      background: linear-gradient(135deg, #d4a93c 0%, #b88a1f 100%);
+      color: #fff;
+    }
+    .flip-card:not(.featured) .flip-ribbon { background: var(--ink); color: #fff; }
+    @media (max-width: 480px) {
+      .flip-ribbon { font-size: .62rem; padding: .45rem 1.1rem; letter-spacing: .18em; }
+    }
+
+    /* Front content */
+    .flip-eyebrow {
+      font-family: 'Syne', serif;
+      color: var(--tan);
+      font-size: .78rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .flip-title {
+      font-family: 'Syne', serif;
+      font-size: clamp(1.6rem, 2.2vw, 1.95rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.01em;
+      margin-bottom: 1.1rem;
+      color: var(--ink);
+    }
+    .flip-price {
+      display: flex; flex-direction: column;
+      gap: .15rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(52,73,96,.12);
+    }
+    .flip-card.featured .flip-price { border-bottom-color: rgba(255,255,255,.18); }
+    .flip-price-from {
+      font-size: .72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(52,73,96,.55);
+    }
+    .flip-price-num {
+      font-family: 'Syne', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .flip-price-per {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .85rem;
+      color: rgba(52,73,96,.65);
+      margin-top: .25rem;
+    }
+    .flip-price-custom .flip-price-num { font-size: 1.6rem; font-weight: 600; }
+    /* Category label on the front (replaces price block) */
+    .flip-category {
+      display: block;
+      padding-bottom: 1.1rem;
+      margin-bottom: 1.15rem;
+      border-bottom: 1px solid rgba(52,73,96,.14);
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -.005em;
+      color: var(--tan);
+    }
+    .flip-card.featured .flip-category {
+      border-bottom-color: rgba(255,255,255,.22);
+      color: var(--bone);
+    }
+    .flip-tagline {
+      color: rgba(52,73,96,.78);
+      font-size: 1rem;
+      line-height: 1.55;
+      flex: 1;
+    }
+    .flip-front-foot {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px dashed rgba(52,73,96,.18);
+    }
+    .flip-card.featured .flip-front-foot { border-top-color: rgba(255,255,255,.18); }
+    .flip-cue {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: .02em;
+    }
+    .flip-cue svg { transition: transform .25s ease; }
+    .flip-card:hover .flip-cue svg { transform: translateX(3px); }
+
+    /* Back content */
+    .flip-title-sm {
+      font-family: 'Syne', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+    .flip-back-label {
+      font-size: .68rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--tan);
+      margin-bottom: .75rem;
+    }
+    .flip-list {
+      list-style: none;
+      padding: 0; margin: 0 0 1.1rem;
+      display: grid; gap: .5rem;
+    }
+    .flip-list li {
+      position: relative;
+      padding-left: 1.3rem;
+      font-size: .92rem;
+      line-height: 1.45;
+      color: rgba(52,73,96,.82);
+    }
+    .flip-list li::before {
+      content: "✓";
+      position: absolute; left: 0; top: 0;
+      color: var(--tan);
+      font-weight: 700;
+    }
+    .flip-best-for {
+      font-size: .88rem;
+      line-height: 1.5;
+      color: rgba(52,73,96,.7);
+      padding: .85rem 1rem;
+      background: rgba(52,73,96,.04);
+      border-left: 3px solid var(--tan);
+      border-radius: 4px;
+      margin-bottom: 1.25rem;
+    }
+    .flip-card.featured .flip-best-for { background: rgba(255,255,255,.08); }
+    .flip-cta {
+      margin-top: auto;
+      width: 100%;
+      justify-content: center;
+    }
+    .flip-back-link {
+      margin-top: .75rem;
+      font-size: .78rem;
+      color: rgba(52,73,96,.55);
+      background: transparent;
+      border: none;
+      padding: .5rem;
+      cursor: pointer;
+      align-self: center;
+      transition: color .2s ease;
+    }
+    .flip-back-link:hover { color: var(--ink); }
+
+    /* Price block on the BACK of a card (moved from front per new design) */
+    .flip-back-price {
+      display: flex;
+      align-items: baseline;
+      gap: .5rem;
+      padding: .85rem 1rem;
+      margin-top: .5rem;
+      margin-bottom: 1.1rem;
+      background: rgba(52,73,96,.05);
+      border-left: 3px solid var(--tan);
+      border-radius: 8px;
+    }
+    .flip-back-price-from {
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: rgba(52,73,96,.65);
+    }
+    .flip-back-price-num {
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .flip-back-price-per {
+      font-size: .82rem;
+      color: rgba(52,73,96,.65);
+    }
+    .flip-card.featured .flip-back-price {
+      background: rgba(255,255,255,.08);
+      border-left-color: var(--bone);
+    }
+    .flip-card.featured .flip-back-price-from { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-back-price-num  { color: #fff; }
+    .flip-card.featured .flip-back-price-per  { color: rgba(227,218,208,.7); }
+
+    /* Reduced motion: cross-fade instead of 3D flip */
+    @media (prefers-reduced-motion: reduce) {
+      .flip-inner { transition: none; }
+      .flip-card.flipped .flip-inner { transform: none; }
+      .flip-back { transform: none; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+      .flip-card.flipped .flip-back { opacity: 1; pointer-events: auto; }
+      .flip-card.flipped .flip-front { opacity: 0; pointer-events: none; }
+      .flip-front { transition: opacity .25s ease; }
+    }
+
+    /* Purchase modal */
+    .pm-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(52,73,96,0);
+      backdrop-filter: blur(0px);
+      pointer-events: none;
+      transition: background .35s ease, backdrop-filter .35s ease;
+      z-index: 115;
+    }
+    .pm-backdrop.show {
+      background: rgba(52,73,96,.55);
+      backdrop-filter: blur(6px);
+      pointer-events: auto;
+    }
+    .pm-dialog {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, calc(-50% + 30px));
+      width: min(560px, 92vw);
+      max-height: calc(100vh - 3rem);
+      background: var(--bone);
+      border-radius: 18px;
+      box-shadow: 0 30px 80px -20px rgba(0,0,0,.45);
+      z-index: 120;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .pm-dialog.show {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .pm-header {
+      padding: 1.5rem 1.75rem 1rem;
+      border-bottom: 1px solid rgba(52,73,96,.12);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 1rem;
+    }
+    .pm-eyebrow {
+      font-size: .68rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--tan);
+      margin-bottom: .35rem;
+    }
+    .pm-title {
+      font-family: 'Syne', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: .25rem;
+    }
+    .pm-subtitle {
+      font-size: .85rem;
+      color: rgba(52,73,96,.7);
+    }
+    .pm-close {
+      background: transparent;
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 999px;
+      color: rgba(52,73,96,.55);
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+      flex-shrink: 0;
+    }
+    .pm-close:hover { background: rgba(52,73,96,.08); color: var(--ink); }
+    .pm-body {
+      padding: 1.25rem 1.75rem 1.75rem;
+      overflow-y: auto;
+    }
+    .pm-field {
+      display: flex; flex-direction: column;
+      margin-bottom: 1rem;
+    }
+    .pm-field label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: rgba(52,73,96,.7);
+      margin-bottom: .3rem;
+    }
+    .pm-field input,
+    .pm-field textarea {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .95rem;
+      padding: .7rem .9rem;
+      border: 1px solid rgba(52,73,96,.18);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      resize: vertical;
+    }
+    .pm-field input:focus,
+    .pm-field textarea:focus {
+      border-color: var(--tan);
+      box-shadow: 0 0 0 3px rgba(90,115,144,.18);
+    }
+    .pm-field textarea { min-height: 80px; }
+    .pm-footnote {
+      font-size: .75rem;
+      color: rgba(52,73,96,.55);
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .pm-success {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .pm-success-icon {
+      width: 56px; height: 56px;
+      border-radius: 999px;
+      background: rgba(90,115,144,.15);
+      color: var(--ink);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 1rem;
+    }
+
+    /* Three CTA tiles */
+    .cta-tile {
+      display: block;
+      background: #fff;
+      border: 1px solid rgba(28,28,28,.10);
+      border-radius: 18px;
+      padding: 2rem 1.75rem 1.75rem;
+      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+      color: var(--ink);
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+    }
+    .cta-tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 50px -28px rgba(28,28,28,.28);
+      border-color: var(--tan);
+    }
+    .cta-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .cta-title {
+      font-family: 'Syne', serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: .5rem;
+    }
+    .cta-desc {
+      color: rgba(28,28,28,.65);
+      font-size: .92rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .cta-arrow {
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--clay);
+    }
+    .cta-tile--feature {
+      background: var(--ink);
+      color: var(--bone);
+      border-color: var(--ink);
+      transform: scale(1.03);
+    }
+    .cta-tile--feature:hover { background: #2a2a2a; border-color: var(--tan); transform: scale(1.03) translateY(-4px); }
+    .cta-tile--feature .cta-desc { color: rgba(247,243,236,.72); }
+    .cta-tile--feature .cta-arrow { color: var(--tan); }
+
+    /* Heath portrait — circular */
+    .heath-portrait {
+      width: 100%;
+      max-width: 360px;
+      aspect-ratio: 1 / 1;
+      border-radius: 9999px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #e9eef2 0%, #d8dfe4 100%);
+      box-shadow: 0 30px 60px -32px rgba(28,28,28,.35);
+      transition: transform .4s ease;
+    }
+    .heath-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .heath-portrait:hover { transform: scale(1.02); }
+
+    /* Premium primary offer cards */
+    .offer-hero {
+      position: relative;
+      display: flex; flex-direction: column;
+      background: #fff;
+      border: 1px solid rgba(28,28,28,.10);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+      color: var(--ink);
+      isolation: isolate;
+    }
+    .offer-hero:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 32px 60px -28px rgba(28,28,28,.28);
+      border-color: var(--tan);
+    }
+    .offer-hero .oh-img {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--bone);
+    }
+    .offer-hero .oh-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .8s ease;
+    }
+    .offer-hero:hover .oh-img img { transform: scale(1.06); }
+    .offer-hero .oh-img::after {
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(180deg, transparent 50%, rgba(15,15,15,.55) 100%);
+    }
+    .offer-hero .oh-num {
+      position: absolute; top: 1rem; left: 1rem;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(6px);
+      color: var(--clay);
+      font-family: 'Syne', serif;
+      font-weight: 600;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      z-index: 2;
+    }
+    .offer-hero .oh-body {
+      padding: 1.6rem 1.75rem 1.75rem;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .offer-hero .oh-title {
+      font-family: 'Syne', serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 1.1;
+      margin-bottom: .65rem;
+    }
+    .offer-hero .oh-desc {
+      color: rgba(28,28,28,.7);
+      font-size: .97rem;
+      line-height: 1.55;
+      margin-bottom: 1.4rem;
+      flex: 1;
+    }
+    .offer-hero .oh-cta {
+      display: inline-flex; align-items: center;
+      gap: .5rem;
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: .01em;
+    }
+    .offer-hero .oh-cta svg {
+      transition: transform .25s ease;
+    }
+    .offer-hero:hover .oh-cta { color: var(--clay); }
+    .offer-hero:hover .oh-cta svg { transform: translateX(4px); }
+
+    /* Offer menu — primary + secondary tiers (legacy) */
+    .offer-primary {
+      position: relative;
+      padding: 2rem 1.75rem 1.75rem;
+      border-bottom: 1px solid rgba(28,28,28,.14);
+      transition: background .3s ease;
+      cursor: pointer;
+      display: block;
+      color: var(--ink);
+    }
+    .offer-primary:hover { background: rgba(255,255,255,.6); }
+    .offer-primary .op-num {
+      font-family: 'Syne', serif;
+      color: var(--clay);
+      font-size: .95rem;
+      letter-spacing: .15em;
+    }
+    .offer-primary .op-title {
+      font-family: 'Syne', serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+      line-height: 1.05;
+      margin: .5rem 0 .9rem;
+    }
+    .offer-primary .op-desc {
+      color: rgba(28,28,28,.7);
+      max-width: 38ch;
+      font-size: .98rem;
+      line-height: 1.55;
+    }
+    .offer-primary .op-arrow {
+      position: absolute;
+      right: 1.75rem; top: 2rem;
+      width: 44px; height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(28,28,28,.18);
+      display:flex; align-items:center; justify-content:center;
+      transition: transform .3s ease, background .3s ease, color .3s ease, border-color .3s ease;
+      color: var(--ink);
+    }
+    .offer-primary:hover .op-arrow {
+      background: var(--ink); color: var(--bone); border-color: var(--ink);
+      transform: translateX(4px);
+    }
+    .offer-secondary {
+      padding: 1.25rem 1.25rem;
+      border-radius: 12px;
+      transition: background .25s ease, transform .25s ease;
+      display: block;
+      color: var(--ink);
+    }
+    .offer-secondary:hover { background: rgba(255,255,255,.7); transform: translateY(-2px); }
+    .offer-secondary .os-title {
+      font-family: 'Syne', serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: .25rem;
+    }
+    .offer-secondary .os-desc {
+      font-size: .85rem;
+      color: rgba(28,28,28,.65);
+      line-height: 1.45;
+    }
+
+    /* Framework drawer (full-screen overlay) */
+    .fw-drawer {
+      position: fixed; inset: 0;
+      background: var(--bone);
+      z-index: 110;
+      transform: translateY(100%);
+      transition: transform .55s cubic-bezier(.2,.8,.2,1);
+      overflow-y: auto;
+    }
+    .fw-drawer.open { transform: translateY(0); }
+    .fw-drawer-close {
+      position: sticky; top: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem clamp(1.25rem,4vw,2.5rem);
+      background: var(--bone);
+      border-bottom: 1px solid rgba(28,28,28,.08);
+      z-index: 5;
+    }
+
+    /* Hero letter rise */
+    .hero-word { display: inline-block; overflow: hidden; vertical-align: top; }
+    .hero-word > span {
+      display: inline-block;
+      transform: translateY(105%);
+      opacity: 0;
+      animation: rise 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    @keyframes rise {
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Reveal-on-scroll utility */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.in-view { opacity: 1; transform: none; }
+
+    /* Buttons */
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:.5rem;
+      padding: 0.95rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--ink); color: var(--bone); }
+    .btn-primary:hover { background: var(--tan); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(52,73,96,.55); }
+    .btn-tan { background: var(--ink); color: #fff; }
+    .btn-tan:hover { background: var(--tan); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(52,73,96,.6); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid rgba(52,73,96,.25); }
+    .btn-outline:hover { border-color: var(--ink); transform: translateY(-1px); }
+    .btn:focus-visible { outline: 3px solid var(--tan); outline-offset: 3px; }
+
+    /* Framework tabs */
+    .fw-tab {
+      display:flex; align-items:center; gap: 1rem;
+      width: 100%;
+      padding: 1.1rem 1.4rem;
+      background: #fff;
+      border: 1px solid rgba(28,28,28,.10);
+      border-radius: 14px;
+      text-align: left;
+      transition: all .25s ease;
+      font-family: 'Syne', serif;
+      font-weight: 500;
+      font-size: 1.15rem;
+      color: var(--ink);
+    }
+    .fw-tab .fw-num { color: var(--clay); font-size: .9rem; letter-spacing: .05em; min-width: 28px; }
+    .fw-tab .fw-name { flex: 1; }
+    .fw-tab .fw-arrow { color: var(--ink); opacity: .35; transition: transform .25s ease, opacity .25s ease; }
+    .fw-tab:hover { border-color: var(--tan); transform: translateX(3px); }
+    .fw-tab[aria-selected="true"] {
+      background: var(--ink);
+      color: var(--bone);
+      border-color: var(--ink);
+    }
+    .fw-tab[aria-selected="true"] .fw-num { color: var(--tan); }
+    .fw-tab[aria-selected="true"] .fw-arrow { opacity: 1; transform: translateX(4px); color: var(--tan); }
+
+    .fw-panel { transition: transform .35s ease; }
+    .fw-panel.flip { animation: fwFlip .45s ease; }
+    @keyframes fwFlip {
+      0%   { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card hover */
+    .offer-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .offer-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(28,28,28,.18); border-color: rgba(200,169,126,.6); }
+    .offer-card .more::after {
+      content:""; display:block; height:1px; width:0; background: var(--clay); transition: width .3s ease; margin-top: 2px;
+    }
+    .offer-card:hover .more::after { width: 100%; }
+
+    /* Sticky nav — over dark hero by default, solid white after scroll */
+    .nav { transition: background .35s ease, box-shadow .35s ease, color .35s ease, backdrop-filter .35s ease; color: #fff; }
+    .nav .nav-link { color: rgba(255,255,255,.85); }
+    .nav .nav-link:hover { color: #fff; }
+    .nav .nav-link.active { color: var(--tan); }
+    .nav.scrolled { background: rgba(255,255,255,.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px -16px rgba(0,0,0,.25); color: var(--ink); }
+    .nav.scrolled .nav-link { color: var(--ink); }
+    .nav.scrolled .nav-link:hover { color: var(--clay); }
+    .nav.scrolled .nav-link.active { color: var(--clay); }
+    .nav-link {
+      position: relative;
+      padding: .55rem .85rem;
+      font-size: .92rem;
+      font-weight: 500;
+      color: var(--ink);
+      border-radius: 999px;
+      transition: color .2s ease, background .2s ease;
+    }
+    .nav-link::after {
+      content:""; position:absolute; left:50%; bottom: 6px;
+      transform: translateX(-50%);
+      width: 0; height: 1px; background: var(--clay);
+      transition: width .25s ease;
+    }
+    .nav-link:hover { color: var(--clay); }
+    .nav-link:hover::after { width: 60%; }
+    .nav-link.active { color: var(--clay); }
+    .nav-link.active::after { width: 60%; }
+
+    /* Promise band texture */
+    .promise-band {
+      background: linear-gradient(135deg, var(--tan) 0%, var(--ink) 100%);
+    }
+
+    /* L3 brand logos in nav and footer */
+    .l3-logo-nav { height: 132px; width: auto; display: block; transition: opacity .25s ease; }
+    .l3-logo-nav.dark { display: none; }
+    .nav.scrolled .l3-logo-nav.light { display: none; }
+    .nav.scrolled .l3-logo-nav.dark { display: block; }
+    @media (max-width: 640px) {
+      .l3-logo-nav { height: 96px; }
+    }
+    .l3-logo-footer { height: 90px; width: auto; display: block; }
+
+    /* Powered by GiANT section */
+    .powered-by-section {
+      background: var(--bone);
+      padding: 4rem 0 2rem;
+      text-align: center;
+    }
+    .powered-by-logo {
+      max-width: 280px;
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+      display: block;
+    }
+
+    /* Rolling logo marquee (client logos) */
+    .marquee {
+      position: relative;
+      overflow: hidden;
+      padding: 2rem 0;
+      mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 4rem;
+      width: max-content;
+      animation: scroll 50s linear infinite;
+      will-change: transform;
+      align-items: center;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    /* Tinted silhouette treatment so client logos blend with the brand
+       navy. Logos that don't tint cleanly (white-on-color marks like Ford
+       or Delta where the wordmark is a white cutout) have been pruned
+       from the LOGOS array rather than special-cased here.                 */
+    .client-logo {
+      flex: 0 0 auto;
+      height: 60px;
+      width: auto;
+      max-width: 180px;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(0) saturate(100%) invert(26%) sepia(13%) saturate(1400%) hue-rotate(176deg) brightness(94%) contrast(92%);
+      opacity: 0.7;
+      transition: opacity .3s ease, filter .3s ease, transform .3s ease;
+    }
+    .client-logo:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed; inset:0;
+      background: rgba(28,28,28,0);
+      backdrop-filter: blur(0px);
+      pointer-events: none;
+      transition: background .35s ease, backdrop-filter .35s ease;
+      z-index: 90;
+    }
+    .modal-backdrop.show {
+      background: rgba(28,28,28,.45);
+      backdrop-filter: blur(4px);
+      pointer-events: auto;
+    }
+    .modal {
+      position: fixed;
+      right: 1.25rem;
+      bottom: 1.25rem;
+      width: min(620px, 60vw);
+      max-height: calc(100vh - 2.5rem);
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 30px 80px -20px rgba(0,0,0,.35);
+      overflow: hidden;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
+      z-index: 100;
+      display:flex; flex-direction:column;
+    }
+    .modal.open { transform: translateY(0); opacity: 1; }
+    .modal-body { overflow-y: auto; padding: 1.75rem 1.75rem 1.5rem; }
+    .modal-header {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:1rem;
+      padding: 1.25rem 1.25rem 0 1.75rem;
+    }
+    @media (max-width: 640px) {
+      .modal {
+        right: 0; bottom: 0; left: 0;
+        width: 100vw;
+        max-height: 100vh;
+        height: 100vh;
+        border-radius: 0;
+      }
+    }
+
+    /* Sticky re-open tab */
+    .reopen-tab {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translate(100%, -50%);
+      background: var(--ink);
+      color: var(--bone);
+      padding: .85rem .9rem;
+      writing-mode: vertical-rl;
+      transform-origin: right center;
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      border-radius: 10px 0 0 10px;
+      cursor: pointer;
+      z-index: 80;
+      box-shadow: -8px 0 20px -12px rgba(0,0,0,.25);
+      transition: transform .35s ease, background .2s ease;
+    }
+    .reopen-tab.show { transform: translate(0, -50%); }
+    .reopen-tab:hover { background: var(--clay); }
+
+    /* Likert pills */
+    .likert {
+      display:grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: .4rem;
+      margin-top: .6rem;
+    }
+    .likert button {
+      border: 1px solid rgba(28,28,28,.18);
+      background: #fff;
+      padding: .55rem .25rem;
+      font-size: .8rem;
+      border-radius: 8px;
+      transition: all .15s ease;
+      color: var(--ink);
+    }
+    .likert button:hover { border-color: var(--clay); }
+    .likert button.selected { background: var(--ink); color: var(--bone); border-color: var(--ink); }
+
+    /* Accordion */
+    details.objection {
+      border-top: 1px solid rgba(28,28,28,.12);
+      padding: 1.25rem 0;
+    }
+    details.objection:last-of-type { border-bottom: 1px solid rgba(28,28,28,.12); }
+    details.objection > summary {
+      list-style: none;
+      cursor: pointer;
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 1rem;
+      font-family:'Fraunces',serif;
+      font-weight: 500;
+      font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+      color: var(--ink);
+    }
+    details.objection > summary::-webkit-details-marker { display:none; }
+    details.objection .plus {
+      width: 36px; height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(28,28,28,.2);
+      display:flex; align-items:center; justify-content:center;
+      font-size: 1.2rem;
+      transition: transform .25s ease, background .2s ease, color .2s ease;
+      flex-shrink:0;
+    }
+    details.objection[open] .plus {
+      transform: rotate(45deg);
+      background: var(--ink);
+      color: var(--bone);
+      border-color: var(--ink);
+    }
+    details.objection .answer {
+      margin-top: 1rem;
+      max-width: 60ch;
+      color: rgba(28,28,28,.78);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    /* Hamburger */
+    .hamburger { display:none; }
+    @media (max-width: 900px) {
+      .nav-links { display: none !important; }
+      .hamburger { display: inline-flex; }
+    }
+    .mobile-menu {
+      position: fixed; inset: 0;
+      background: var(--bone);
+      z-index: 95;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap: 1.25rem;
+      transform: translateY(-100%);
+      transition: transform .4s ease;
+    }
+    .mobile-menu.open { transform: translateY(0); }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+      .reveal { opacity: 1; transform: none; }
+      .hero-word > span { transform: none; opacity: 1; }
+    }
+
+    /* Focus rings everywhere */
+    a:focus-visible, button:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--tan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    /* ── Workplace.io affiliate band ─────────────────────────────── */
+    .affiliate-band {
+      background: #fff;
+      padding: clamp(4rem, 8vw, 6rem) 0;
+      border-top: 1px solid rgba(52,73,96,.08);
+      border-bottom: 1px solid rgba(52,73,96,.08);
+    }
+    .affiliate-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+    }
+    @media (max-width: 880px) {
+      .affiliate-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .affiliate-tag {
+      display: inline-block;
+      font-family: 'Syne', serif;
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .affiliate-title {
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      max-width: 22ch;
+    }
+    .affiliate-copy {
+      color: rgba(52,73,96,.78);
+      font-size: 1.02rem;
+      line-height: 1.65;
+      margin-bottom: 1rem;
+      max-width: 56ch;
+    }
+    .affiliate-actions {
+      display: flex; flex-wrap: wrap;
+      gap: .75rem;
+      margin-top: 1.5rem;
+    }
+    .affiliate-qr {
+      background: var(--bone);
+      border: 1px solid rgba(52,73,96,.10);
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 18px 38px -28px rgba(52,73,96,.35);
+      max-width: 320px;
+      margin-inline: auto;
+    }
+    .affiliate-qr img {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      background: #fff;
+      padding: .5rem;
+    }
+    .affiliate-qr-caption {
+      font-size: .82rem;
+      color: rgba(52,73,96,.7);
+      margin-top: 1rem;
+      line-height: 1.45;
+    }
+    .affiliate-qr-caption strong { color: var(--ink); }
+    .affiliate-qr-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      margin-top: 1rem;
+      font-family: 'Syne', serif;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: .55rem .95rem;
+      border: 1px solid rgba(52,73,96,.2);
+      border-radius: 999px;
+      transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
+    }
+    .affiliate-qr-cta:hover {
+      background: var(--ink);
+      color: var(--bone);
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    /* ── Workplace.io "How It Works" 3-step block ───────────────── */
+    .wp-how {
+      margin-top: clamp(3rem, 6vw, 5rem);
+      padding-top: clamp(2.5rem, 5vw, 4rem);
+      border-top: 1px solid rgba(52,73,96,.12);
+    }
+    .wp-how-eyebrow {
+      text-align: center;
+      font-family: 'Syne', serif;
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--tan);
+      font-weight: 700;
+      margin-bottom: .75rem;
+    }
+    .wp-how-heading {
+      text-align: center;
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      line-height: 1.1;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      margin: 0 auto 2.5rem;
+      max-width: 22ch;
+    }
+    .wp-how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 820px) {
+      .wp-how-grid { grid-template-columns: 1fr; gap: 1rem; }
+    }
+    .wp-how-step {
+      position: relative;
+      background: var(--bone);
+      border: 1px solid rgba(52,73,96,.10);
+      border-radius: 14px;
+      padding: 1.5rem 1.5rem 1.4rem;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .wp-how-step:hover {
+      transform: translateY(-3px);
+      border-color: var(--tan);
+      box-shadow: 0 16px 32px -20px rgba(52,73,96,.35);
+    }
+    .wp-how-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: .82rem;
+      letter-spacing: .1em;
+      color: var(--tan);
+      background: #fff;
+      border: 1px solid rgba(52,73,96,.15);
+      width: 36px; height: 36px;
+      border-radius: 999px;
+      margin-bottom: .85rem;
+    }
+    .wp-how-title {
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--ink);
+      margin: 0 0 .45rem;
+      letter-spacing: -.005em;
+    }
+    .wp-how-desc {
+      font-size: .92rem;
+      line-height: 1.55;
+      color: rgba(52,73,96,.78);
+      margin: 0;
+    }
+
+    /* ── Final consult CTA band ──────────────────────────────────── */
+    .final-cta {
+      background: linear-gradient(135deg, var(--ink) 0%, #2a3a4d 100%);
+      color: var(--bone);
+      padding: clamp(4rem, 7vw, 5.5rem) 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(45% 60% at 15% 20%, rgba(90,115,144,.35), transparent 70%),
+        radial-gradient(40% 60% at 85% 80%, rgba(90,115,144,.30), transparent 70%);
+      pointer-events: none;
+    }
+    .final-cta > * { position: relative; z-index: 1; }
+    .final-cta-eyebrow {
+      font-family: 'Syne', serif;
+      font-size: .72rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: rgba(227,218,208,.7);
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .final-cta-title {
+      font-family: 'Syne', serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+    .final-cta-sub {
+      color: rgba(227,218,208,.8);
+      font-size: 1.05rem;
+      line-height: 1.55;
+      max-width: 44ch;
+      margin: 0 auto 2rem;
+    }
+    .final-cta .btn-tan { background: var(--bone); color: var(--ink); font-weight: 600; }
+    .final-cta .btn-tan:hover { background: #fff; }
+
+    /* Section spacing */
+    .section { padding-block: clamp(5rem, 10vw, 8rem); }
+    .container-x { max-width: 1240px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+  </style>
+</head>
+<body class="bg-bone text-ink">
+
+  <!-- ───── STICKY NAV ───── -->
+  <header id="nav" class="nav fixed top-0 inset-x-0 z-50 text-ink">
+    <div class="container-x flex items-center justify-between h-28 md:h-40">
+      <a href="#top" class="flex items-center" aria-label="L3 Coaching home">
+        <img class="l3-logo-nav light" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
+        <img class="l3-logo-nav dark" src="2026 L3 Logos/2026 Full L3 Logo Transparent.png" alt="L3 Coaching" />
+      </a>
+
+      <nav class="nav-links flex items-center gap-1" aria-label="Primary">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#offers" class="nav-link">Services</a>
+        <a href="#process" class="nav-link">How We Work</a>
+        <span class="w-px h-5 bg-current opacity-20 mx-2"></span>
+        <a href="#" class="btn btn-tan" data-open-modal>Free Diagnostic</a>
+      </nav>
+
+      <button class="hamburger btn btn-outline" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false" id="hamburgerBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <button id="mobileClose" class="absolute top-5 right-5 btn btn-outline" aria-label="Close menu">✕</button>
+    <a href="#about" class="font-serif text-3xl" data-mobile>About</a>
+    <a href="#offers" class="font-serif text-3xl" data-mobile>Services</a>
+    <a href="#process" class="font-serif text-3xl" data-mobile>How We Work</a>
+    <a href="#" class="font-serif text-3xl text-clay" data-open-modal data-mobile>Free Diagnostic</a>
+  </div>
+
+  <a id="top"></a>
+
+  <!-- ───── HERO ───── -->
+  <section class="hero relative min-h-[100svh] flex items-center" aria-labelledby="hero-heading">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <!-- Partner badge -->
+    <div class="badge absolute top-32 md:top-44 left-[clamp(1.25rem,4vw,2.5rem)] flex items-center gap-2 text-xs uppercase tracking-[.18em]">
+      <span class="w-1.5 h-1.5 rounded-full bg-tan"></span>
+      Licensed GiANT Worldwide Partner
+    </div>
+
+    <div class="container-x w-full pt-40 md:pt-56 pb-24 relative">
+      <h1 id="hero-heading" class="display text-[clamp(3rem,9vw,8.5rem)] max-w-[18ch]">
+        <span class="hero-word"><span style="animation-delay:.05s">Liberating</span></span>
+        <br/>
+        <span class="hero-word"><span style="animation-delay:.18s">Leaders</span></span>
+        <span class="hero-word"><span style="animation-delay:.28s">that</span></span>
+        <span class="hero-word underline-stroke" id="lastWord">
+          <span style="animation-delay:.38s">Last.</span>
+          <svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M4 14 C 60 4, 130 18, 200 8 S 290 16, 296 10" />
+          </svg>
+        </span>
+      </h1>
+
+      <p class="reveal mt-8 max-w-2xl text-xl md:text-2xl leading-relaxed">
+        We help leaders and teams create clarity, strengthen ownership, and build cultures that sustain performance over time.
+      </p>
+
+      <div class="reveal mt-10 flex flex-wrap items-center gap-3">
+        <button class="btn btn-tan" data-open-modal>Take the Free Diagnostic</button>
+        <a class="btn btn-outline" href="#cta">Book a Discovery Call</a>
+      </div>
+
+      <a href="#diagnostic" class="reveal absolute left-[clamp(1.25rem,4vw,2.5rem)] bottom-10 flex items-center gap-2 text-xs text-white/60 hover:text-white transition" aria-label="Scroll to start the journey">
+        <span class="w-px h-8 bg-white/30"></span>
+        <span class="uppercase tracking-[.22em]">Begin</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ───── DIAGNOSTIC JOURNEY (Q + quote + solution × 3, drifting L → R → C) ───── -->
+  <section id="diagnostic" class="section bg-white relative" aria-labelledby="diag-heading">
+    <div class="container-x">
+      <div class="text-center mb-16">
+        <h2 id="diag-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[20ch] mx-auto leading-[1.05]">Where is your leadership stuck?</h2>
+        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Sit with each question. Tap a card to see the principle behind it — and one concrete move you can make this week.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 md:gap-7 diag-grid">
+
+        <!-- 01 — Calendar -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 01 — tap to see the principle and solution">
+          <div class="flip-inner">
+            <div class="flip-front">
+              <span class="diag-num-pill">01</span>
+              <p class="diag-front-label">The question</p>
+              <p class="diag-q-text">"Who are you becoming as a leader — and is your calendar telling the same story?"</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see the principle &amp; solution
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="flip-back">
+              <span class="diag-num-pill">01</span>
+              <p class="diag-back-label">The principle</p>
+              <blockquote class="diag-principle">Your calendar is your character in calendar form. Change the blocks, and you change the leader.</blockquote>
+              <p class="diag-back-label diag-back-label-sol">The practical move</p>
+              <p class="diag-solution-text">Audit one week. Color-code every hour as <em>Building People</em>, <em>Building Strategy</em>, <em>Building Yourself</em>, or <em>Putting Out Fires</em>. The ratio is your real leadership — not your job description.</p>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 02 — Hard conversations -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 02 — tap to see the principle and solution">
+          <div class="flip-inner">
+            <div class="flip-front">
+              <span class="diag-num-pill">02</span>
+              <p class="diag-front-label">The question</p>
+              <p class="diag-q-text">"What conversation have you been avoiding — and what is it costing the person you're not having it with?"</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see the principle &amp; solution
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="flip-back">
+              <span class="diag-num-pill">02</span>
+              <p class="diag-back-label">The principle</p>
+              <blockquote class="diag-principle">Silence is not kindness. The conversation you owe them is the one that sets them free.</blockquote>
+              <p class="diag-back-label diag-back-label-sol">The practical move</p>
+              <p class="diag-solution-text">Name the one person. Write the one sentence you've been swallowing. Schedule it inside 7 days. <em>Liberators</em> say the hard thing early; <em>Dominators</em> say it late and loud; <em>Abdicators</em> never say it at all.</p>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 03 — Team perception -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 03 — tap to see the principle and solution">
+          <div class="flip-inner">
+            <div class="flip-front">
+              <span class="diag-num-pill">03</span>
+              <p class="diag-front-label">The question</p>
+              <p class="diag-q-text">"If your team described your leadership honestly, what would they say — and what would need to change?"</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see the principle &amp; solution
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="flip-back">
+              <span class="diag-num-pill">03</span>
+              <p class="diag-back-label">The principle</p>
+              <blockquote class="diag-principle">You don't get to define your leadership — your team does. Lead like they're already telling the truth about you.</blockquote>
+              <p class="diag-back-label diag-back-label-sol">The practical move</p>
+              <p class="diag-solution-text">Ask three trusted people one question: <em>"What's it like on the other side of me?"</em> Don't defend the answers. Adjust one behavior this month. That single loop is how reputation becomes reality.</p>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 04 — Clarity of "winning" (NEW) -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 04 — tap to see the principle and solution">
+          <div class="flip-inner">
+            <div class="flip-front">
+              <span class="diag-num-pill">04</span>
+              <p class="diag-front-label">The question</p>
+              <p class="diag-q-text">"If we asked every person on your team what 'winning' looks like this quarter, would we get the same answer four times — or four different ones?"</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see the principle &amp; solution
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="flip-back">
+              <span class="diag-num-pill">04</span>
+              <p class="diag-back-label">The principle</p>
+              <blockquote class="diag-principle">Clarity is a multiplier. The cost of unclear targets isn't slower work — it's smart people pulling in opposite directions, all looking like they're failing.</blockquote>
+              <p class="diag-back-label diag-back-label-sol">The practical move</p>
+              <p class="diag-solution-text">Write the one-sentence "win" for this quarter. Test it with three people on the team this week. If you get three different versions back, you don't have a team problem — you have a clarity problem. Fix that first.</p>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- ── CTA below diagnostic cards ── -->
+      <div class="reveal diag-cta mt-16 text-center">
+        <p class="diag-cta-text">If any of these landed, the Diagnostic will tell you where to start.</p>
+        <button type="button" class="btn btn-tan mt-6" data-open-modal>Take the Free Diagnostic →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── HOW WE WORK — 3-step process preview ───── -->
+  <section id="process" class="section bg-bone" aria-labelledby="process-heading">
+    <div class="container-x">
+      <div class="text-center mb-14">
+        <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">How we work</p>
+        <h2 id="process-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[18ch] mx-auto leading-[1.05]">Three steps. One transformation.</h2>
+        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">The path from where you are today to leadership that lasts.</p>
+      </div>
+
+      <div class="reveal process-row">
+        <div class="process-circle pc-1">
+          <span class="pc-num">01</span>
+          <h4 class="pc-title">Discovery Interview</h4>
+          <p class="pc-desc">Discovery questions to unearth pain points and identify the strengths to build on.</p>
+        </div>
+        <div class="process-arrow" aria-hidden="true">
+          <svg viewBox="0 0 80 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12h70m0 0l-9-9m9 9l-9 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-circle pc-2">
+          <span class="pc-num">02</span>
+          <h4 class="pc-title">Developmental Plan</h4>
+          <p class="pc-desc">Use discovery data to co-build a plan that guides the engagement.</p>
+        </div>
+        <div class="process-arrow" aria-hidden="true">
+          <svg viewBox="0 0 80 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12h70m0 0l-9-9m9 9l-9 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-circle pc-3">
+          <span class="pc-num">03</span>
+          <h4 class="pc-title">Transformational Process</h4>
+          <p class="pc-desc">Ongoing learning, 1:1 coaching, intuitive tools, and accountability.</p>
+        </div>
+      </div>
+
+      <div class="reveal text-center mt-14">
+        <p class="text-ink/65 mb-5 max-w-lg mx-auto">Want to go deeper? Explore the five core areas we build inside every engagement.</p>
+        <button type="button" class="btn btn-tan" data-open-fw>See the 5 Core Areas →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── ABOUT / WHY L3 ───── -->
+  <section id="about" class="section bg-white" aria-labelledby="about-heading">
+    <div class="container-x">
+      <div class="grid md:grid-cols-12 gap-10 md:gap-16 items-center">
+        <div class="reveal md:col-span-5">
+          <div class="heath-portrait mx-auto md:mx-0">
+            <img loading="lazy" alt="Heath Haynes, founder of L3 Coaching" src="heath-haynes.jpg" />
+          </div>
+          <p class="mt-5 text-center md:text-left text-xs uppercase tracking-[.22em] text-ink/45">Heath Haynes · Founder &amp; Coach</p>
+
+          <!-- Certification badges — GiANT credentials -->
+          <div class="cert-badges">
+            <p class="cert-badges-label">Certified in</p>
+            <div class="cert-badges-row">
+              <img class="cert-badge" src="Cert Badges/GiANT Certified Coach.png"     alt="GiANT Certified Coach"      title="GiANT Certified Coach" />
+              <img class="cert-badge" src="Cert Badges/100X Certified.png"            alt="100X Certified"             title="100X Certified · Powered by GiANT" />
+              <img class="cert-badge" src="Cert Badges/5V4T Badge.png"                alt="5 Voices Certified"         title="5 Voices Certified · GiANT" />
+              <img class="cert-badge" src="Cert Badges/GiANT Intensive Cert Badge.png" alt="GiANT Leader Intensive Certified" title="GiANT Leader Intensive Certified" />
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-7">
+          <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">Why L3 Coaching</p>
+          <h2 id="about-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.02] mb-7">Most leadership problems aren't talent problems. They're formation problems.</h2>
+
+          <p class="reveal text-ink/80 text-[1.05rem] leading-relaxed mb-7 max-w-prose">
+            Heath is a licensed <strong>GiANT Worldwide Partner</strong> who has spent 20 years developing leaders — first inside the nonprofit world, where mission is demanding and leadership formation is rarely optional, and now across organizations of every kind. That progression — from developed leader to healthy team to lasting performance — is exactly what L3 is built to produce.
+          </p>
+
+          <div class="reveal flex flex-wrap gap-3">
+            <a class="btn btn-outline" href="#process">See How We Work →</a>
+            <a class="btn btn-primary" href="#cta">Book a Free Consultation</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Testimonial (credibility) ── -->
+      <figure class="reveal testimonial">
+        <blockquote class="testimonial-body">
+          We didn't just learn leadership frameworks — we reshaped behaviors, built trust, and aligned execution to strategy.
+        </blockquote>
+        <figcaption class="testimonial-attr">
+          <span class="testimonial-attr-name">Kelly Moore</span>
+          <span class="testimonial-attr-sub">Executive Director · Houston, TX</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ───── OFFERS — Massive freebies → 3 packages → 3 mini offers ───── -->
+  <section id="offers" class="section bg-bone" aria-labelledby="offers-heading">
+    <div class="container-x">
+      <div class="text-center mb-14">
+        <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">What we offer</p>
+        <h2 id="offers-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[22ch] mx-auto leading-[1.02]">Three ways we work together.</h2>
+        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Tap a card to see what's inside.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7">
+
+        <!-- ── 1. Leader Launch Track ── -->
+        <article class="reveal flip-card" data-package="leader-launch" tabindex="0" role="button" aria-label="Leader Launch Track — tap to see details">
+          <span class="flip-ribbon">Leaders</span>
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <h3 class="flip-title">Leader Launch Track</h3>
+              <p class="flip-category">Leader Formation</p>
+              <p class="flip-tagline">For new hires, new leaders, and emerging leaders.</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see what's included
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <h3 class="flip-title-sm">Leader Launch Track</h3>
+              <p class="flip-back-label">Includes</p>
+              <ul class="flip-list">
+                <li>Proven leadership development concepts</li>
+                <li>Continuous learning process</li>
+                <li>Clear growth steps and accountability</li>
+                <li>Personal leadership dashboard &amp; toolkit</li>
+              </ul>
+              <p class="flip-best-for"><strong>Best for:</strong> one leader who knows something needs to change but isn't ready to bring in the whole team yet.</p>
+              <div class="flip-back-price">
+                <span class="flip-back-price-from">Starts at</span>
+                <span class="flip-back-price-num">$1,500</span>
+                <span class="flip-back-price-per">/month</span>
+              </div>
+              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="leader-launch">Schedule a Consultation →</button>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 2. TeamLift Track (featured) ── -->
+        <article class="reveal flip-card featured" data-package="teamlift" tabindex="0" role="button" aria-label="TeamLift Track — tap to see details">
+          <span class="flip-ribbon ribbon-gold">Teams</span>
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <h3 class="flip-title">TeamLift Track</h3>
+              <p class="flip-category">Team Alignment</p>
+              <p class="flip-tagline">For one team that needs better communication, trust, alignment, execution, and capacity.</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see what's included
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <h3 class="flip-title-sm">TeamLift Track</h3>
+              <p class="flip-back-label">Includes</p>
+              <ul class="flip-list">
+                <li>Monthly team workshop</li>
+                <li>Monthly core group / real-time leadership conversation</li>
+                <li>Leader toolkit access for participants</li>
+                <li>One key-leader 1:1 coaching touchpoint</li>
+              </ul>
+              <p class="flip-best-for"><strong>Best for:</strong> a team with real friction, burnout, unclear alignment, or execution issues.</p>
+              <div class="flip-back-price">
+                <span class="flip-back-price-from">Starts at</span>
+                <span class="flip-back-price-num">$2,500</span>
+                <span class="flip-back-price-per">/month</span>
+              </div>
+              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="teamlift">Schedule a Consultation →</button>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 3. Custom Culture Track ── -->
+        <article class="reveal flip-card" data-package="custom-culture" tabindex="0" role="button" aria-label="Custom Culture Track — tap to see details">
+          <span class="flip-ribbon">Organization</span>
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <h3 class="flip-title">Custom Culture Track</h3>
+              <p class="flip-category">Culture at Scale</p>
+              <p class="flip-tagline">For companies that need a larger tailored engagement across multiple teams.</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see what's included
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <h3 class="flip-title-sm">Custom Culture Track</h3>
+              <p class="flip-back-label">Includes</p>
+              <ul class="flip-list">
+                <li>Multi-team workshops</li>
+                <li>Core groups by team</li>
+                <li>Leader 360s (if needed)</li>
+                <li>Keynotes &amp; lunch-and-learns</li>
+                <li>On-site day options</li>
+                <li>Custom 6–12 month culture &amp; performance plan</li>
+              </ul>
+              <p class="flip-best-for"><strong>Best for:</strong> organizations that want leadership language embedded across multiple teams.</p>
+              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="custom-culture">Schedule a Free Consultation →</button>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 4. 1:1 Executive Coaching ── -->
+        <article class="reveal flip-card" data-package="one-on-one" tabindex="0" role="button" aria-label="1:1 Executive Coaching — tap to see details">
+          <span class="flip-ribbon">1:1</span>
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <h3 class="flip-title">1:1 Executive Coaching</h3>
+              <p class="flip-category">Executive Coaching</p>
+              <p class="flip-tagline">Session-based, no commitment. For a specific decision, transition, or leadership sticking point.</p>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap to see what's included
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <h3 class="flip-title-sm">1:1 Executive Coaching</h3>
+              <p class="flip-back-label">Includes</p>
+              <ul class="flip-list">
+                <li>Focused 1:1 session with Heath</li>
+                <li>Tailored to whatever you bring</li>
+                <li>Practical, actionable outcomes</li>
+                <li>Zero long-term commitment</li>
+              </ul>
+              <p class="flip-best-for"><strong>Best for:</strong> leaders who need targeted help on a specific decision, transition, or leadership challenge — without committing to an ongoing track.</p>
+              <div class="flip-back-price">
+                <span class="flip-back-price-from">Starts at</span>
+                <span class="flip-back-price-num">$300</span>
+                <span class="flip-back-price-per">/hour</span>
+              </div>
+              <a href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener" class="btn btn-tan flip-cta">Book a Session →</a>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── TESTIMONIALS ─────────────────────────────────────────
+       Positioned at the decision point (right before the Next
+       Steps CTA). Three flip cards, each with a "phone-contact"
+       style initial-avatar. Front = punchy hook. Back = fuller
+       excerpted story. Tap the card to flip.                       -->
+  <section id="testimonials" class="section bg-white" aria-labelledby="tst-heading">
+    <div class="container-x">
+      <div class="text-center mb-14">
+        <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">Real leaders · Real change</p>
+        <h2 id="tst-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[22ch] mx-auto leading-[1.02]">What leaders say after the work.</h2>
+        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Tap a card to hear the fuller story.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 md:gap-7 tst-grid">
+
+        <!-- ── Testimonial 1 — Dougal Cameron ── -->
+        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Dougal Cameron — tap for the full story">
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <div class="tst-avatar-wrap">
+                <div class="tst-avatar tst-avatar-dc" aria-hidden="true">DC</div>
+              </div>
+              <svg class="tst-quote-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z" fill="currentColor" opacity="0.55"/></svg>
+              <blockquote class="tst-quote">Heath helped us uncover blind spots we'd unintentionally neglected — we now operate with clarity, confidence, and alignment.</blockquote>
+              <div class="tst-attr">
+                <p class="tst-name">Dougal Cameron</p>
+                <p class="tst-role">CEO · Houston, TX</p>
+              </div>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap for the full story
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <div class="tst-back-header">
+                <div class="tst-avatar tst-avatar-sm tst-avatar-dc" aria-hidden="true">DC</div>
+                <div>
+                  <p class="tst-name">Dougal Cameron</p>
+                  <p class="tst-role">CEO · Houston, TX</p>
+                </div>
+              </div>
+              <blockquote class="tst-quote-full">"Heath at L3 Coaching provided an invaluable experience for our team, guiding us through a deep dive into our individual giftings, personality dynamics, and leadership styles. His insight and structured approach helped us align more effectively around our firm's goals, sharpen our execution, and improve collaboration. Heath helped us uncover blind spots and address areas we had unintentionally neglected — we're now better equipped to operate with clarity, confidence, and alignment."</blockquote>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── Testimonial 2 — Chad Wilson ── -->
+        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Chad Wilson — tap for the full story">
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <div class="tst-avatar-wrap">
+                <div class="tst-avatar tst-avatar-cw" aria-hidden="true">CW</div>
+              </div>
+              <svg class="tst-quote-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z" fill="currentColor" opacity="0.55"/></svg>
+              <blockquote class="tst-quote">Working with Heath and L3 Coaching has been a game changer for my leadership.</blockquote>
+              <div class="tst-attr">
+                <p class="tst-name">Chad Wilson</p>
+                <p class="tst-role">Lead Pastor · Boulder, CO</p>
+              </div>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap for the full story
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <div class="tst-back-header">
+                <div class="tst-avatar tst-avatar-sm tst-avatar-cw" aria-hidden="true">CW</div>
+                <div>
+                  <p class="tst-name">Chad Wilson</p>
+                  <p class="tst-role">Lead Pastor · Boulder, CO</p>
+                </div>
+              </div>
+              <blockquote class="tst-quote-full">"Working with Heath and L3 Coaching has been a game changer for my leadership. He guided me into a deeper understanding of leadership principles that reshaped how I lead and how I show up for my team. His resources, accountability, and authentic connection created the space I needed to grow. My leadership took a noticeable step forward because of Heath."</blockquote>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── Testimonial 3 — Kelly Moore ── -->
+        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Kelly Moore — tap for the full story">
+          <div class="flip-inner">
+            <!-- FRONT -->
+            <div class="flip-front">
+              <div class="tst-avatar-wrap">
+                <div class="tst-avatar tst-avatar-km" aria-hidden="true">KM</div>
+              </div>
+              <svg class="tst-quote-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z" fill="currentColor" opacity="0.55"/></svg>
+              <blockquote class="tst-quote">Leadership is a discipline. Heath helped us practice it with purpose, humility, and confidence.</blockquote>
+              <div class="tst-attr">
+                <p class="tst-name">Kelly Moore</p>
+                <p class="tst-role">Executive Director · Houston, TX</p>
+              </div>
+              <div class="flip-front-foot">
+                <span class="flip-cue">Tap for the full story
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- BACK -->
+            <div class="flip-back">
+              <div class="tst-back-header">
+                <div class="tst-avatar tst-avatar-sm tst-avatar-km" aria-hidden="true">KM</div>
+                <div>
+                  <p class="tst-name">Kelly Moore</p>
+                  <p class="tst-role">Executive Director · Houston, TX</p>
+                </div>
+              </div>
+              <blockquote class="tst-quote-full">"Working with Heath and L3 Coaching has been genuinely transformative for our leadership team and our broader organization. Heath created an environment where transparency was safe, accountability was expected, and growth was non-negotiable. We didn't just learn frameworks — we reshaped behaviors, built trust, and aligned execution to strategy. Our team is stronger, more connected, and better prepared to achieve meaningful outcomes because of the work we did together."</blockquote>
+              <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── FINAL CTA + OBJECTIONS (paired side-by-side) ───── -->
+  <section id="cta" class="section bg-white" aria-labelledby="cta-heading">
+    <div class="container-x">
+      <div class="grid md:grid-cols-12 gap-10 md:gap-14 items-start">
+
+        <!-- Left: the consultation ask -->
+        <div class="md:col-span-5 md:sticky md:top-28">
+          <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">The next step</p>
+          <h2 id="cta-heading" class="reveal display text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.02] mb-6">Schedule a Free Consultation.</h2>
+          <p class="reveal text-ink/70 leading-relaxed mb-8 max-w-md">
+            30 minutes. No pitch, no deck. Just a real outside read on what's actually creating friction in your leadership.
+          </p>
+          <div class="reveal flex flex-wrap gap-3">
+            <a class="btn btn-tan" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">
+              Book the Call →
+            </a>
+            <button class="btn btn-outline" data-open-modal>Take the Free Diagnostic</button>
+          </div>
+          <p class="reveal mt-6 text-xs text-ink/50 italic">
+            Prefer to start lighter? Sign up for the free monthly <a href="mailto:connect@l3leadershipcoaching.com?subject=Free%20Monthly%20Workshop" class="text-clay underline-offset-2 hover:underline">workshop</a> instead.
+          </p>
+        </div>
+
+        <!-- Right: 3 objections paired with reframes -->
+        <div class="md:col-span-7">
+          <p class="reveal text-xs uppercase tracking-[.22em] text-ink/55 mb-6">Common objections · Answered honestly</p>
+
+          <div class="space-y-4">
+            <article class="reveal grid sm:grid-cols-2 gap-4 sm:gap-6 bg-bone rounded-2xl p-6">
+              <div>
+                <p class="text-[10px] uppercase tracking-[.22em] text-ink/40 mb-2">Objection</p>
+                <p class="font-serif text-lg leading-snug text-ink/85">"It's too expensive."</p>
+              </div>
+              <div class="border-l border-ink/10 pl-4 sm:pl-6">
+                <p class="text-[10px] uppercase tracking-[.22em] text-clay mb-2">The reframe</p>
+                <p class="text-ink/80 text-[.95rem] leading-relaxed">What's the cost of <em>not</em> developing your leaders? You stay the bottleneck — and that compounds.</p>
+              </div>
+            </article>
+
+            <article class="reveal grid sm:grid-cols-2 gap-4 sm:gap-6 bg-bone rounded-2xl p-6">
+              <div>
+                <p class="text-[10px] uppercase tracking-[.22em] text-ink/40 mb-2">Objection</p>
+                <p class="font-serif text-lg leading-snug text-ink/85">"The timing isn't right."</p>
+              </div>
+              <div class="border-l border-ink/10 pl-4 sm:pl-6">
+                <p class="text-[10px] uppercase tracking-[.22em] text-clay mb-2">The reframe</p>
+                <p class="text-ink/80 text-[.95rem] leading-relaxed">There's no perfect time for people development other than now. Prioritize people over projects.</p>
+              </div>
+            </article>
+
+            <article class="reveal grid sm:grid-cols-2 gap-4 sm:gap-6 bg-bone rounded-2xl p-6">
+              <div>
+                <p class="text-[10px] uppercase tracking-[.22em] text-ink/40 mb-2">Objection</p>
+                <p class="font-serif text-lg leading-snug text-ink/85">"We've got leadership covered."</p>
+              </div>
+              <div class="border-l border-ink/10 pl-4 sm:pl-6">
+                <p class="text-[10px] uppercase tracking-[.22em] text-clay mb-2">The reframe</p>
+                <p class="text-ink/80 text-[.95rem] leading-relaxed">Every leadership culture eventually becomes a mirror, reflecting back what's already there. Outside perspective doesn't replace what you've built — it shows you what you can't see from inside it.</p>
+              </div>
+            </article>
+
+            <article class="reveal grid sm:grid-cols-2 gap-4 sm:gap-6 bg-bone rounded-2xl p-6">
+              <div>
+                <p class="text-[10px] uppercase tracking-[.22em] text-ink/40 mb-2">Objection</p>
+                <p class="font-serif text-lg leading-snug text-ink/85">"We don't know if this will actually work."</p>
+              </div>
+              <div class="border-l border-ink/10 pl-4 sm:pl-6">
+                <p class="text-[10px] uppercase tracking-[.22em] text-clay mb-2">The reframe</p>
+                <p class="text-ink/80 text-[.95rem] leading-relaxed">That's the right question to bring to the discovery call. Thirty minutes. No commitment, no pitch. Just an honest conversation about what's actually creating friction and whether L3 is the right fit to address it.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── POWERED BY GIANT ───── -->
+  <section class="powered-by-section border-t border-ink/10" aria-label="Powered by GiANT Worldwide">
+    <div class="container-x">
+      <p class="reveal text-center text-xs uppercase tracking-[.22em] text-ink/55 mb-6">A globally trusted leadership development ecosystem</p>
+      <img class="reveal powered-by-logo mb-12" src="Powered by GiANT Logos/Powered By GiANT - All Grey.png" alt="Powered by GiANT" />
+    </div>
+    <div class="marquee" aria-hidden="false" aria-label="GiANT client logos">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       WORKPLACE.IO AFFILIATE SECTION
+       ═══════════════════════════════════════════════════════════════
+       Currently HIDDEN via the `hidden` attribute below. To reveal
+       when Workplace.io is publicly ready, delete the `hidden`
+       attribute on the <section> tag.
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="affiliate-band" aria-labelledby="affiliate-heading" hidden>
+    <div class="container-x">
+      <div class="affiliate-grid">
+        <div>
+          <span class="reveal affiliate-tag">Partner · Your Culture Needs a System</span>
+          <h2 id="affiliate-heading" class="reveal affiliate-title">Updating project software is exhausting. Workplace.io fixed it.</h2>
+          <p class="reveal affiliate-copy">
+            Workplace turns your meetings into organized projects, notes, and next steps — always updated in real time.
+          </p>
+          <div class="reveal affiliate-actions">
+            <a class="btn btn-tan" href="https://app.workplace.io/p/heath-haynes" target="_blank" rel="noopener">
+              Start for Free →
+            </a>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="affiliate-qr">
+            <img src="Workplace.io_Link_heath_haynes.png" alt="Scan to sign up for Workplace.io through Heath Haynes" />
+            <a class="affiliate-qr-cta" href="https://app.workplace.io/p/heath-haynes" target="_blank" rel="noopener">
+              Scan to Learn More →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── How It Works (mirrored from workplace.io) ── -->
+      <div class="reveal wp-how">
+        <p class="wp-how-eyebrow">How it works</p>
+        <h3 class="wp-how-heading">Three moves. Zero babysitting.</h3>
+        <div class="wp-how-grid">
+          <div class="wp-how-step">
+            <span class="wp-how-num">01</span>
+            <h4 class="wp-how-title">Connect</h4>
+            <p class="wp-how-desc">One-click sync with Zoom, Google Meet, Microsoft Teams, and Slack. Workplace quietly joins your meetings and reads your team chat.</p>
+          </div>
+          <div class="wp-how-step">
+            <span class="wp-how-num">02</span>
+            <h4 class="wp-how-title">Capture</h4>
+            <p class="wp-how-desc">It extracts decisions, action items, owners, and risks from every conversation — automatically routing each to the right project page.</p>
+          </div>
+          <div class="wp-how-step">
+            <span class="wp-how-num">03</span>
+            <h4 class="wp-how-title">Update</h4>
+            <p class="wp-how-desc">Project pages update themselves in real time. Cards on the board move themselves. No more dragging, chasing, or status meetings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── FINAL CONSULTATION CTA ───── -->
+  <section class="final-cta" aria-labelledby="final-cta-heading">
+    <div class="container-x">
+      <p class="final-cta-eyebrow">Free · 30 minutes · No pitch</p>
+      <h2 id="final-cta-heading" class="final-cta-title">Ready for a real conversation?</h2>
+      <p class="final-cta-sub">
+        Book a free consultation with Heath. We'll look at what's actually creating friction in your leadership — and what would change if it were gone.
+      </p>
+      <a class="btn btn-tan" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">
+        Schedule a Free Consultation →
+      </a>
+    </div>
+  </section>
+
+  <!-- ───── FOOTER ───── -->
+  <footer class="bg-ink text-bone py-16">
+    <div class="container-x grid md:grid-cols-12 gap-10">
+      <div class="md:col-span-5">
+        <img class="l3-logo-footer mb-4" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
+        <p class="text-bone/75 max-w-sm leading-relaxed">Liberating leaders that last. A licensed GiANT Worldwide partner.</p>
+      </div>
+
+      <div class="md:col-span-4">
+        <p class="text-xs uppercase tracking-[.22em] text-bone/55 mb-3">Stay in touch</p>
+        <form id="footerForm" class="flex gap-2 max-w-sm">
+          <input type="email" required placeholder="you@company.com" aria-label="Email"
+                 class="flex-1 bg-transparent border border-bone/25 rounded-full px-4 py-3 text-sm placeholder:text-bone/40 focus:border-tan outline-none" />
+          <button class="btn btn-tan" type="submit">Join</button>
+        </form>
+        <p id="footerFormMsg" class="text-xs text-tan mt-3 hidden">Thanks — we'll be in touch.</p>
+      </div>
+
+      <div class="md:col-span-3">
+        <p class="text-xs uppercase tracking-[.22em] text-bone/55 mb-3">Connect</p>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-bone/85 hover:text-tan transition">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8h4.56v14H.22V8zm7.4 0h4.37v1.92h.06c.61-1.15 2.1-2.36 4.32-2.36 4.62 0 5.47 3.04 5.47 7v7.44h-4.55v-6.6c0-1.58-.03-3.6-2.2-3.6-2.2 0-2.54 1.72-2.54 3.5V22H7.62V8z"/></svg>
+          LinkedIn
+        </a>
+        <p class="mt-6 text-xs text-bone/40">© <span id="year"></span> L3 Coaching. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ───── FRAMEWORK DRAWER (full-screen) ───── -->
+  <div id="fwDrawer" class="fw-drawer" role="dialog" aria-modal="true" aria-labelledby="fwDrawerTitle" aria-hidden="true">
+    <div class="fw-drawer-close">
+      <p class="text-xs uppercase tracking-[.22em] text-clay">How We Work</p>
+      <button id="fwDrawerClose" class="btn btn-outline" aria-label="Close framework">✕ Close</button>
+    </div>
+    <div class="container-x py-16 md:py-24">
+      <div class="grid md:grid-cols-12 gap-10 mb-12">
+        <div class="md:col-span-5">
+          <h2 id="fwDrawerTitle" class="display text-[clamp(2rem,4.5vw,3.6rem)] leading-[1.02]">Five core areas. One healthy leader.</h2>
+        </div>
+        <div class="md:col-span-7 md:pt-6">
+          <p class="text-ink/75 leading-relaxed max-w-prose">Every L3 engagement is built around the same five areas. Click any area below to see the GiANT tool we use to move you forward.</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-3 md:gap-4">
+        <div class="md:col-span-5 flex flex-col gap-2" role="tablist" aria-label="Core leadership areas">
+          <button class="fw-tab" role="tab" aria-selected="true" data-fw="0">
+            <span class="fw-num">01</span><span class="fw-name">Communication</span><span class="fw-arrow">→</span>
+          </button>
+          <button class="fw-tab" role="tab" aria-selected="false" data-fw="1">
+            <span class="fw-num">02</span><span class="fw-name">Relationships</span><span class="fw-arrow">→</span>
+          </button>
+          <button class="fw-tab" role="tab" aria-selected="false" data-fw="2">
+            <span class="fw-num">03</span><span class="fw-name">Alignment</span><span class="fw-arrow">→</span>
+          </button>
+          <button class="fw-tab" role="tab" aria-selected="false" data-fw="3">
+            <span class="fw-num">04</span><span class="fw-name">Execution</span><span class="fw-arrow">→</span>
+          </button>
+          <button class="fw-tab" role="tab" aria-selected="false" data-fw="4">
+            <span class="fw-num">05</span><span class="fw-name">Capacity</span><span class="fw-arrow">→</span>
+          </button>
+        </div>
+
+        <div class="md:col-span-7">
+          <div id="fwPanel" class="fw-panel bg-white rounded-2xl border border-ink/10 p-8 md:p-10 min-h-[360px]" role="tabpanel">
+            <!-- JS-rendered -->
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 flex flex-wrap gap-3 justify-center">
+        <a class="btn btn-primary" href="#cta" data-fw-close>Schedule a Free Consultation →</a>
+        <button class="btn btn-outline" data-open-modal data-fw-close>Take the Free Diagnostic</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ASSESSMENT MODAL ───── -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+  <aside id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-header">
+      <div>
+        <p class="text-xs uppercase tracking-[.22em] text-clay mb-2">Free · 12 questions · ~3 min</p>
+        <h3 id="modalTitle" class="font-serif text-2xl md:text-3xl leading-tight">The Liberating Leader Diagnostic</h3>
+      </div>
+      <button id="modalClose" class="text-ink/55 hover:text-ink text-2xl leading-none px-2" aria-label="Close diagnostic">✕</button>
+    </div>
+
+    <div class="px-7 md:px-7 pt-2">
+      <div class="w-full h-1 bg-ink/10 rounded-full overflow-hidden">
+        <div id="qBar" class="h-full bg-clay transition-all" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="modalBody" class="modal-body">
+      <!-- Step 0: intro -->
+      <div id="step-intro">
+        <p class="text-ink/80 leading-relaxed mb-4">A 12-question diagnostic that reveals where your leadership liberates your team — and where it quietly dominates them.</p>
+        <p class="text-ink/70 leading-relaxed mb-5">Takes about three minutes. You'll get a personalized result with the single highest-leverage shift to make next.</p>
+        <p class="bg-bone border-l-2 border-clay px-5 py-4 italic text-ink/70 text-sm leading-relaxed mb-6">
+          Most teams operate well below their potential. Not because they lack talent — but because the leadership above them creates control instead of clarity. Answer honestly. The result is only useful if you do.
+        </p>
+        <button id="startBtn" class="btn btn-primary w-full">Begin the Diagnostic →</button>
+      </div>
+
+      <!-- Step 1: questions -->
+      <div id="step-questions" class="hidden">
+        <div class="flex items-center justify-between mb-3 text-xs text-ink/55">
+          <span id="qProgress">Question 1 of 12</span>
+          <button id="restartBtn" class="hover:text-ink transition">Restart</button>
+        </div>
+        <p id="qDim" class="text-[11px] uppercase tracking-[.22em] text-clay mb-2">—</p>
+        <p id="qText" class="font-serif text-xl md:text-2xl leading-snug min-h-[5rem] mb-6"></p>
+
+        <div class="flex justify-between text-[11px] text-ink/50 mb-1 px-1">
+          <span>Strongly Disagree</span>
+          <span>Strongly Agree</span>
+        </div>
+        <div class="likert" role="radiogroup" aria-label="Rate 1 to 5">
+          <button data-v="1" type="button"><span class="block text-base font-semibold">1</span><span class="block text-[10px] opacity-60 leading-tight mt-0.5">Strongly<br/>Disagree</span></button>
+          <button data-v="2" type="button"><span class="block text-base font-semibold">2</span><span class="block text-[10px] opacity-60 leading-tight mt-0.5">Disagree</span></button>
+          <button data-v="3" type="button"><span class="block text-base font-semibold">3</span><span class="block text-[10px] opacity-60 leading-tight mt-0.5">Neutral</span></button>
+          <button data-v="4" type="button"><span class="block text-base font-semibold">4</span><span class="block text-[10px] opacity-60 leading-tight mt-0.5">Agree</span></button>
+          <button data-v="5" type="button"><span class="block text-base font-semibold">5</span><span class="block text-[10px] opacity-60 leading-tight mt-0.5">Strongly<br/>Agree</span></button>
+        </div>
+
+        <div class="flex justify-between mt-6">
+          <button id="prevBtn" class="btn btn-outline" disabled>← Back</button>
+          <span class="text-xs text-ink/50 self-center">Tap a number to continue</span>
+        </div>
+      </div>
+
+      <!-- Step 2: capture -->
+      <div id="step-capture" class="hidden">
+        <p class="text-xs uppercase tracking-[.22em] text-clay mb-2">Almost done</p>
+        <h4 class="font-serif text-2xl mb-2">Where should we send your result?</h4>
+        <p class="text-ink/65 text-sm mb-5">Your personalized diagnostic with your tier and recommended next step is one click away.</p>
+        <form id="captureForm" class="space-y-3">
+          <div>
+            <label class="text-xs text-ink/60 mb-1 block">First name *</label>
+            <input id="firstName" required type="text" autocomplete="given-name" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none"/>
+          </div>
+          <div>
+            <label class="text-xs text-ink/60 mb-1 block">Work email *</label>
+            <input id="email" required type="email" autocomplete="email" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none"/>
+          </div>
+          <div>
+            <label class="text-xs text-ink/60 mb-1 block">Company / organization *</label>
+            <input id="company" required type="text" autocomplete="organization" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none"/>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-ink/60 mb-1 block">Your role *</label>
+              <select id="role" required class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none">
+                <option value="">Select…</option>
+                <option>CEO / Owner</option>
+                <option>VP / Director</option>
+                <option>Manager</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs text-ink/60 mb-1 block">Team size *</label>
+              <select id="teamSize" required class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none">
+                <option value="">Select…</option>
+                <option>1–5</option>
+                <option>6–15</option>
+                <option>16–50</option>
+                <option>51+</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-ink/60 mb-1 block">What's the one leadership challenge you'd most like to solve in the next 90 days? <span class="text-ink/40 normal-case">(optional)</span></label>
+            <textarea id="challenge" rows="3" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none resize-y"></textarea>
+          </div>
+          <button class="btn btn-primary w-full" type="submit">See My Result →</button>
+        </form>
+      </div>
+
+      <!-- Step 3: results -->
+      <div id="step-results" class="hidden">
+        <div class="text-center mb-6">
+          <p class="text-xs uppercase tracking-[.22em] text-clay mb-2">Your diagnostic result</p>
+          <p class="display text-5xl md:text-6xl"><span id="scoreNum">—</span><span class="text-ink/40 text-3xl"> / 60</span></p>
+          <p id="tierName" class="font-serif text-2xl mt-3 text-clay">—</p>
+        </div>
+
+        <p id="tierDiagnosis" class="text-ink/80 leading-relaxed mb-6"></p>
+
+        <div class="bg-bone border-l-2 border-clay rounded-r-lg px-5 py-4 mb-6">
+          <p class="text-[11px] uppercase tracking-[.22em] text-clay font-semibold mb-2">The single highest-leverage shift</p>
+          <p id="tierShift" class="text-ink/85 leading-relaxed text-[0.97rem]"></p>
+        </div>
+
+        <p id="tierCloser" class="text-ink/70 italic mb-7"></p>
+
+        <div class="border-t border-ink/10 pt-6">
+          <p class="font-medium mb-2">Want a 30-minute conversation about your specific situation?</p>
+          <p class="text-sm text-ink/60 mb-4">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
+          <a class="btn btn-tan w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
+          <p id="resultsSent" class="text-xs text-ink/50 text-center mt-3">A copy of your result has been emailed to you.</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <button id="reopenTab" class="reopen-tab" aria-label="Reopen the free leadership diagnostic">Free Leadership Diagnostic →</button>
+
+  <!-- ───── PURCHASE / CONSULTATION MODAL (shared, dynamic) ───── -->
+  <div id="pmBackdrop" class="pm-backdrop" aria-hidden="true"></div>
+  <div id="pmDialog" class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="pmTitle" aria-hidden="true">
+    <div class="pm-header">
+      <div>
+        <p id="pmEyebrow" class="pm-eyebrow">Get started</p>
+        <h3 id="pmTitle" class="pm-title">—</h3>
+        <p id="pmSubtitle" class="pm-subtitle">—</p>
+      </div>
+      <button id="pmClose" class="pm-close" aria-label="Close form">✕</button>
+    </div>
+    <div id="pmBody" class="pm-body">
+      <!-- Form (JS-rendered) -->
+    </div>
+  </div>
+
+  <script>
+    /* ──────────────────────────
+       Year
+       ────────────────────────── */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ──────────────────────────
+       Reduced motion
+       ────────────────────────── */
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ──────────────────────────
+       Reveal-on-scroll (IntersectionObserver fallback + GSAP if available)
+       ────────────────────────── */
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => io.observe(r));
+
+    // Stroke under "Last."
+    const lastWord = document.getElementById('lastWord');
+    if (lastWord) {
+      const lio = new IntersectionObserver(es => {
+        es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); lio.unobserve(e.target); } });
+      }, { threshold: 0.5 });
+      lio.observe(lastWord);
+    }
+
+    /* ──────────────────────────
+       Sticky nav
+       ────────────────────────── */
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.6) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ──────────────────────────
+       Mobile menu
+       ────────────────────────── */
+    const hamb = document.getElementById('hamburgerBtn');
+    const mm = document.getElementById('mobileMenu');
+    const mmClose = document.getElementById('mobileClose');
+    function openMM(){ mm.classList.add('open'); mm.setAttribute('aria-hidden','false'); hamb.setAttribute('aria-expanded','true'); }
+    function closeMM(){ mm.classList.remove('open'); mm.setAttribute('aria-hidden','true'); hamb.setAttribute('aria-expanded','false'); }
+    hamb.addEventListener('click', openMM);
+    mmClose.addEventListener('click', closeMM);
+    document.querySelectorAll('[data-mobile]').forEach(a => a.addEventListener('click', closeMM));
+
+    /* ──────────────────────────
+       Offering flip cards
+       Click anywhere on the card front to flip; "Back" button returns.
+       Inner controls (Get Started / form buttons) don't bubble a flip.
+       ────────────────────────── */
+    const CONTACT_EMAIL = 'connect@l3leadershipcoaching.com';
+
+    document.querySelectorAll('.flip-card').forEach(card => {
+      const flip = (e) => {
+        // Don't flip when clicking inner controls (Get Started, Back, links)
+        if (e.target.closest('[data-open-purchase], [data-flip-back], a, button')) return;
+        card.classList.toggle('flipped');
+      };
+      card.addEventListener('click', flip);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (e.target === card) {
+            e.preventDefault();
+            card.classList.toggle('flipped');
+          }
+        }
+      });
+    });
+    document.querySelectorAll('[data-flip-back]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        btn.closest('.flip-card').classList.remove('flipped');
+      });
+    });
+
+    /* ──────────────────────────
+       Purchase / consultation modal
+       Each package opens the modal with its own set of fields.
+       Submission opens a pre-filled mailto: to connect@l3leadershipcoaching.com.
+       ────────────────────────── */
+    const PACKAGES = {
+      'leader-launch': {
+        eyebrow: 'Consultation · Leader Launch Track',
+        title: "Let's talk about your leader.",
+        subtitle: 'Starts at $1,500/month — share a few details and Heath will follow up within 1 business day to schedule a consultation.',
+        ctaLabel: 'Request Consultation →',
+        emailSubject: 'New Leader Launch Track consultation request',
+        fields: [
+          { id: 'name',      label: 'Your name',                                              required: true,  type: 'text',     autocomplete: 'name' },
+          { id: 'email',     label: 'Email',                                                  required: true,  type: 'email',    autocomplete: 'email' },
+          { id: 'business',  label: 'Business / organization',                                required: true,  type: 'text',     autocomplete: 'organization' },
+          { id: 'role',      label: 'Your role (CEO, owner, manager…)',                       required: true,  type: 'text',     autocomplete: 'organization-title' },
+          { id: 'leadCount', label: 'How many people do you lead?',                           required: true,  type: 'text' },
+          { id: 'hangup',    label: "What's your biggest leadership hang-up right now?",      required: true,  type: 'textarea' }
+        ]
+      },
+      'teamlift': {
+        eyebrow: 'Consultation · TeamLift Track',
+        title: "Let's talk about your team.",
+        subtitle: 'Starts at $2,500/month — tell us where the friction is and Heath will follow up within 1 business day to schedule a consultation.',
+        ctaLabel: 'Request Consultation →',
+        emailSubject: 'New TeamLift Track consultation request',
+        fields: [
+          { id: 'name',      label: 'Your name',                                                                       required: true,  type: 'text',     autocomplete: 'name' },
+          { id: 'email',     label: 'Email',                                                                           required: true,  type: 'email',    autocomplete: 'email' },
+          { id: 'business',  label: 'Business / organization',                                                         required: true,  type: 'text',     autocomplete: 'organization' },
+          { id: 'teamSize',  label: 'How many people are on the team?',                                                required: true,  type: 'text' },
+          { id: 'friction',  label: 'Where is the friction strongest? (communication, trust, alignment, execution, capacity)', required: true,  type: 'text' },
+          { id: 'goal',      label: 'If we fix one thing in the next 90 days, what would it be?',                      required: true,  type: 'textarea' }
+        ]
+      },
+      'custom-culture': {
+        eyebrow: 'Free Consultation · Custom Culture Track',
+        title: 'Let’s design something custom.',
+        subtitle: 'Tell us a little about your org and Heath will reach out to set up a free consultation.',
+        ctaLabel: 'Request Consultation →',
+        emailSubject: 'New Custom Culture Track consultation request',
+        fields: [
+          { id: 'name',     label: 'Your name',                                       required: true,  type: 'text',     autocomplete: 'name' },
+          { id: 'email',    label: 'Email',                                           required: true,  type: 'email',    autocomplete: 'email' },
+          { id: 'business', label: 'Business / organization',                         required: true,  type: 'text',     autocomplete: 'organization' },
+          { id: 'context',  label: 'A sentence or two about your org and goals (optional)', required: false, type: 'textarea' }
+        ]
+      }
+    };
+
+    const pmBackdrop = document.getElementById('pmBackdrop');
+    const pmDialog   = document.getElementById('pmDialog');
+    const pmEyebrow  = document.getElementById('pmEyebrow');
+    const pmTitle    = document.getElementById('pmTitle');
+    const pmSubtitle = document.getElementById('pmSubtitle');
+    const pmBody     = document.getElementById('pmBody');
+    const pmClose    = document.getElementById('pmClose');
+    let activePackageId = null;
+
+    function renderPurchaseForm(pkgId) {
+      const pkg = PACKAGES[pkgId];
+      if (!pkg) return;
+      activePackageId = pkgId;
+      pmEyebrow.textContent  = pkg.eyebrow;
+      pmTitle.textContent    = pkg.title;
+      pmSubtitle.textContent = pkg.subtitle;
+      const fieldsHtml = pkg.fields.map(f => {
+        const ac = f.autocomplete ? ` autocomplete="${f.autocomplete}"` : '';
+        const req = f.required ? ' required' : '';
+        const ctrl = f.type === 'textarea'
+          ? `<textarea id="pm-${f.id}" name="${f.id}" rows="3"${req}${ac}></textarea>`
+          : `<input id="pm-${f.id}" name="${f.id}" type="${f.type}"${req}${ac} />`;
+        return `<div class="pm-field"><label for="pm-${f.id}">${f.label}${f.required ? ' *' : ''}</label>${ctrl}</div>`;
+      }).join('');
+      pmBody.innerHTML = `
+        <form id="pmForm" novalidate>
+          ${fieldsHtml}
+          <button type="submit" class="btn btn-tan w-full" style="width:100%;justify-content:center;margin-top:.5rem;">${pkg.ctaLabel}</button>
+          <p class="pm-footnote">Goes straight to <strong>${CONTACT_EMAIL}</strong>. We reply within 1 business day.</p>
+        </form>`;
+      document.getElementById('pmForm').addEventListener('submit', onPurchaseSubmit);
+    }
+
+    function onPurchaseSubmit(e) {
+      e.preventDefault();
+      const pkg = PACKAGES[activePackageId];
+      if (!pkg) return;
+      // Native HTML5 validation
+      if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+
+      const data = {};
+      pkg.fields.forEach(f => { data[f.id] = (document.getElementById('pm-' + f.id).value || '').trim(); });
+
+      // Build a clean email body
+      const bodyLines = [
+        `Package: ${pkg.eyebrow}`,
+        '',
+        ...pkg.fields.map(f => `${f.label.replace(/\s*\*$/, '')}: ${data[f.id] || '(blank)'}`),
+        '',
+        '---',
+        `Submitted: ${new Date().toLocaleString()}`,
+        `Source: L3 Coaching website`
+      ];
+      const subject = encodeURIComponent(pkg.emailSubject + ' — ' + (data.name || 'no name'));
+      const body    = encodeURIComponent(bodyLines.join('\n'));
+      const mailto  = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+
+      // Show success state in modal
+      pmBody.innerHTML = `
+        <div class="pm-success">
+          <div class="pm-success-icon">✓</div>
+          <h4 class="pm-title" style="margin-bottom:.5rem;">Almost there!</h4>
+          <p class="pm-subtitle" style="margin-bottom:1.25rem;max-width:34ch;margin-inline:auto;">
+            Your email app is opening with the details prefilled. Just hit send and Heath will reply within 1 business day.
+          </p>
+          <a class="btn btn-tan" href="${mailto}" style="justify-content:center;">Open Email to Send →</a>
+          <p class="pm-footnote" style="margin-top:1rem;">If your email app didn't open, copy the form details and send them to <strong>${CONTACT_EMAIL}</strong>.</p>
+        </div>`;
+
+      // Try to open the user's mail client automatically
+      window.location.href = mailto;
+    }
+
+    function openPurchase(pkgId) {
+      renderPurchaseForm(pkgId);
+      pmBackdrop.classList.add('show');
+      pmBackdrop.setAttribute('aria-hidden', 'false');
+      pmDialog.classList.add('show');
+      pmDialog.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        const firstInput = pmBody.querySelector('input, textarea');
+        if (firstInput) firstInput.focus();
+      }, 280);
+    }
+    function closePurchase() {
+      pmBackdrop.classList.remove('show');
+      pmBackdrop.setAttribute('aria-hidden', 'true');
+      pmDialog.classList.remove('show');
+      pmDialog.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    document.querySelectorAll('[data-open-purchase]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPurchase(btn.getAttribute('data-open-purchase'));
+      });
+    });
+    pmClose.addEventListener('click', closePurchase);
+    pmBackdrop.addEventListener('click', closePurchase);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && pmDialog.classList.contains('show')) closePurchase();
+    });
+
+    /* ──────────────────────────
+       Rolling logo marquee — GiANT client logos
+       The track is duplicated so the CSS marquee loop is seamless.
+       ────────────────────────── */
+    // Logos pruned from this list because they don't tint cleanly under
+    // the navy silhouette filter:
+    //   • Symmetry Financial — PNG has opaque white background, so the
+    //     whole image becomes a solid navy rectangle
+    //   • Ford — white "Ford" script inside the oval gets absorbed, leaving
+    //     an unrecognizable solid navy oval blob
+    //   • Delta — V slash inside the triangle is white-painted (blobs)
+    //   • Loretto — dense heraldic crest + tall vertical aspect ratio
+    const LOGOS = [
+      { name: 'Chick-fil-A',          file: 'Chick-Fil-A-logo.png' },
+      { name: 'Pfizer',               file: 'Pfizer_logo.png' },
+      { name: 'Nike',                 file: 'nike_PNG17.png' },
+      { name: 'U.S. Air Force',       file: 'U.S.-Air-Force-Logo.png' },
+      { name: 'Georgia Power',        file: 'Georgia_Power_logo.png' },
+      { name: 'Agilent Technologies', file: 'Agilent_Technologies-Logo.png' },
+      { name: 'Endava',               file: 'Endava_Logo.png' },
+      { name: 'Leidos',               file: 'Leidos-Logo.png' },
+      { name: 'Sourcewell',           file: 'Sourcewell_logo.png' },
+      { name: 'Creature Comforts',    file: 'Creature_Comforts_Logo.png' },
+      { name: 'Thousand Hills Coffee',file: 'Thousand_Hills_Coffee_Co_Logo.png' }
+    ];
+
+    function logoPlate(item) {
+      return `<img class="client-logo" loading="lazy" src="Individual GiANT Client Logos/${item.file}" alt="${item.name}" />`;
+    }
+    const track = document.getElementById('marqueeTrack');
+    // duplicate the set so the CSS scroll wraps seamlessly
+    track.innerHTML = LOGOS.map(logoPlate).join('') + LOGOS.map(logoPlate).join('');
+    if (reduced) track.style.animation = 'none';
+
+    /* ──────────────────────────
+       Framework — interactive 5 Core Areas
+       ────────────────────────── */
+    const FRAMEWORK = [
+      {
+        title: 'Communication',
+        tagline: 'Everyone speaks. Not everyone is heard.',
+        body: 'Leadership starts with how you speak — and how you listen. Most teams confuse talking with alignment. We help you discover the way you communicate under pressure and how to flex it for the people you lead.',
+        tool: '5 Voices Framework',
+        toolDesc: 'Discover your dominant voice and how it shows up to others.'
+      },
+      {
+        title: 'Relationships',
+        tagline: 'Build a foundation of trust.',
+        body: 'High-trust teams move faster. We help you build the psychological safety that lets people bring problems, ideas, and bad news without first calculating how you\u2019ll react.',
+        tool: 'The Influence Model',
+        toolDesc: 'Establish trust and earn the right to lead at every level.'
+      },
+      {
+        title: 'Alignment',
+        tagline: 'Get everyone on the same page.',
+        body: 'When people pull in different directions, capacity disappears. We help you set vision, sharpen priorities, and translate strategy into clarity your team can act on.',
+        tool: 'Organizational Clarity Canvas',
+        toolDesc: 'A one-page tool to align vision, values, and priorities.'
+      },
+      {
+        title: 'Execution',
+        tagline: 'Maximize your performance and results.',
+        body: 'Clarity without execution is wishful thinking. We install the rhythms and tools that turn priorities into outcomes — week after week.',
+        tool: 'Execution Toolkit',
+        toolDesc: 'Practical systems for personal and team workflow.'
+      },
+      {
+        title: 'Capacity',
+        tagline: 'Get things done without burning out.',
+        body: 'Sustainable leadership is the goal. We help you grow your bandwidth by developing the people behind you — so the team\u2019s capacity grows with yours.',
+        tool: 'Developing Others Roadmap',
+        toolDesc: 'A clear path for growing leaders who grow other leaders.'
+      }
+    ];
+
+    /* Framework drawer open/close */
+    const fwDrawer = document.getElementById('fwDrawer');
+    const fwDrawerClose = document.getElementById('fwDrawerClose');
+    function openFw() {
+      fwDrawer.classList.add('open');
+      fwDrawer.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFw() {
+      fwDrawer.classList.remove('open');
+      fwDrawer.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    document.querySelectorAll('[data-open-fw]').forEach(el => el.addEventListener('click', (e) => { e.preventDefault(); openFw(); }));
+    fwDrawerClose.addEventListener('click', closeFw);
+    document.querySelectorAll('[data-fw-close]').forEach(el => el.addEventListener('click', closeFw));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && fwDrawer.classList.contains('open')) closeFw();
+    });
+    const openFwBtn = document.getElementById('openFramework');
+    if (openFwBtn) openFwBtn.addEventListener('click', openFw);
+
+    const fwTabs = document.querySelectorAll('.fw-tab');
+    const fwPanel = document.getElementById('fwPanel');
+
+    function renderFw(i) {
+      const f = FRAMEWORK[i];
+      fwPanel.innerHTML = `
+        <p class="text-xs uppercase tracking-[.22em] text-clay mb-2">Area 0${i+1} of 05</p>
+        <h3 class="font-serif text-[clamp(1.6rem,3vw,2.2rem)] leading-tight mb-3">${f.title}</h3>
+        <p class="font-serif italic text-ink/60 mb-5">${f.tagline}</p>
+        <p class="text-ink/80 leading-relaxed mb-6">${f.body}</p>
+        <div class="border-t border-ink/10 pt-5">
+          <p class="text-[11px] uppercase tracking-[.22em] text-ink/45 mb-1">The tool we use</p>
+          <p class="font-serif text-xl text-clay">${f.tool}</p>
+          <p class="text-ink/65 text-sm mt-1">${f.toolDesc}</p>
+        </div>`;
+      fwPanel.classList.remove('flip');
+      void fwPanel.offsetWidth; // restart animation
+      fwPanel.classList.add('flip');
+
+      fwTabs.forEach(t => t.setAttribute('aria-selected', String(Number(t.dataset.fw) === i)));
+    }
+    fwTabs.forEach(tab => tab.addEventListener('click', () => renderFw(Number(tab.dataset.fw))));
+    renderFw(0);
+
+    /* ──────────────────────────
+       Active-section scrollspy for top-nav links.
+       We use a scroll-position calculation instead of IntersectionObserver
+       so that when the viewport is ABOVE all target sections (i.e. sitting
+       on the hero) NO link is highlighted. The old IO approach never
+       cleared the active state once it was set.
+       ────────────────────────── */
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+    const spyTargets = [...navLinks]
+      .map(a => ({ link: a, section: document.querySelector(a.getAttribute('href')) }))
+      .filter(t => t.section);
+
+    function updateActiveNav() {
+      // "activation line" — 35% down the viewport
+      const line = window.scrollY + window.innerHeight * 0.35;
+      let active = null;
+      for (const t of spyTargets) {
+        const top = t.section.getBoundingClientRect().top + window.scrollY;
+        if (top <= line) active = t;   // last section whose top has passed the line
+      }
+      spyTargets.forEach(t => t.link.classList.toggle('active', t === active));
+    }
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    window.addEventListener('resize', updateActiveNav);
+    updateActiveNav();
+
+    /* ──────────────────────────
+       Footer email form (front-end only)
+       ────────────────────────── */
+    document.getElementById('footerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('footerFormMsg').classList.remove('hidden');
+      e.target.reset();
+    });
+
+    /* ──────────────────────────
+       Liberating Leader Diagnostic
+       ────────────────────────── */
+    // Set this to your Airtable / Make / Zapier webhook URL.
+    // Leave empty ("") to disable submission — useful for testing.
+    const WEBHOOK_URL = "";
+
+    const QUESTIONS = [
+      { dim: "Self-Awareness",         text: "I can name the specific leadership tendencies that energize my team — and the ones that drain it." },
+      { dim: "Self-Awareness",         text: "When I'm under pressure, I default to behaviors I've consciously chosen, not ones that just happen to me." },
+      { dim: "Self-Awareness",         text: "I've received candid feedback on how I lead in the last 90 days, and I made a specific change because of it." },
+      { dim: "Team Clarity",           text: "Every person on my team can articulate what success in their role looks like this quarter without checking a document." },
+      { dim: "Team Clarity",           text: "My team can predict how I'll respond to common situations because my standards and decisions are consistent." },
+      { dim: "Team Clarity",           text: "We have a shared language for hard conversations — and we actually use it." },
+      { dim: "Liberation vs. Control", text: "The people I lead bring me problems, ideas, and bad news without first calculating how I'll react." },
+      { dim: "Liberation vs. Control", text: "Decisions get made at the lowest level where the information lives — they don't get pushed up to me." },
+      { dim: "Liberation vs. Control", text: "When someone on my team disagrees with me, they say it directly, in real time, rather than working around me later." },
+      { dim: "Sustainability",         text: "If I were unavailable for 30 days, my team's performance would be steady — not dependent on my presence." },
+      { dim: "Sustainability",         text: "There are at least two people on my team I'm actively developing to replace or surpass me in key responsibilities." },
+      { dim: "Sustainability",         text: "The culture we've built reflects shared values that are written down, talked about, and lived — not just assumed." }
+    ];
+
+    const TIERS = [
+      {
+        min: 12, max: 30, name: "The Bottleneck Leader",
+        diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw — it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`,
+        shift: `Stop being the answer. For the next 30 days, when someone brings you a problem, ask "what do you recommend?" before you say anything else. If their recommendation is workable — even 70% as good as yours — let them run with it. The short-term cost in quality is the long-term price of building a team that can think.`,
+        closer: `This is the exact pattern Heath helps leaders break in 1:1 coaching.`
+      },
+      {
+        min: 31, max: 44, name: "The Capable Manager",
+        diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden — the company runs, the numbers look fine — and the cost of breaking through (giving real authority away) feels disproportionate.`,
+        shift: `Identify the three decisions you currently own that you shouldn't, and transfer them this month. Not delegate — transfer. Owned by someone else, including the right to be wrong. You will hate this. That hatred is the proof it's the right move.`,
+        closer: `Heath works with leaders at this exact stage in Core Groups, where peer accountability makes the transfer actually stick.`
+      },
+      {
+        min: 45, max: 54, name: "The Emerging Liberator",
+        diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more — they're about doing fewer things at higher resolution.`,
+        shift: `Pick the dimension where you scored lowest and treat it as a system, not a behavior. If your weakness is feedback, build a feedback ritual into your operating cadence. If it's succession, name your successors publicly and let the team see you train them. The leaders who break out of this tier do it by making their growth visible to the people they lead.`,
+        closer: `This is the territory Heath spends most of his time in — leaders who are good and want to compound that into something durable.`
+      },
+      {
+        min: 55, max: 60, name: "The Liberating Leader",
+        diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously — most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`,
+        shift: `Build a deliberate channel for hard feedback you can't ignore. A peer group. An outside coach. A 360 you actually act on. The next decade of your leadership will be shaped less by what you build and more by what you choose not to defend.`,
+        closer: `Heath runs Core Groups specifically for leaders in this air — peer accountability with people who can match your altitude.`
+      }
+    ];
+
+    function tierFor(score) {
+      return TIERS.find(t => score >= t.min && score <= t.max) || TIERS[0];
+    }
+
+    const modal = document.getElementById('modal');
+    const backdrop = document.getElementById('modalBackdrop');
+    const reopen = document.getElementById('reopenTab');
+    const stepIntro = document.getElementById('step-intro');
+    const stepQ = document.getElementById('step-questions');
+    const stepC = document.getElementById('step-capture');
+    const stepR = document.getElementById('step-results');
+    const qText = document.getElementById('qText');
+    const qDim = document.getElementById('qDim');
+    const qProgress = document.getElementById('qProgress');
+    const qBar = document.getElementById('qBar');
+    const likertBtns = stepQ.querySelectorAll('.likert button');
+    const prevBtn = document.getElementById('prevBtn');
+
+    let answers = Array(QUESTIONS.length).fill(null);
+    let qIndex = 0;
+
+    function openModal() {
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      backdrop.classList.add('show');
+      backdrop.setAttribute('aria-hidden','false');
+      reopen.classList.remove('show');
+      setTimeout(() => document.getElementById('modalClose').focus(), 200);
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      backdrop.classList.remove('show');
+      backdrop.setAttribute('aria-hidden','true');
+      reopen.classList.add('show');
+    }
+
+    backdrop.addEventListener('click', closeModal);
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    reopen.addEventListener('click', openModal);
+    document.querySelectorAll('[data-open-modal]').forEach(el => {
+      el.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    // Auto-open on load
+    setTimeout(() => { openModal(); }, 1200);
+
+    function setProgress(stepName) {
+      const total = QUESTIONS.length + 2; // questions + capture + result
+      let pct = 0;
+      if (stepName === 'intro')         pct = 0;
+      else if (stepName === 'question') pct = ((qIndex) / total) * 100;
+      else if (stepName === 'capture')  pct = (QUESTIONS.length / total) * 100;
+      else if (stepName === 'result')   pct = 100;
+      qBar.style.width = pct + '%';
+    }
+
+    function showStep(name) {
+      [stepIntro, stepQ, stepC, stepR].forEach(s => s.classList.add('hidden'));
+      ({ intro: stepIntro, question: stepQ, capture: stepC, result: stepR })[name].classList.remove('hidden');
+      document.getElementById('modalBody').scrollTop = 0;
+      setProgress(name);
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      qIndex = 0;
+      renderQ();
+      showStep('question');
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      answers = Array(QUESTIONS.length).fill(null);
+      qIndex = 0;
+      showStep('intro');
+    });
+
+    function renderQ() {
+      const q = QUESTIONS[qIndex];
+      qText.textContent = q.text;
+      qDim.textContent = q.dim;
+      qProgress.textContent = `Question ${qIndex+1} of ${QUESTIONS.length}`;
+      likertBtns.forEach(b => b.classList.toggle('selected', Number(b.dataset.v) === answers[qIndex]));
+      prevBtn.disabled = qIndex === 0;
+      setProgress('question');
+    }
+
+    likertBtns.forEach(btn => btn.addEventListener('click', () => {
+      const v = Number(btn.dataset.v);
+      answers[qIndex] = v;
+      likertBtns.forEach(b => b.classList.toggle('selected', Number(b.dataset.v) === v));
+      // auto-advance on selection
+      setTimeout(() => {
+        if (qIndex < QUESTIONS.length - 1) {
+          qIndex++;
+          renderQ();
+        } else {
+          showStep('capture');
+        }
+      }, 180);
+    }));
+
+    prevBtn.addEventListener('click', () => {
+      if (qIndex > 0) { qIndex--; renderQ(); }
+      else { showStep('intro'); }
+    });
+
+    document.getElementById('captureForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const score = answers.reduce((a, b) => a + (b || 0), 0);
+      const tier = tierFor(score);
+
+      const payload = {
+        firstName: document.getElementById('firstName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        role: document.getElementById('role').value,
+        teamSize: document.getElementById('teamSize').value,
+        challenge: document.getElementById('challenge').value.trim(),
+        score, tier: tier.name, answers,
+        utmSource: new URLSearchParams(window.location.search).get('utm_source') || '',
+        utmCampaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
+        submittedAt: new Date().toISOString()
+      };
+
+      // Render result instantly
+      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('tierName').textContent = tier.name;
+      document.getElementById('tierDiagnosis').textContent = tier.diagnosis;
+      document.getElementById('tierShift').textContent = tier.shift;
+      document.getElementById('tierCloser').textContent = tier.closer;
+      showStep('result');
+
+      // Fire-and-forget POST to webhook (if configured)
+      if (WEBHOOK_URL) {
+        try {
+          await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (err) {
+          console.warn('Webhook submission failed:', err);
+        }
+      } else {
+        console.log('Diagnostic payload (WEBHOOK_URL not set):', payload);
+      }
+
+      // Always also send via mailto: as the no-backend fallback so results
+      // reach connect@l3leadershipcoaching.com.
+      const answerLines = payload.answers
+        .map((v, i) => `  Q${i + 1} (${QUESTIONS[i].dim}): ${v ?? '-'} — ${QUESTIONS[i].text}`)
+        .join('\n');
+      const mailBody = [
+        `Liberating Leader Diagnostic — new submission`,
+        ``,
+        `Name:     ${payload.firstName}`,
+        `Email:    ${payload.email}`,
+        `Company:  ${payload.company}`,
+        `Role:     ${payload.role}`,
+        `Team size:${payload.teamSize}`,
+        ``,
+        `Score:    ${payload.score} / 60`,
+        `Tier:     ${payload.tier}`,
+        ``,
+        `90-day challenge:`,
+        payload.challenge || '(blank)',
+        ``,
+        `--- Raw answers ---`,
+        answerLines,
+        ``,
+        `Submitted: ${new Date().toLocaleString()}`,
+        `Source:    L3 Coaching website (diagnostic)`
+      ].join('\n');
+      const mailto =
+        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Liberating Leader Diagnostic — ' + payload.firstName)}` +
+        `&body=${encodeURIComponent(mailBody)}`;
+      // Append a "send me a copy" link inside the result step so the user
+      // can fire the mailto on demand without disrupting the result view.
+      const sent = document.getElementById('resultsSent');
+      if (sent) {
+        sent.innerHTML =
+          `A copy of your result is ready to send to <strong>${CONTACT_EMAIL}</strong>. ` +
+          `<a href="${mailto}" class="text-clay underline-offset-2 hover:underline">Send it now →</a>`;
+      }
+    });
+
+    /* ──────────────────────────
+       GSAP: gentle parallax on hero only (skip if reduced motion)
+       ────────────────────────── */
+    if (window.gsap && window.ScrollTrigger && !reduced) {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.utils.toArray('.section').forEach(sec => {
+        // very subtle — let CSS reveals do the heavy lifting
+        gsap.fromTo(sec, { backgroundPosition: '50% 0%' }, {
+          backgroundPosition: '50% 4%',
+          ease: 'none',
+          scrollTrigger: { trigger: sec, scrub: true }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

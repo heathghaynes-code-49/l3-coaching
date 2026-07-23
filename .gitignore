@@ -1,0 +1,25 @@
+# ── Internal docs — keep off the public site ─────────────────────
+L3 Lead Gen Playbook.docx
+L3 LinkedIn Voice Profile + 30 Starter Posts.docx
+Logo Color Guide.pdf
+L3_Website_Change_Request_Form.pdf
+
+# ── Local Netlify state (auth-linked to this folder) ─────────────
+.netlify
+
+# ── Claude Code local session state ──────────────────────────────
+.claude/
+
+# ── macOS / editor cruft ─────────────────────────────────────────
+.DS_Store
+._*
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# ── Node / build artifacts (future-proofing) ─────────────────────
+node_modules/
+.env
+.env.*
+!.env.example
