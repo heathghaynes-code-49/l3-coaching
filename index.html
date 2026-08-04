@@ -127,15 +127,19 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background:
-        radial-gradient(80% 60% at 75% 40%, rgba(90,115,144,.35) 0%, transparent 60%),
-        linear-gradient(180deg, #3d556f 0%, var(--ink) 55%, #2a3a4d 100%);
+      background-image:
+        linear-gradient(180deg, rgba(52,73,96,.88) 0%, rgba(52,73,96,.82) 55%, rgba(52,73,96,.94) 100%),
+        url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2200&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       z-index: -1;
+      filter: saturate(0.85);
     }
     .hero-bg::after {
       content:"";
       position: absolute; inset: 0;
-      background: radial-gradient(80% 60% at 75% 40%, transparent 0%, rgba(52,73,96,.55) 100%);
+      background: radial-gradient(80% 60% at 50% 45%, transparent 0%, rgba(52,73,96,.55) 100%);
     }
     .hero .badge { color: rgba(255,255,255,.65); }
     .hero .display { color: #fff; }
@@ -143,6 +147,20 @@
     .hero .btn-outline { color: #fff; border-color: rgba(255,255,255,.5); }
     .hero .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.06); }
     .hero .underline-stroke svg path { stroke: var(--tan); }
+
+    /* Prominent L3 brand mark inside the hero body */
+    .hero-logo {
+      height: 140px;
+      width: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    @media (min-width: 768px) {
+      .hero-logo { height: 200px; }
+    }
+    @media (min-width: 1200px) {
+      .hero-logo { height: 240px; }
+    }
 
     /* Sticky vision scroll */
     .sticky-vision { position: relative; }
@@ -1436,6 +1454,10 @@
     .l3-logo-nav.dark { display: none; }
     .nav.scrolled .l3-logo-nav.light { display: none; }
     .nav.scrolled .l3-logo-nav.dark { display: block; }
+    /* Hide the top-left nav logo while we're on the hero (the big centered
+       hero-logo is doing that job). Reveal it as soon as the user starts
+       scrolling and the nav flips to its solid-white treatment.           */
+    .nav:not(.scrolled) .l3-logo-nav { opacity: 0; visibility: hidden; }
     @media (max-width: 640px) {
       .l3-logo-nav { height: 96px; }
     }
@@ -1920,19 +1942,22 @@
   <a id="top"></a>
 
   <!-- ───── HERO ───── -->
-  <section class="hero relative min-h-[100svh] flex items-center" aria-labelledby="hero-heading">
+  <section class="hero relative min-h-[100svh] flex items-center justify-center text-center" aria-labelledby="hero-heading">
     <div class="hero-bg" aria-hidden="true"></div>
 
-    <!-- Partner badge -->
-    <div class="badge absolute top-32 md:top-44 left-[clamp(1.25rem,4vw,2.5rem)] flex items-center gap-2 text-xs uppercase tracking-[.18em]">
+    <!-- Partner badge (centered above the logo) -->
+    <div class="badge absolute top-24 md:top-32 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs uppercase tracking-[.18em] whitespace-nowrap">
       <span class="w-1.5 h-1.5 rounded-full bg-tan"></span>
       Licensed GiANT Worldwide Partner
     </div>
 
-    <div class="container-x w-full pt-40 md:pt-56 pb-24 relative">
-      <h1 id="hero-heading" class="display text-[clamp(3rem,9vw,8.5rem)] max-w-[18ch]">
+    <div class="container-x w-full pt-40 md:pt-48 pb-24 relative flex flex-col items-center text-center">
+
+      <!-- Prominent L3 Coaching brand mark, above the taglines -->
+      <img class="hero-logo reveal" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
+
+      <h1 id="hero-heading" class="display text-[clamp(2.5rem,7vw,6.5rem)] max-w-[18ch] mx-auto mt-6 leading-[1.02]">
         <span class="hero-word"><span style="animation-delay:.05s">Liberating</span></span>
-        <br/>
         <span class="hero-word"><span style="animation-delay:.18s">Leaders</span></span>
         <span class="hero-word"><span style="animation-delay:.28s">that</span></span>
         <span class="hero-word underline-stroke" id="lastWord">
@@ -1943,18 +1968,18 @@
         </span>
       </h1>
 
-      <p class="reveal mt-8 max-w-2xl text-xl md:text-2xl leading-relaxed">
+      <p class="reveal mt-8 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
         We help leaders and teams create clarity, strengthen ownership, and build cultures that sustain performance over time.
       </p>
 
-      <div class="reveal mt-10 flex flex-wrap items-center gap-3">
+      <div class="reveal mt-10 flex flex-wrap justify-center items-center gap-3">
         <button class="btn btn-tan" data-open-modal>Take the Free Diagnostic</button>
         <a class="btn btn-outline" href="#cta">Book a Discovery Call</a>
       </div>
 
-      <a href="#diagnostic" class="reveal absolute left-[clamp(1.25rem,4vw,2.5rem)] bottom-10 flex items-center gap-2 text-xs text-white/60 hover:text-white transition" aria-label="Scroll to start the journey">
-        <span class="w-px h-8 bg-white/30"></span>
+      <a href="#diagnostic" class="reveal absolute left-1/2 -translate-x-1/2 bottom-8 flex items-center gap-2 text-xs text-white/60 hover:text-white transition" aria-label="Scroll to start the journey">
         <span class="uppercase tracking-[.22em]">Begin</span>
+        <span class="w-px h-8 bg-white/30"></span>
       </a>
     </div>
   </section>
