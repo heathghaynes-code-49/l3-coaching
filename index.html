@@ -693,27 +693,33 @@
     .flip-card {
       position: relative;
       perspective: 1600px;
-      /* Mobile: shorter — cards stack 1-per-row and shouldn't have huge
-         empty space beneath the short front-face copy. The back face can
-         still scroll thanks to overflow-y:auto on .flip-back.            */
-      min-height: 480px;
+      /* 4-per-row narrow cards on desktop. Front face is short by design
+         (title + category + tagline + cue) so min-height stays modest;
+         longer back-face copy scrolls in place (see .flip-back).         */
+      min-height: 440px;
       cursor: pointer;
       outline: none;
     }
     @media (min-width: 768px) {
-      .flip-card { min-height: 640px; }
+      .flip-card { min-height: 500px; }
+    }
+    @media (min-width: 1024px) {
+      .flip-card { min-height: 520px; }
     }
     .flip-card:focus-visible { box-shadow: 0 0 0 3px var(--tan); border-radius: 22px; }
     .flip-inner {
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 480px;
+      min-height: 440px;
       transform-style: preserve-3d;
       transition: transform .7s cubic-bezier(.2,.8,.2,1);
     }
     @media (min-width: 768px) {
-      .flip-inner { min-height: 640px; }
+      .flip-inner { min-height: 500px; }
+    }
+    @media (min-width: 1024px) {
+      .flip-inner { min-height: 520px; }
     }
     .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
     .flip-front,
@@ -723,7 +729,7 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       border-radius: 22px;
-      padding: 2.5rem 2.25rem 2rem;
+      padding: 1.75rem 1.5rem 1.5rem;
       background: #fff;
       border: 1px solid rgba(52,73,96,.12);
       box-shadow: 0 18px 38px -28px rgba(52,73,96,.35);
@@ -732,11 +738,53 @@
       transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
       overflow: hidden;
     }
-    /* Allow the back face to scroll if a card's copy runs long
-       (only bites when content really overflows the fixed height). */
+    /* Back face scrolls its own content and shows a persistent
+       "scroll for more" cue at the bottom so users know price + CTA
+       live below the fold on the narrower 4-column layout.           */
     .flip-back {
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      /* Room for the scroll-cue overlay + a soft fade indicating
+         there's more below.                                          */
+      padding-bottom: 3.25rem;
+      -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 42px), transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 calc(100% - 42px), transparent 100%);
+    }
+    /* When the user has scrolled to the bottom, the fade / cue are no
+       longer helpful — hide via a scroll-driven data flag from JS.    */
+    .flip-back.at-end {
+      -webkit-mask-image: none;
+              mask-image: none;
+      padding-bottom: 1.5rem;
+    }
+    .flip-back.at-end + .flip-scroll-cue,
+    .flip-back.at-end .flip-scroll-cue { opacity: 0; }
+
+    /* Little pulsing chevron pinned to the bottom of the back face. */
+    .flip-scroll-cue {
+      position: absolute;
+      left: 50%;
+      bottom: .5rem;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .68rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--tan);
+      pointer-events: none;
+      opacity: .9;
+      animation: scrollCueBounce 1.6s ease-in-out infinite;
+      transition: opacity .25s ease;
+      z-index: 2;
+    }
+    .flip-scroll-cue svg { width: 12px; height: 12px; }
+    .flip-card.featured .flip-scroll-cue { color: #fff; }
+    @keyframes scrollCueBounce {
+      0%, 100% { transform: translate(-50%, 0); }
+      50%      { transform: translate(-50%, 4px); }
     }
     .flip-card:hover:not(.flipped) .flip-front {
       transform: translateY(-4px);
@@ -2213,7 +2261,7 @@
         <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Tap a card to see what's inside.</p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-7 md:gap-8 offers-grid">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 offers-grid">
 
         <!-- ── 1. Leader Launch Track ── -->
         <article class="reveal flip-card" data-package="leader-launch" tabindex="0" role="button" aria-label="Leader Launch Track, tap to see details">
@@ -2248,6 +2296,7 @@
               </div>
               <button type="button" class="btn btn-tan flip-cta" data-open-purchase="leader-launch">Schedule a Consultation →</button>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+              <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
           </div>
         </article>
@@ -2285,6 +2334,7 @@
               </div>
               <button type="button" class="btn btn-tan flip-cta" data-open-purchase="teamlift">Schedule a Consultation →</button>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+              <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
           </div>
         </article>
@@ -2319,6 +2369,7 @@
               <p class="flip-best-for"><strong>Best for:</strong> organizations that want leadership language embedded across multiple teams.</p>
               <button type="button" class="btn btn-tan flip-cta" data-open-purchase="custom-culture">Schedule a Free Consultation →</button>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+              <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
           </div>
         </article>
@@ -2356,6 +2407,7 @@
               </div>
               <a href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener" class="btn btn-tan flip-cta">Book a Session →</a>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
+              <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
           </div>
         </article>
@@ -2958,6 +3010,25 @@
         e.stopPropagation();
         btn.closest('.flip-card').classList.remove('flipped');
       });
+    });
+
+    /* Hide the "Scroll" cue + bottom fade once the user has scrolled the
+       back face to (or near) the bottom — the cue is only useful while
+       there's more content to reveal. */
+    document.querySelectorAll('.flip-back').forEach(back => {
+      const check = () => {
+        const atEnd = back.scrollTop + back.clientHeight >= back.scrollHeight - 6;
+        back.classList.toggle('at-end', atEnd);
+      };
+      back.addEventListener('scroll', check, { passive: true });
+      /* Re-check when a card is flipped open (scrollHeight is 0 until visible). */
+      const card = back.closest('.flip-card');
+      if (card) {
+        const mo = new MutationObserver(() => {
+          if (card.classList.contains('flipped')) requestAnimationFrame(check);
+        });
+        mo.observe(card, { attributes: true, attributeFilter: ['class'] });
+      }
     });
 
     /* ──────────────────────────
