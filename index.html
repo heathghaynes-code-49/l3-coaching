@@ -985,6 +985,12 @@
       margin-top: auto;
       width: 100%;
       justify-content: center;
+      /* Narrower cards → override .btn's default padding / nowrap so the
+         CTA label ("Book a Consultation →") never spills the card edge. */
+      padding: 0.75rem 0.85rem;
+      font-size: 0.88rem;
+      white-space: normal;
+      line-height: 1.2;
     }
     .flip-back-link {
       margin-top: .75rem;
@@ -1003,16 +1009,18 @@
     .flip-back-price {
       display: flex;
       align-items: baseline;
-      gap: .5rem;
-      padding: .85rem 1rem;
+      flex-wrap: wrap;
+      gap: .35rem .5rem;
+      padding: .7rem .85rem;
       margin-top: .5rem;
-      margin-bottom: 1.1rem;
+      margin-bottom: 1rem;
       background: rgba(52,73,96,.05);
       border-left: 3px solid var(--tan);
       border-radius: 8px;
     }
     .flip-back-price-from {
-      font-size: .7rem;
+      flex-basis: 100%;
+      font-size: .62rem;
       letter-spacing: .18em;
       text-transform: uppercase;
       font-weight: 700;
@@ -1021,12 +1029,12 @@
     .flip-back-price-num {
       font-family: 'Syne', serif;
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       color: var(--ink);
       line-height: 1;
     }
     .flip-back-price-per {
-      font-size: .82rem;
+      font-size: .78rem;
       color: rgba(52,73,96,.65);
     }
     .flip-card.featured .flip-back-price {
@@ -2294,7 +2302,7 @@
                 <span class="flip-back-price-num">$1,500</span>
                 <span class="flip-back-price-per">/month</span>
               </div>
-              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="leader-launch">Schedule a Consultation →</button>
+              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="leader-launch">Book a Consultation →</button>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
               <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
@@ -2332,7 +2340,7 @@
                 <span class="flip-back-price-num">$2,500</span>
                 <span class="flip-back-price-per">/month</span>
               </div>
-              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="teamlift">Schedule a Consultation →</button>
+              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="teamlift">Book a Consultation →</button>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
               <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
@@ -2367,7 +2375,7 @@
                 <li>Custom 6–12 month culture &amp; performance plan</li>
               </ul>
               <p class="flip-best-for"><strong>Best for:</strong> organizations that want leadership language embedded across multiple teams.</p>
-              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="custom-culture">Schedule a Free Consultation →</button>
+              <button type="button" class="btn btn-tan flip-cta" data-open-purchase="custom-culture">Book a Consultation →</button>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
               <span class="flip-scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
             </div>
@@ -3068,9 +3076,9 @@
         ]
       },
       'custom-culture': {
-        eyebrow: 'Free Consultation · Custom Culture Track',
+        eyebrow: 'Consultation · Custom Culture Track',
         title: 'Let’s design something custom.',
-        subtitle: 'Tell us a little about your org and Heath will reach out to set up a free consultation.',
+        subtitle: 'Tell us a little about your org and Heath will reach out to set up a consultation.',
         ctaLabel: 'Request Consultation →',
         emailSubject: 'New Custom Culture Track consultation request',
         fields: [
