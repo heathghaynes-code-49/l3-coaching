@@ -1454,10 +1454,6 @@
     .l3-logo-nav.dark { display: none; }
     .nav.scrolled .l3-logo-nav.light { display: none; }
     .nav.scrolled .l3-logo-nav.dark { display: block; }
-    /* Hide the top-left nav logo while we're on the hero (the big centered
-       hero-logo is doing that job). Reveal it as soon as the user starts
-       scrolling and the nav flips to its solid-white treatment.           */
-    .nav:not(.scrolled) .l3-logo-nav { opacity: 0; visibility: hidden; }
     @media (max-width: 640px) {
       .l3-logo-nav { height: 96px; }
     }
@@ -1953,26 +1949,14 @@
 
     <div class="container-x w-full pt-40 md:pt-48 pb-24 relative flex flex-col items-center text-center">
 
-      <!-- Prominent L3 Coaching brand mark, above the taglines -->
-      <img class="hero-logo reveal" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
+      <!-- Screen-reader-only heading (the nav logo carries the visible brand). -->
+      <h1 id="hero-heading" class="sr-only">L3 Coaching — Liberating Leaders that Last.</h1>
 
-      <h1 id="hero-heading" class="display text-[clamp(2.5rem,7vw,6.5rem)] max-w-[18ch] mx-auto mt-6 leading-[1.02]">
-        <span class="hero-word"><span style="animation-delay:.05s">Liberating</span></span>
-        <span class="hero-word"><span style="animation-delay:.18s">Leaders</span></span>
-        <span class="hero-word"><span style="animation-delay:.28s">that</span></span>
-        <span class="hero-word underline-stroke" id="lastWord">
-          <span style="animation-delay:.38s">Last.</span>
-          <svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M4 14 C 60 4, 130 18, 200 8 S 290 16, 296 10" />
-          </svg>
-        </span>
-      </h1>
-
-      <p class="reveal mt-8 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
+      <p class="reveal max-w-3xl mx-auto text-2xl md:text-3xl lg:text-4xl leading-relaxed font-light">
         We help leaders and teams create clarity, strengthen ownership, and build cultures that sustain performance over time.
       </p>
 
-      <div class="reveal mt-10 flex flex-wrap justify-center items-center gap-3">
+      <div class="reveal mt-12 flex flex-wrap justify-center items-center gap-3">
         <button class="btn btn-tan" data-open-modal>Take the Free Diagnostic</button>
         <a class="btn btn-outline" href="#cta">Book a Discovery Call</a>
       </div>
