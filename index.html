@@ -1418,15 +1418,16 @@
     }
     .offer-card:hover .more::after { width: 100%; }
 
-    /* Sticky nav, over dark hero by default, solid white after scroll */
-    .nav { transition: background .35s ease, box-shadow .35s ease, color .35s ease, backdrop-filter .35s ease; color: #fff; }
-    .nav .nav-link { color: rgba(255,255,255,.85); }
-    .nav .nav-link:hover { color: #fff; }
-    .nav .nav-link.active { color: var(--tan); }
-    .nav.scrolled { background: rgba(255,255,255,.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px -16px rgba(0,0,0,.25); color: var(--ink); }
-    .nav.scrolled .nav-link { color: var(--ink); }
-    .nav.scrolled .nav-link:hover { color: var(--clay); }
-    .nav.scrolled .nav-link.active { color: var(--clay); }
+    /* Sticky nav — always solid white with dark ink text, no transparent-over-hero state. */
+    .nav {
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px -16px rgba(0,0,0,.25);
+      color: var(--ink);
+    }
+    .nav .nav-link { color: var(--ink); }
+    .nav .nav-link:hover { color: var(--clay); }
+    .nav .nav-link.active { color: var(--clay); }
     .nav-link {
       position: relative;
       padding: .55rem .85rem;
@@ -1454,9 +1455,9 @@
 
     /* L3 brand logos in nav and footer */
     .l3-logo-nav { height: 132px; width: auto; display: block; transition: opacity .25s ease; }
-    .l3-logo-nav.dark { display: none; }
-    .nav.scrolled .l3-logo-nav.light { display: none; }
-    .nav.scrolled .l3-logo-nav.dark { display: block; }
+    /* Nav is always solid-white now, so always show the dark-ink variant. */
+    .l3-logo-nav.light { display: none; }
+    .l3-logo-nav.dark { display: block; }
     @media (max-width: 640px) {
       .l3-logo-nav { height: 96px; }
     }
@@ -1958,10 +1959,11 @@
 
     <div class="container-x w-full pt-40 md:pt-48 pb-24 relative flex flex-col items-center text-center">
 
-      <!-- Screen-reader-only heading (the nav logo carries the visible brand). -->
-      <h1 id="hero-heading" class="sr-only">L3 Coaching — Liberating Leaders that Last.</h1>
+      <h1 id="hero-heading" class="reveal display text-[clamp(2.75rem,7.5vw,6rem)] leading-[1.04] max-w-[16ch] mx-auto">
+        Liberating Leaders that Last.
+      </h1>
 
-      <p class="reveal max-w-3xl mx-auto text-2xl md:text-3xl lg:text-4xl leading-relaxed font-light">
+      <p class="reveal mt-6 max-w-2xl mx-auto text-base md:text-lg lg:text-xl leading-relaxed text-white/85">
         We help leaders and teams create clarity, strengthen ownership, and build cultures that sustain performance over time.
       </p>
 
