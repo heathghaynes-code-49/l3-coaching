@@ -1426,15 +1426,16 @@
     }
     .offer-card:hover .more::after { width: 100%; }
 
-    /* Sticky nav — transparent over dark hero by default, solid white after scroll. */
-    .nav { transition: background .35s ease, box-shadow .35s ease, color .35s ease, backdrop-filter .35s ease; color: #fff; }
-    .nav .nav-link { color: rgba(255,255,255,.85); }
-    .nav .nav-link:hover { color: #fff; }
-    .nav .nav-link.active { color: var(--tan); }
-    .nav.scrolled { background: rgba(255,255,255,.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px -16px rgba(0,0,0,.25); color: var(--ink); }
-    .nav.scrolled .nav-link { color: var(--ink); }
-    .nav.scrolled .nav-link:hover { color: var(--clay); }
-    .nav.scrolled .nav-link.active { color: var(--clay); }
+    /* Sticky nav — always solid off-white with dark ink text, no transparent-over-hero state. */
+    .nav {
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px -16px rgba(0,0,0,.25);
+      color: var(--ink);
+    }
+    .nav .nav-link { color: var(--ink); }
+    .nav .nav-link:hover { color: var(--clay); }
+    .nav .nav-link.active { color: var(--clay); }
     .nav-link {
       position: relative;
       padding: .55rem .85rem;
@@ -1461,10 +1462,13 @@
     }
 
     /* L3 brand logos in nav and footer */
-    .l3-logo-nav { height: 132px; width: auto; display: block; transition: opacity .25s ease; }
-    .l3-logo-nav.dark { display: none; }
-    .nav.scrolled .l3-logo-nav.light { display: none; }
-    .nav.scrolled .l3-logo-nav.dark { display: block; }
+    .l3-logo-nav { height: 76px; width: auto; display: block; transition: opacity .25s ease; }
+    @media (min-width: 768px) {
+      .l3-logo-nav { height: 84px; }
+    }
+    /* Nav is always solid-white now, so always show the dark-ink variant. */
+    .l3-logo-nav.light { display: none; }
+    .l3-logo-nav.dark { display: block; }
     @media (max-width: 640px) {
       .l3-logo-nav { height: 96px; }
     }
@@ -1923,7 +1927,7 @@
 
   <!-- ───── STICKY NAV ───── -->
   <header id="nav" class="nav fixed top-0 inset-x-0 z-50 text-ink">
-    <div class="container-x flex items-center justify-between h-28 md:h-40">
+    <div class="container-x flex items-center justify-between h-20 md:h-24">
       <a href="#top" class="flex items-center" aria-label="L3 Coaching home">
         <img class="l3-logo-nav light" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
         <img class="l3-logo-nav dark" src="2026 L3 Logos/2026 Full L3 Logo Transparent.png" alt="L3 Coaching" />
