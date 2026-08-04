@@ -685,7 +685,10 @@
     .flip-card {
       position: relative;
       perspective: 1600px;
-      min-height: 620px;
+      /* Mobile: shorter — cards stack 1-per-row and shouldn't have huge
+         empty space beneath the short front-face copy. The back face can
+         still scroll thanks to overflow-y:auto on .flip-back.            */
+      min-height: 480px;
       cursor: pointer;
       outline: none;
     }
@@ -697,7 +700,7 @@
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 620px;
+      min-height: 480px;
       transform-style: preserve-3d;
       transition: transform .7s cubic-bezier(.2,.8,.2,1);
     }
@@ -1582,6 +1585,12 @@
     }
     .reopen-tab.show { transform: translate(0, -50%); }
     .reopen-tab:hover { background: var(--clay); }
+    /* Hide the vertical reopen pill on phones — it overlaps content
+       and there are plenty of other CTAs to reopen the diagnostic
+       (nav button, hero buttons, in-page CTAs).                     */
+    @media (max-width: 767px) {
+      .reopen-tab { display: none !important; }
+    }
 
     /* Likert pills */
     .likert {
