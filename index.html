@@ -127,14 +127,10 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background-image:
-        linear-gradient(180deg, rgba(52,73,96,.85) 0%, rgba(52,73,96,.78) 60%, rgba(52,73,96,.92) 100%),
-        url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2200&q=80');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background:
+        radial-gradient(80% 60% at 75% 40%, rgba(90,115,144,.35) 0%, transparent 60%),
+        linear-gradient(180deg, #3d556f 0%, var(--ink) 55%, #2a3a4d 100%);
       z-index: -1;
-      filter: saturate(0.85);
     }
     .hero-bg::after {
       content:"";
@@ -349,24 +345,26 @@
     }
     .cert-badges-row {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
-      gap: 1rem;
+      gap: .6rem;
       justify-content: center;
     }
     @media (min-width: 768px) {
-      .cert-badges-row { justify-content: flex-start; gap: 1.15rem; }
+      .cert-badges-row { justify-content: flex-start; gap: .75rem; }
     }
     .cert-badge {
-      height: 96px;
+      height: 62px;
       width: auto;
+      max-width: 24%;
       object-fit: contain;
       opacity: 0.9;
       transition: opacity .3s ease, transform .3s ease, filter .3s ease;
       cursor: help;
+      flex: 0 1 auto;
     }
     @media (min-width: 768px) {
-      .cert-badge { height: 118px; }
+      .cert-badge { height: 84px; }
     }
     .cert-badge:hover {
       opacity: 1;
