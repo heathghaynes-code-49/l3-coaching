@@ -1,5 +1,5 @@
 <!--
-  L3 Coaching — Single-page marketing site
+  L3 Coaching, Single-page marketing site
   ────────────────────────────────────────────────────────────────
   Sections (top → bottom):
     1.  Sticky nav (appears after hero)
@@ -24,7 +24,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#E3DAD0" />
-  <title>L3 Coaching — Liberating Leaders that Last.</title>
+  <title>L3 Coaching, Liberating Leaders that Last.</title>
   <meta name="description" content="L3 Coaching develops leaders who develop other leaders. Licensed GiANT Worldwide partner. Take the free leadership assessment, join a free workshop, or book a consultation." />
 
   <!-- Tailwind -->
@@ -128,7 +128,7 @@
     .hero-bg {
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(180deg, rgba(52,73,96,.85) 0%, rgba(52,73,96,.78) 60%, rgba(52,73,96,.92) 100%),
+        linear-gradient(180deg, rgba(52,73,96.85) 0%, rgba(52,73,96.78) 60%, rgba(52,73,96.92) 100%),
         url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2200&q=80');
       background-size: cover;
       background-position: center;
@@ -139,13 +139,13 @@
     .hero-bg::after {
       content:"";
       position: absolute; inset: 0;
-      background: radial-gradient(80% 60% at 75% 40%, transparent 0%, rgba(52,73,96,.55) 100%);
+      background: radial-gradient(80% 60% at 75% 40%, transparent 0%, rgba(52,73,96.55) 100%);
     }
-    .hero .badge { color: rgba(255,255,255,.65); }
+    .hero .badge { color: rgba(255,255,255.65); }
     .hero .display { color: #fff; }
-    .hero p { color: rgba(255,255,255,.8); }
-    .hero .btn-outline { color: #fff; border-color: rgba(255,255,255,.5); }
-    .hero .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.06); }
+    .hero p { color: rgba(255,255,255.8); }
+    .hero .btn-outline { color: #fff; border-color: rgba(255,255,255.5); }
+    .hero .btn-outline:hover { border-color: #fff; background: rgba(255,255,255.06); }
     .hero .underline-stroke svg path { stroke: var(--tan); }
 
     /* Sticky vision scroll */
@@ -167,7 +167,7 @@
     .sv-bg::after {
       content:"";
       position:absolute; inset:0;
-      background: linear-gradient(180deg, rgba(15,15,15,.72), rgba(15,15,15,.85));
+      background: linear-gradient(180deg, rgba(15,15,15.72), rgba(15,15,15.85));
     }
     .sv-content {
       position: relative;
@@ -209,7 +209,7 @@
     }
     .process-circle:hover {
       transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 24px 50px -24px rgba(28,28,28,.25);
+      box-shadow: 0 24px 50px -24px rgba(28,28,28.25);
     }
     .pc-1 { border-color: #344960; }
     .pc-1 .pc-num { color: #344960; }
@@ -234,7 +234,7 @@
     }
     .pc-desc {
       font-size: .85rem;
-      color: rgba(28,28,28,.7);
+      color: rgba(28,28,28.7);
       line-height: 1.45;
       max-width: 22ch;
     }
@@ -245,7 +245,7 @@
     }
     .process-arrow svg { width: 100%; height: auto; }
 
-    /* Diagnostic flip cards — reuses .flip-card mechanics with denser styling */
+    /* Diagnostic flip cards, reuses .flip-card mechanics with denser styling */
     .diag-grid { max-width: 1100px; margin-inline: auto; }
     .diag-cta {
       max-width: 640px;
@@ -269,7 +269,7 @@
       padding: clamp(2.25rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
       background: var(--bone);
       border-radius: 20px;
-      box-shadow: 0 20px 44px -32px rgba(52,73,96,.35);
+      box-shadow: 0 20px 44px -32px rgba(52,73,96.35);
       overflow: hidden;
     }
     .testimonial::before {
@@ -303,7 +303,7 @@
       z-index: 1;
       margin-top: 1.6rem;
       padding-top: 1.25rem;
-      border-top: 1px solid rgba(52,73,96,.18);
+      border-top: 1px solid rgba(52,73,96.18);
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
@@ -331,7 +331,7 @@
     .cert-badges {
       margin-top: 1.75rem;
       padding-top: 1.5rem;
-      border-top: 1px solid rgba(52,73,96,.15);
+      border-top: 1px solid rgba(52,73,96.15);
       text-align: center;
     }
     @media (min-width: 768px) {
@@ -358,17 +358,20 @@
       .cert-badges-row { justify-content: flex-start; gap: 1.15rem; }
     }
     .cert-badge {
-      height: 62px;
+      height: 96px;
       width: auto;
       object-fit: contain;
-      opacity: 0.85;
+      opacity: 0.9;
       transition: opacity .3s ease, transform .3s ease, filter .3s ease;
       cursor: help;
+    }
+    @media (min-width: 768px) {
+      .cert-badge { height: 118px; }
     }
     .cert-badge:hover {
       opacity: 1;
       transform: translateY(-3px) scale(1.05);
-      filter: drop-shadow(0 8px 14px rgba(52,73,96,.25));
+      filter: drop-shadow(0 8px 14px rgba(52,73,96.25));
     }
 
     .flip-card.diag-card {
@@ -380,12 +383,12 @@
     .flip-card.diag-card .flip-back {
       padding: 2rem 1.9rem 1.75rem;
       background: var(--bone);
-      border-color: rgba(52,73,96,.10);
-      box-shadow: 0 14px 32px -22px rgba(52,73,96,.25);
+      border-color: rgba(52,73,96.10);
+      box-shadow: 0 14px 32px -22px rgba(52,73,96.25);
     }
     .flip-card.diag-card:hover:not(.flipped) .flip-front {
       transform: translateY(-3px);
-      box-shadow: 0 22px 44px -22px rgba(52,73,96,.35);
+      box-shadow: 0 22px 44px -22px rgba(52,73,96.35);
       border-color: var(--tan);
     }
 
@@ -399,7 +402,7 @@
       letter-spacing: .2em;
       color: var(--ink);
       background: #fff;
-      border: 1px solid rgba(52,73,96,.18);
+      border: 1px solid rgba(52,73,96.18);
       width: 44px; height: 44px;
       border-radius: 999px;
       margin-bottom: 1.1rem;
@@ -437,7 +440,7 @@
       border-left: 3px solid var(--tan);
     }
     .diag-solution-text {
-      color: rgba(52,73,96,.82);
+      color: rgba(52,73,96.82);
       font-size: .95rem;
       line-height: 1.55;
       flex: 1;
@@ -458,13 +461,13 @@
     .flip-card.tst-card .flip-back {
       padding: 2.5rem 1.75rem 1.6rem;
       background: var(--bone);
-      border-color: rgba(52,73,96,.10);
-      box-shadow: 0 14px 32px -22px rgba(52,73,96,.25);
+      border-color: rgba(52,73,96.10);
+      box-shadow: 0 14px 32px -22px rgba(52,73,96.25);
       text-align: center;
     }
     .flip-card.tst-card:hover:not(.flipped) .flip-front {
       transform: translateY(-3px);
-      box-shadow: 0 22px 44px -22px rgba(52,73,96,.35);
+      box-shadow: 0 22px 44px -22px rgba(52,73,96.35);
       border-color: var(--tan);
     }
 
@@ -487,7 +490,7 @@
       color: #fff;
       letter-spacing: .04em;
       border: 3px solid #fff;
-      box-shadow: 0 8px 18px -8px rgba(52,73,96,.45);
+      box-shadow: 0 8px 18px -8px rgba(52,73,96.45);
       flex-shrink: 0;
       user-select: none;
     }
@@ -496,7 +499,7 @@
       height: 52px;
       font-size: 1rem;
       border-width: 2px;
-      box-shadow: 0 4px 10px -4px rgba(52,73,96,.35);
+      box-shadow: 0 4px 10px -4px rgba(52,73,96.35);
     }
     /* Per-person gradients so each contact is visually distinct */
     .tst-avatar-dc { background: linear-gradient(135deg, #344960 0%, #5a7390 100%); }
@@ -524,7 +527,7 @@
     }
     .tst-attr {
       padding-top: 1.1rem;
-      border-top: 1px solid rgba(52,73,96,.15);
+      border-top: 1px solid rgba(52,73,96.15);
       margin-bottom: 1rem;
     }
     .tst-name {
@@ -552,7 +555,7 @@
       gap: .95rem;
       padding-bottom: 1.1rem;
       margin-bottom: 1.25rem;
-      border-bottom: 1px solid rgba(52,73,96,.15);
+      border-bottom: 1px solid rgba(52,73,96.15);
     }
     .tst-back-header .tst-name,
     .tst-back-header .tst-role { text-align: left; }
@@ -579,7 +582,7 @@
       grid-template-columns: 1.1fr 1fr;
       gap: 0;
       background: #fff;
-      border: 1px solid rgba(28,28,28,.10);
+      border: 1px solid rgba(28,28,28.10);
       border-radius: 22px;
       overflow: hidden;
       transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
@@ -588,7 +591,7 @@
     }
     .massive-offer:hover {
       transform: translateY(-5px);
-      box-shadow: 0 36px 70px -32px rgba(28,28,28,.32);
+      box-shadow: 0 36px 70px -32px rgba(28,28,28.32);
       border-color: var(--tan);
     }
     .massive-offer .mo-img {
@@ -630,7 +633,7 @@
       margin-bottom: 1rem;
     }
     .massive-offer .mo-desc {
-      color: rgba(28,28,28,.72);
+      color: rgba(28,28,28.72);
       font-size: 1.02rem;
       line-height: 1.6;
       margin-bottom: 1.8rem;
@@ -658,22 +661,32 @@
       .massive-offer .mo-body { padding: 2rem 1.75rem; }
     }
 
-    /* ── Flip cards (3 offering packages) ───────────────────────── */
+    /* ── Flip cards (4 offering packages) ─────────────────────────
+       Sized to match the diagnostic flip cards up-page: 2 per row on
+       medium+ screens, roomier proportions, so full copy + price fits
+       without being clipped. The .flip-back still allows overflow-y
+       scrolling as a fallback for very-long copy on narrow viewports. */
     .flip-card {
       position: relative;
       perspective: 1600px;
-      min-height: 540px;
+      min-height: 620px;
       cursor: pointer;
       outline: none;
+    }
+    @media (min-width: 768px) {
+      .flip-card { min-height: 640px; }
     }
     .flip-card:focus-visible { box-shadow: 0 0 0 3px var(--tan); border-radius: 22px; }
     .flip-inner {
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 540px;
+      min-height: 620px;
       transform-style: preserve-3d;
-      transition: transform .7s cubic-bezier(.2,.8,.2,1);
+      transition: transform .7s cubic-bezier(.2.8.2,1);
+    }
+    @media (min-width: 768px) {
+      .flip-inner { min-height: 640px; }
     }
     .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
     .flip-front,
@@ -683,18 +696,24 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       border-radius: 22px;
-      padding: 2.5rem 2rem 2rem;
+      padding: 2.5rem 2.25rem 2rem;
       background: #fff;
-      border: 1px solid rgba(52,73,96,.12);
-      box-shadow: 0 18px 38px -28px rgba(52,73,96,.35);
+      border: 1px solid rgba(52,73,96.12);
+      box-shadow: 0 18px 38px -28px rgba(52,73,96.35);
       display: flex;
       flex-direction: column;
       transition: box-shadow .35s ease, border-color .35s ease, transform .35s ease;
       overflow: hidden;
     }
+    /* Allow the back face to scroll if a card's copy runs long
+       (only bites when content really overflows the fixed height). */
+    .flip-back {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
     .flip-card:hover:not(.flipped) .flip-front {
       transform: translateY(-4px);
-      box-shadow: 0 30px 56px -28px rgba(52,73,96,.45);
+      box-shadow: 0 30px 56px -28px rgba(52,73,96.45);
       border-color: var(--tan);
     }
     .flip-back { transform: rotateY(180deg); }
@@ -704,26 +723,26 @@
     .flip-card.featured .flip-back {
       background: linear-gradient(165deg, #3d556f 0%, var(--ink) 55%, #2a3a4d 100%);
       color: var(--bone);
-      border-color: rgba(255,255,255,.10);
-      box-shadow: 0 24px 48px -22px rgba(52,73,96,.55);
+      border-color: rgba(255,255,255.10);
+      box-shadow: 0 24px 48px -22px rgba(52,73,96.55);
     }
     .flip-card.featured .flip-eyebrow,
     .flip-card.featured .flip-tagline,
     .flip-card.featured .flip-back-label,
     .flip-card.featured .flip-best-for,
-    .flip-card.featured .flip-list li { color: rgba(227,218,208,.88); }
+    .flip-card.featured .flip-list li { color: rgba(227,218,208.88); }
     .flip-card.featured .flip-best-for strong { color: #fff; }
     .flip-card.featured .flip-title,
     .flip-card.featured .flip-title-sm { color: #fff; }
     .flip-card.featured .flip-price-num { color: #fff; }
     .flip-card.featured .flip-price-from,
-    .flip-card.featured .flip-price-per { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-price-per { color: rgba(227,218,208.7); }
     .flip-card.featured .flip-list li::before { color: var(--bone); }
-    .flip-card.featured .flip-cue { color: rgba(227,218,208,.9); }
-    .flip-card.featured .flip-back-link { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-cue { color: rgba(227,218,208.9); }
+    .flip-card.featured .flip-back-link { color: rgba(227,218,208.7); }
     .flip-card.featured .flip-back-link:hover { color: #fff; }
 
-    /* Ribbon — floating pill that overhangs the top edge of the card.
+    /* Ribbon, floating pill that overhangs the top edge of the card.
        Sits OUTSIDE .flip-inner so it's never clipped and doesn't rotate
        with the flip.                                                     */
     .flip-ribbon {
@@ -741,7 +760,7 @@
       text-transform: uppercase;
       white-space: nowrap;
       border-radius: 999px;
-      box-shadow: 0 12px 24px -8px rgba(52,73,96,.45);
+      box-shadow: 0 12px 24px -8px rgba(52,73,96.45);
       z-index: 5;
     }
     .flip-ribbon.ribbon-gold {
@@ -780,14 +799,14 @@
       gap: .15rem;
       margin-bottom: 1.25rem;
       padding-bottom: 1.25rem;
-      border-bottom: 1px solid rgba(52,73,96,.12);
+      border-bottom: 1px solid rgba(52,73,96.12);
     }
-    .flip-card.featured .flip-price { border-bottom-color: rgba(255,255,255,.18); }
+    .flip-card.featured .flip-price { border-bottom-color: rgba(255,255,255.18); }
     .flip-price-from {
       font-size: .72rem;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: rgba(52,73,96,.55);
+      color: rgba(52,73,96.55);
     }
     .flip-price-num {
       font-family: 'Syne', serif;
@@ -799,7 +818,7 @@
     .flip-price-per {
       font-family: 'Montserrat', sans-serif;
       font-size: .85rem;
-      color: rgba(52,73,96,.65);
+      color: rgba(52,73,96.65);
       margin-top: .25rem;
     }
     .flip-price-custom .flip-price-num { font-size: 1.6rem; font-weight: 600; }
@@ -808,7 +827,7 @@
       display: block;
       padding-bottom: 1.1rem;
       margin-bottom: 1.15rem;
-      border-bottom: 1px solid rgba(52,73,96,.14);
+      border-bottom: 1px solid rgba(52,73,96.14);
       font-family: 'Syne', serif;
       font-weight: 700;
       font-size: 1.15rem;
@@ -816,11 +835,11 @@
       color: var(--tan);
     }
     .flip-card.featured .flip-category {
-      border-bottom-color: rgba(255,255,255,.22);
+      border-bottom-color: rgba(255,255,255.22);
       color: var(--bone);
     }
     .flip-tagline {
-      color: rgba(52,73,96,.78);
+      color: rgba(52,73,96.78);
       font-size: 1rem;
       line-height: 1.55;
       flex: 1;
@@ -828,9 +847,9 @@
     .flip-front-foot {
       margin-top: 1.5rem;
       padding-top: 1.25rem;
-      border-top: 1px dashed rgba(52,73,96,.18);
+      border-top: 1px dashed rgba(52,73,96.18);
     }
-    .flip-card.featured .flip-front-foot { border-top-color: rgba(255,255,255,.18); }
+    .flip-card.featured .flip-front-foot { border-top-color: rgba(255,255,255.18); }
     .flip-cue {
       display: inline-flex; align-items: center; gap: .35rem;
       font-size: .82rem;
@@ -868,7 +887,7 @@
       padding-left: 1.3rem;
       font-size: .92rem;
       line-height: 1.45;
-      color: rgba(52,73,96,.82);
+      color: rgba(52,73,96.82);
     }
     .flip-list li::before {
       content: "✓";
@@ -879,14 +898,14 @@
     .flip-best-for {
       font-size: .88rem;
       line-height: 1.5;
-      color: rgba(52,73,96,.7);
+      color: rgba(52,73,96.7);
       padding: .85rem 1rem;
-      background: rgba(52,73,96,.04);
+      background: rgba(52,73,96.04);
       border-left: 3px solid var(--tan);
       border-radius: 4px;
       margin-bottom: 1.25rem;
     }
-    .flip-card.featured .flip-best-for { background: rgba(255,255,255,.08); }
+    .flip-card.featured .flip-best-for { background: rgba(255,255,255.08); }
     .flip-cta {
       margin-top: auto;
       width: 100%;
@@ -895,7 +914,7 @@
     .flip-back-link {
       margin-top: .75rem;
       font-size: .78rem;
-      color: rgba(52,73,96,.55);
+      color: rgba(52,73,96.55);
       background: transparent;
       border: none;
       padding: .5rem;
@@ -913,7 +932,7 @@
       padding: .85rem 1rem;
       margin-top: .5rem;
       margin-bottom: 1.1rem;
-      background: rgba(52,73,96,.05);
+      background: rgba(52,73,96.05);
       border-left: 3px solid var(--tan);
       border-radius: 8px;
     }
@@ -922,7 +941,7 @@
       letter-spacing: .18em;
       text-transform: uppercase;
       font-weight: 700;
-      color: rgba(52,73,96,.65);
+      color: rgba(52,73,96.65);
     }
     .flip-back-price-num {
       font-family: 'Syne', serif;
@@ -933,15 +952,15 @@
     }
     .flip-back-price-per {
       font-size: .82rem;
-      color: rgba(52,73,96,.65);
+      color: rgba(52,73,96.65);
     }
     .flip-card.featured .flip-back-price {
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255.08);
       border-left-color: var(--bone);
     }
-    .flip-card.featured .flip-back-price-from { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-back-price-from { color: rgba(227,218,208.7); }
     .flip-card.featured .flip-back-price-num  { color: #fff; }
-    .flip-card.featured .flip-back-price-per  { color: rgba(227,218,208,.7); }
+    .flip-card.featured .flip-back-price-per  { color: rgba(227,218,208.7); }
 
     /* Reduced motion: cross-fade instead of 3D flip */
     @media (prefers-reduced-motion: reduce) {
@@ -963,7 +982,7 @@
       z-index: 115;
     }
     .pm-backdrop.show {
-      background: rgba(52,73,96,.55);
+      background: rgba(52,73,96.55);
       backdrop-filter: blur(6px);
       pointer-events: auto;
     }
@@ -975,11 +994,11 @@
       max-height: calc(100vh - 3rem);
       background: var(--bone);
       border-radius: 18px;
-      box-shadow: 0 30px 80px -20px rgba(0,0,0,.45);
+      box-shadow: 0 30px 80px -20px rgba(0,0,0.45);
       z-index: 120;
       opacity: 0;
       pointer-events: none;
-      transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+      transition: transform .45s cubic-bezier(.2.8.2,1), opacity .3s ease;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -991,7 +1010,7 @@
     }
     .pm-header {
       padding: 1.5rem 1.75rem 1rem;
-      border-bottom: 1px solid rgba(52,73,96,.12);
+      border-bottom: 1px solid rgba(52,73,96.12);
       display: flex; align-items: flex-start; justify-content: space-between;
       gap: 1rem;
     }
@@ -1012,21 +1031,21 @@
     }
     .pm-subtitle {
       font-size: .85rem;
-      color: rgba(52,73,96,.7);
+      color: rgba(52,73,96.7);
     }
     .pm-close {
       background: transparent;
       border: none;
       width: 36px; height: 36px;
       border-radius: 999px;
-      color: rgba(52,73,96,.55);
+      color: rgba(52,73,96.55);
       font-size: 1.4rem;
       line-height: 1;
       cursor: pointer;
       transition: background .2s ease, color .2s ease;
       flex-shrink: 0;
     }
-    .pm-close:hover { background: rgba(52,73,96,.08); color: var(--ink); }
+    .pm-close:hover { background: rgba(52,73,96.08); color: var(--ink); }
     .pm-body {
       padding: 1.25rem 1.75rem 1.75rem;
       overflow-y: auto;
@@ -1040,7 +1059,7 @@
       font-weight: 600;
       letter-spacing: .05em;
       text-transform: uppercase;
-      color: rgba(52,73,96,.7);
+      color: rgba(52,73,96.7);
       margin-bottom: .3rem;
     }
     .pm-field input,
@@ -1048,7 +1067,7 @@
       font-family: 'Montserrat', sans-serif;
       font-size: .95rem;
       padding: .7rem .9rem;
-      border: 1px solid rgba(52,73,96,.18);
+      border: 1px solid rgba(52,73,96.18);
       border-radius: 10px;
       background: #fff;
       color: var(--ink);
@@ -1059,12 +1078,12 @@
     .pm-field input:focus,
     .pm-field textarea:focus {
       border-color: var(--tan);
-      box-shadow: 0 0 0 3px rgba(90,115,144,.18);
+      box-shadow: 0 0 0 3px rgba(90,115,144.18);
     }
     .pm-field textarea { min-height: 80px; }
     .pm-footnote {
       font-size: .75rem;
-      color: rgba(52,73,96,.55);
+      color: rgba(52,73,96.55);
       text-align: center;
       margin-top: 1rem;
     }
@@ -1075,7 +1094,7 @@
     .pm-success-icon {
       width: 56px; height: 56px;
       border-radius: 999px;
-      background: rgba(90,115,144,.15);
+      background: rgba(90,115,144.15);
       color: var(--ink);
       display: inline-flex; align-items: center; justify-content: center;
       font-size: 1.6rem;
@@ -1086,7 +1105,7 @@
     .cta-tile {
       display: block;
       background: #fff;
-      border: 1px solid rgba(28,28,28,.10);
+      border: 1px solid rgba(28,28,28.10);
       border-radius: 18px;
       padding: 2rem 1.75rem 1.75rem;
       transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
@@ -1097,7 +1116,7 @@
     }
     .cta-tile:hover {
       transform: translateY(-4px);
-      box-shadow: 0 24px 50px -28px rgba(28,28,28,.28);
+      box-shadow: 0 24px 50px -28px rgba(28,28,28.28);
       border-color: var(--tan);
     }
     .cta-icon { font-size: 2rem; margin-bottom: 1rem; }
@@ -1108,7 +1127,7 @@
       margin-bottom: .5rem;
     }
     .cta-desc {
-      color: rgba(28,28,28,.65);
+      color: rgba(28,28,28.65);
       font-size: .92rem;
       line-height: 1.5;
       margin-bottom: 1.5rem;
@@ -1125,10 +1144,10 @@
       transform: scale(1.03);
     }
     .cta-tile--feature:hover { background: #2a2a2a; border-color: var(--tan); transform: scale(1.03) translateY(-4px); }
-    .cta-tile--feature .cta-desc { color: rgba(247,243,236,.72); }
+    .cta-tile--feature .cta-desc { color: rgba(247,243,236.72); }
     .cta-tile--feature .cta-arrow { color: var(--tan); }
 
-    /* Heath portrait — circular */
+    /* Heath portrait, circular */
     .heath-portrait {
       width: 100%;
       max-width: 360px;
@@ -1136,7 +1155,7 @@
       border-radius: 9999px;
       overflow: hidden;
       background: linear-gradient(180deg, #e9eef2 0%, #d8dfe4 100%);
-      box-shadow: 0 30px 60px -32px rgba(28,28,28,.35);
+      box-shadow: 0 30px 60px -32px rgba(28,28,28.35);
       transition: transform .4s ease;
     }
     .heath-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -1147,7 +1166,7 @@
       position: relative;
       display: flex; flex-direction: column;
       background: #fff;
-      border: 1px solid rgba(28,28,28,.10);
+      border: 1px solid rgba(28,28,28.10);
       border-radius: 20px;
       overflow: hidden;
       transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
@@ -1156,7 +1175,7 @@
     }
     .offer-hero:hover {
       transform: translateY(-6px);
-      box-shadow: 0 32px 60px -28px rgba(28,28,28,.28);
+      box-shadow: 0 32px 60px -28px rgba(28,28,28.28);
       border-color: var(--tan);
     }
     .offer-hero .oh-img {
@@ -1173,11 +1192,11 @@
     .offer-hero:hover .oh-img img { transform: scale(1.06); }
     .offer-hero .oh-img::after {
       content:""; position:absolute; inset:0;
-      background: linear-gradient(180deg, transparent 50%, rgba(15,15,15,.55) 100%);
+      background: linear-gradient(180deg, transparent 50%, rgba(15,15,15.55) 100%);
     }
     .offer-hero .oh-num {
       position: absolute; top: 1rem; left: 1rem;
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255.92);
       backdrop-filter: blur(6px);
       color: var(--clay);
       font-family: 'Syne', serif;
@@ -1200,7 +1219,7 @@
       margin-bottom: .65rem;
     }
     .offer-hero .oh-desc {
-      color: rgba(28,28,28,.7);
+      color: rgba(28,28,28.7);
       font-size: .97rem;
       line-height: 1.55;
       margin-bottom: 1.4rem;
@@ -1220,17 +1239,17 @@
     .offer-hero:hover .oh-cta { color: var(--clay); }
     .offer-hero:hover .oh-cta svg { transform: translateX(4px); }
 
-    /* Offer menu — primary + secondary tiers (legacy) */
+    /* Offer menu, primary + secondary tiers (legacy) */
     .offer-primary {
       position: relative;
       padding: 2rem 1.75rem 1.75rem;
-      border-bottom: 1px solid rgba(28,28,28,.14);
+      border-bottom: 1px solid rgba(28,28,28.14);
       transition: background .3s ease;
       cursor: pointer;
       display: block;
       color: var(--ink);
     }
-    .offer-primary:hover { background: rgba(255,255,255,.6); }
+    .offer-primary:hover { background: rgba(255,255,255.6); }
     .offer-primary .op-num {
       font-family: 'Syne', serif;
       color: var(--clay);
@@ -1244,7 +1263,7 @@
       margin: .5rem 0 .9rem;
     }
     .offer-primary .op-desc {
-      color: rgba(28,28,28,.7);
+      color: rgba(28,28,28.7);
       max-width: 38ch;
       font-size: .98rem;
       line-height: 1.55;
@@ -1254,7 +1273,7 @@
       right: 1.75rem; top: 2rem;
       width: 44px; height: 44px;
       border-radius: 999px;
-      border: 1px solid rgba(28,28,28,.18);
+      border: 1px solid rgba(28,28,28.18);
       display:flex; align-items:center; justify-content:center;
       transition: transform .3s ease, background .3s ease, color .3s ease, border-color .3s ease;
       color: var(--ink);
@@ -1270,7 +1289,7 @@
       display: block;
       color: var(--ink);
     }
-    .offer-secondary:hover { background: rgba(255,255,255,.7); transform: translateY(-2px); }
+    .offer-secondary:hover { background: rgba(255,255,255.7); transform: translateY(-2px); }
     .offer-secondary .os-title {
       font-family: 'Syne', serif;
       font-size: 1.15rem;
@@ -1279,7 +1298,7 @@
     }
     .offer-secondary .os-desc {
       font-size: .85rem;
-      color: rgba(28,28,28,.65);
+      color: rgba(28,28,28.65);
       line-height: 1.45;
     }
 
@@ -1289,7 +1308,7 @@
       background: var(--bone);
       z-index: 110;
       transform: translateY(100%);
-      transition: transform .55s cubic-bezier(.2,.8,.2,1);
+      transition: transform .55s cubic-bezier(.2.8.2,1);
       overflow-y: auto;
     }
     .fw-drawer.open { transform: translateY(0); }
@@ -1298,7 +1317,7 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.25rem clamp(1.25rem,4vw,2.5rem);
       background: var(--bone);
-      border-bottom: 1px solid rgba(28,28,28,.08);
+      border-bottom: 1px solid rgba(28,28,28.08);
       z-index: 5;
     }
 
@@ -1308,7 +1327,7 @@
       display: inline-block;
       transform: translateY(105%);
       opacity: 0;
-      animation: rise 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+      animation: rise 0.9s cubic-bezier(.2.8.2,1) forwards;
     }
     @keyframes rise {
       to { transform: translateY(0); opacity: 1; }
@@ -1331,10 +1350,10 @@
       white-space: nowrap;
     }
     .btn-primary { background: var(--ink); color: var(--bone); }
-    .btn-primary:hover { background: var(--tan); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(52,73,96,.55); }
+    .btn-primary:hover { background: var(--tan); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(52,73,96.55); }
     .btn-tan { background: var(--ink); color: #fff; }
-    .btn-tan:hover { background: var(--tan); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(52,73,96,.6); }
-    .btn-outline { background: transparent; color: var(--ink); border: 1px solid rgba(52,73,96,.25); }
+    .btn-tan:hover { background: var(--tan); transform: translateY(-1px); box-shadow: 0 10px 24px -10px rgba(52,73,96.6); }
+    .btn-outline { background: transparent; color: var(--ink); border: 1px solid rgba(52,73,96.25); }
     .btn-outline:hover { border-color: var(--ink); transform: translateY(-1px); }
     .btn:focus-visible { outline: 3px solid var(--tan); outline-offset: 3px; }
 
@@ -1344,7 +1363,7 @@
       width: 100%;
       padding: 1.1rem 1.4rem;
       background: #fff;
-      border: 1px solid rgba(28,28,28,.10);
+      border: 1px solid rgba(28,28,28.10);
       border-radius: 14px;
       text-align: left;
       transition: all .25s ease;
@@ -1374,18 +1393,18 @@
 
     /* Card hover */
     .offer-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
-    .offer-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(28,28,28,.18); border-color: rgba(200,169,126,.6); }
+    .offer-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(28,28,28.18); border-color: rgba(200,169,126.6); }
     .offer-card .more::after {
       content:""; display:block; height:1px; width:0; background: var(--clay); transition: width .3s ease; margin-top: 2px;
     }
     .offer-card:hover .more::after { width: 100%; }
 
-    /* Sticky nav — over dark hero by default, solid white after scroll */
+    /* Sticky nav, over dark hero by default, solid white after scroll */
     .nav { transition: background .35s ease, box-shadow .35s ease, color .35s ease, backdrop-filter .35s ease; color: #fff; }
-    .nav .nav-link { color: rgba(255,255,255,.85); }
+    .nav .nav-link { color: rgba(255,255,255.85); }
     .nav .nav-link:hover { color: #fff; }
     .nav .nav-link.active { color: var(--tan); }
-    .nav.scrolled { background: rgba(255,255,255,.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px -16px rgba(0,0,0,.25); color: var(--ink); }
+    .nav.scrolled { background: rgba(255,255,255.95); backdrop-filter: blur(10px); box-shadow: 0 4px 20px -16px rgba(0,0,0.25); color: var(--ink); }
     .nav.scrolled .nav-link { color: var(--ink); }
     .nav.scrolled .nav-link:hover { color: var(--clay); }
     .nav.scrolled .nav-link.active { color: var(--clay); }
@@ -1488,7 +1507,7 @@
       z-index: 90;
     }
     .modal-backdrop.show {
-      background: rgba(28,28,28,.45);
+      background: rgba(28,28,28.45);
       backdrop-filter: blur(4px);
       pointer-events: auto;
     }
@@ -1500,11 +1519,11 @@
       max-height: calc(100vh - 2.5rem);
       background: #fff;
       border-radius: 18px;
-      box-shadow: 0 30px 80px -20px rgba(0,0,0,.35);
+      box-shadow: 0 30px 80px -20px rgba(0,0,0.35);
       overflow: hidden;
       transform: translateY(120%);
       opacity: 0;
-      transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
+      transition: transform .55s cubic-bezier(.2.8.2,1), opacity .35s ease;
       z-index: 100;
       display:flex; flex-direction:column;
     }
@@ -1542,7 +1561,7 @@
       border-radius: 10px 0 0 10px;
       cursor: pointer;
       z-index: 80;
-      box-shadow: -8px 0 20px -12px rgba(0,0,0,.25);
+      box-shadow: -8px 0 20px -12px rgba(0,0,0.25);
       transition: transform .35s ease, background .2s ease;
     }
     .reopen-tab.show { transform: translate(0, -50%); }
@@ -1555,7 +1574,7 @@
       margin-top: .6rem;
     }
     .likert button {
-      border: 1px solid rgba(28,28,28,.18);
+      border: 1px solid rgba(28,28,28.18);
       background: #fff;
       padding: .55rem .25rem;
       font-size: .8rem;
@@ -1568,10 +1587,10 @@
 
     /* Accordion */
     details.objection {
-      border-top: 1px solid rgba(28,28,28,.12);
+      border-top: 1px solid rgba(28,28,28.12);
       padding: 1.25rem 0;
     }
-    details.objection:last-of-type { border-bottom: 1px solid rgba(28,28,28,.12); }
+    details.objection:last-of-type { border-bottom: 1px solid rgba(28,28,28.12); }
     details.objection > summary {
       list-style: none;
       cursor: pointer;
@@ -1586,7 +1605,7 @@
     details.objection .plus {
       width: 36px; height: 36px;
       border-radius: 999px;
-      border: 1px solid rgba(28,28,28,.2);
+      border: 1px solid rgba(28,28,28.2);
       display:flex; align-items:center; justify-content:center;
       font-size: 1.2rem;
       transition: transform .25s ease, background .2s ease, color .2s ease;
@@ -1601,7 +1620,7 @@
     details.objection .answer {
       margin-top: 1rem;
       max-width: 60ch;
-      color: rgba(28,28,28,.78);
+      color: rgba(28,28,28.78);
       font-size: 1.05rem;
       line-height: 1.6;
     }
@@ -1641,8 +1660,8 @@
     .affiliate-band {
       background: #fff;
       padding: clamp(4rem, 8vw, 6rem) 0;
-      border-top: 1px solid rgba(52,73,96,.08);
-      border-bottom: 1px solid rgba(52,73,96,.08);
+      border-top: 1px solid rgba(52,73,96.08);
+      border-bottom: 1px solid rgba(52,73,96.08);
     }
     .affiliate-grid {
       display: grid;
@@ -1674,7 +1693,7 @@
       max-width: 22ch;
     }
     .affiliate-copy {
-      color: rgba(52,73,96,.78);
+      color: rgba(52,73,96.78);
       font-size: 1.02rem;
       line-height: 1.65;
       margin-bottom: 1rem;
@@ -1687,14 +1706,14 @@
     }
     .affiliate-qr {
       background: var(--bone);
-      border: 1px solid rgba(52,73,96,.10);
+      border: 1px solid rgba(52,73,96.10);
       border-radius: 18px;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      box-shadow: 0 18px 38px -28px rgba(52,73,96,.35);
+      box-shadow: 0 18px 38px -28px rgba(52,73,96.35);
       max-width: 320px;
       margin-inline: auto;
     }
@@ -1709,7 +1728,7 @@
     }
     .affiliate-qr-caption {
       font-size: .82rem;
-      color: rgba(52,73,96,.7);
+      color: rgba(52,73,96.7);
       margin-top: 1rem;
       line-height: 1.45;
     }
@@ -1726,7 +1745,7 @@
       text-transform: uppercase;
       color: var(--ink);
       padding: .55rem .95rem;
-      border: 1px solid rgba(52,73,96,.2);
+      border: 1px solid rgba(52,73,96.2);
       border-radius: 999px;
       transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
     }
@@ -1741,7 +1760,7 @@
     .wp-how {
       margin-top: clamp(3rem, 6vw, 5rem);
       padding-top: clamp(2.5rem, 5vw, 4rem);
-      border-top: 1px solid rgba(52,73,96,.12);
+      border-top: 1px solid rgba(52,73,96.12);
     }
     .wp-how-eyebrow {
       text-align: center;
@@ -1775,7 +1794,7 @@
     .wp-how-step {
       position: relative;
       background: var(--bone);
-      border: 1px solid rgba(52,73,96,.10);
+      border: 1px solid rgba(52,73,96.10);
       border-radius: 14px;
       padding: 1.5rem 1.5rem 1.4rem;
       transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
@@ -1783,7 +1802,7 @@
     .wp-how-step:hover {
       transform: translateY(-3px);
       border-color: var(--tan);
-      box-shadow: 0 16px 32px -20px rgba(52,73,96,.35);
+      box-shadow: 0 16px 32px -20px rgba(52,73,96.35);
     }
     .wp-how-num {
       display: inline-flex;
@@ -1795,7 +1814,7 @@
       letter-spacing: .1em;
       color: var(--tan);
       background: #fff;
-      border: 1px solid rgba(52,73,96,.15);
+      border: 1px solid rgba(52,73,96.15);
       width: 36px; height: 36px;
       border-radius: 999px;
       margin-bottom: .85rem;
@@ -1811,7 +1830,7 @@
     .wp-how-desc {
       font-size: .92rem;
       line-height: 1.55;
-      color: rgba(52,73,96,.78);
+      color: rgba(52,73,96.78);
       margin: 0;
     }
 
@@ -1829,8 +1848,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(45% 60% at 15% 20%, rgba(90,115,144,.35), transparent 70%),
-        radial-gradient(40% 60% at 85% 80%, rgba(90,115,144,.30), transparent 70%);
+        radial-gradient(45% 60% at 15% 20%, rgba(90,115,144.35), transparent 70%),
+        radial-gradient(40% 60% at 85% 80%, rgba(90,115,144.30), transparent 70%);
       pointer-events: none;
     }
     .final-cta > * { position: relative; z-index: 1; }
@@ -1839,7 +1858,7 @@
       font-size: .72rem;
       letter-spacing: .25em;
       text-transform: uppercase;
-      color: rgba(227,218,208,.7);
+      color: rgba(227,218,208.7);
       margin-bottom: 1rem;
       font-weight: 700;
     }
@@ -1853,7 +1872,7 @@
       color: #fff;
     }
     .final-cta-sub {
-      color: rgba(227,218,208,.8);
+      color: rgba(227,218,208.8);
       font-size: 1.05rem;
       line-height: 1.55;
       max-width: 44ch;
@@ -1947,18 +1966,18 @@
     <div class="container-x">
       <div class="text-center mb-16">
         <h2 id="diag-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[20ch] mx-auto leading-[1.05]">Where is your leadership stuck?</h2>
-        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Sit with each question. Tap a card to see the principle behind it — and one concrete move you can make this week.</p>
+        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Sit with each question. Tap a card to see the principle behind it, and one concrete move you can make this week.</p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-6 md:gap-7 diag-grid">
 
-        <!-- 01 — Calendar -->
-        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 01 — tap to see the principle and solution">
+        <!-- 01, Calendar -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 01, tap to see the principle and solution">
           <div class="flip-inner">
             <div class="flip-front">
               <span class="diag-num-pill">01</span>
               <p class="diag-front-label">The question</p>
-              <p class="diag-q-text">"Who are you becoming as a leader — and is your calendar telling the same story?"</p>
+              <p class="diag-q-text">"Who are you becoming as a leader, and is your calendar telling the same story?"</p>
               <div class="flip-front-foot">
                 <span class="flip-cue">Tap to see the principle &amp; solution
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
@@ -1970,19 +1989,19 @@
               <p class="diag-back-label">The principle</p>
               <blockquote class="diag-principle">Your calendar is your character in calendar form. Change the blocks, and you change the leader.</blockquote>
               <p class="diag-back-label diag-back-label-sol">The practical move</p>
-              <p class="diag-solution-text">Audit one week. Color-code every hour as <em>Building People</em>, <em>Building Strategy</em>, <em>Building Yourself</em>, or <em>Putting Out Fires</em>. The ratio is your real leadership — not your job description.</p>
+              <p class="diag-solution-text">Audit one week. Color-code every hour as <em>Building People</em>, <em>Building Strategy</em>, <em>Building Yourself</em>, or <em>Putting Out Fires</em>. The ratio is your real leadership, not your job description.</p>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
             </div>
           </div>
         </article>
 
-        <!-- 02 — Hard conversations -->
-        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 02 — tap to see the principle and solution">
+        <!-- 02, Hard conversations -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 02, tap to see the principle and solution">
           <div class="flip-inner">
             <div class="flip-front">
               <span class="diag-num-pill">02</span>
               <p class="diag-front-label">The question</p>
-              <p class="diag-q-text">"What conversation have you been avoiding — and what is it costing the person you're not having it with?"</p>
+              <p class="diag-q-text">"What conversation have you been avoiding, and what is it costing the person you're not having it with?"</p>
               <div class="flip-front-foot">
                 <span class="flip-cue">Tap to see the principle &amp; solution
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
@@ -2000,13 +2019,13 @@
           </div>
         </article>
 
-        <!-- 03 — Team perception -->
-        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 03 — tap to see the principle and solution">
+        <!-- 03, Team perception -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 03, tap to see the principle and solution">
           <div class="flip-inner">
             <div class="flip-front">
               <span class="diag-num-pill">03</span>
               <p class="diag-front-label">The question</p>
-              <p class="diag-q-text">"If your team described your leadership honestly, what would they say — and what would need to change?"</p>
+              <p class="diag-q-text">"If your team described your leadership honestly, what would they say, and what would need to change?"</p>
               <div class="flip-front-foot">
                 <span class="flip-cue">Tap to see the principle &amp; solution
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
@@ -2016,7 +2035,7 @@
             <div class="flip-back">
               <span class="diag-num-pill">03</span>
               <p class="diag-back-label">The principle</p>
-              <blockquote class="diag-principle">You don't get to define your leadership — your team does. Lead like they're already telling the truth about you.</blockquote>
+              <blockquote class="diag-principle">You don't get to define your leadership, your team does. Lead like they're already telling the truth about you.</blockquote>
               <p class="diag-back-label diag-back-label-sol">The practical move</p>
               <p class="diag-solution-text">Ask three trusted people one question: <em>"What's it like on the other side of me?"</em> Don't defend the answers. Adjust one behavior this month. That single loop is how reputation becomes reality.</p>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
@@ -2024,13 +2043,13 @@
           </div>
         </article>
 
-        <!-- 04 — Clarity of "winning" (NEW) -->
-        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 04 — tap to see the principle and solution">
+        <!-- 04, Clarity of "winning" (NEW) -->
+        <article class="reveal flip-card diag-card" tabindex="0" role="button" aria-label="Diagnostic 04, tap to see the principle and solution">
           <div class="flip-inner">
             <div class="flip-front">
               <span class="diag-num-pill">04</span>
               <p class="diag-front-label">The question</p>
-              <p class="diag-q-text">"If we asked every person on your team what 'winning' looks like this quarter, would we get the same answer four times — or four different ones?"</p>
+              <p class="diag-q-text">"If we asked every person on your team what 'winning' looks like this quarter, would we get the same answer four times, or four different ones?"</p>
               <div class="flip-front-foot">
                 <span class="flip-cue">Tap to see the principle &amp; solution
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
@@ -2040,9 +2059,9 @@
             <div class="flip-back">
               <span class="diag-num-pill">04</span>
               <p class="diag-back-label">The principle</p>
-              <blockquote class="diag-principle">Clarity is a multiplier. The cost of unclear targets isn't slower work — it's smart people pulling in opposite directions, all looking like they're failing.</blockquote>
+              <blockquote class="diag-principle">Clarity is a multiplier. The cost of unclear targets isn't slower work, it's smart people pulling in opposite directions, all looking like they're failing.</blockquote>
               <p class="diag-back-label diag-back-label-sol">The practical move</p>
-              <p class="diag-solution-text">Write the one-sentence "win" for this quarter. Test it with three people on the team this week. If you get three different versions back, you don't have a team problem — you have a clarity problem. Fix that first.</p>
+              <p class="diag-solution-text">Write the one-sentence "win" for this quarter. Test it with three people on the team this week. If you get three different versions back, you don't have a team problem, you have a clarity problem. Fix that first.</p>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
             </div>
           </div>
@@ -2058,7 +2077,7 @@
     </div>
   </section>
 
-  <!-- ───── HOW WE WORK — 3-step process preview ───── -->
+  <!-- ───── HOW WE WORK, 3-step process preview ───── -->
   <section id="process" class="section bg-bone" aria-labelledby="process-heading">
     <div class="container-x">
       <div class="text-center mb-14">
@@ -2108,7 +2127,7 @@
           </div>
           <p class="mt-5 text-center md:text-left text-xs uppercase tracking-[.22em] text-ink/45">Heath Haynes · Founder &amp; Coach</p>
 
-          <!-- Certification badges — GiANT credentials -->
+          <!-- Certification badges, GiANT credentials -->
           <div class="cert-badges">
             <p class="cert-badges-label">Certified in</p>
             <div class="cert-badges-row">
@@ -2125,11 +2144,11 @@
           <h2 id="about-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.02] mb-7">Most leadership problems aren't talent problems. They're formation problems.</h2>
 
           <p class="reveal text-ink/80 text-[1.05rem] leading-relaxed mb-7 max-w-prose">
-            Heath is a licensed <strong>GiANT Worldwide Partner</strong> who has spent 20 years developing leaders — first inside the nonprofit world, where mission is demanding and leadership formation is rarely optional, and now across organizations of every kind. That progression — from developed leader to healthy team to lasting performance — is exactly what L3 is built to produce.
+            Heath is a licensed <strong>GiANT Worldwide Partner</strong> who has spent 20 years developing leaders, first inside the nonprofit world, where mission is demanding and leadership formation is rarely optional, and now across organizations of every kind. That progression, from developed leader to healthy team to lasting performance, is exactly what L3 is built to produce.
           </p>
 
           <div class="reveal flex flex-wrap gap-3">
-            <a class="btn btn-outline" href="#process">See How We Work →</a>
+            <a class="btn btn-outline" href="#offers">See How We Work →</a>
             <a class="btn btn-primary" href="#cta">Book a Free Consultation</a>
           </div>
         </div>
@@ -2138,7 +2157,7 @@
       <!-- ── Testimonial (credibility) ── -->
       <figure class="reveal testimonial">
         <blockquote class="testimonial-body">
-          We didn't just learn leadership frameworks — we reshaped behaviors, built trust, and aligned execution to strategy.
+          We didn't just learn leadership frameworks, we reshaped behaviors, built trust, and aligned execution to strategy.
         </blockquote>
         <figcaption class="testimonial-attr">
           <span class="testimonial-attr-name">Kelly Moore</span>
@@ -2148,19 +2167,19 @@
     </div>
   </section>
 
-  <!-- ───── OFFERS — Massive freebies → 3 packages → 3 mini offers ───── -->
+  <!-- ───── OFFERS, Massive freebies → 3 packages → 3 mini offers ───── -->
   <section id="offers" class="section bg-bone" aria-labelledby="offers-heading">
     <div class="container-x">
       <div class="text-center mb-14">
         <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">What we offer</p>
-        <h2 id="offers-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[22ch] mx-auto leading-[1.02]">Three ways we work together.</h2>
+        <h2 id="offers-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[22ch] mx-auto leading-[1.02]">Four ways we work together.</h2>
         <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Tap a card to see what's inside.</p>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7">
+      <div class="grid md:grid-cols-2 gap-7 md:gap-8 offers-grid">
 
         <!-- ── 1. Leader Launch Track ── -->
-        <article class="reveal flip-card" data-package="leader-launch" tabindex="0" role="button" aria-label="Leader Launch Track — tap to see details">
+        <article class="reveal flip-card" data-package="leader-launch" tabindex="0" role="button" aria-label="Leader Launch Track, tap to see details">
           <span class="flip-ribbon">Leaders</span>
           <div class="flip-inner">
             <!-- FRONT -->
@@ -2184,7 +2203,7 @@
                 <li>Clear growth steps and accountability</li>
                 <li>Personal leadership dashboard &amp; toolkit</li>
               </ul>
-              <p class="flip-best-for"><strong>Best for:</strong> one leader who knows something needs to change but isn't ready to bring in the whole team yet.</p>
+              <p class="flip-best-for"><strong>Best for:</strong> those needing to be onboarded in to your leadership culture and language, or emerging leaders on your team.</p>
               <div class="flip-back-price">
                 <span class="flip-back-price-from">Starts at</span>
                 <span class="flip-back-price-num">$1,500</span>
@@ -2197,7 +2216,7 @@
         </article>
 
         <!-- ── 2. TeamLift Track (featured) ── -->
-        <article class="reveal flip-card featured" data-package="teamlift" tabindex="0" role="button" aria-label="TeamLift Track — tap to see details">
+        <article class="reveal flip-card featured" data-package="teamlift" tabindex="0" role="button" aria-label="TeamLift Track, tap to see details">
           <span class="flip-ribbon ribbon-gold">Teams</span>
           <div class="flip-inner">
             <!-- FRONT -->
@@ -2234,7 +2253,7 @@
         </article>
 
         <!-- ── 3. Custom Culture Track ── -->
-        <article class="reveal flip-card" data-package="custom-culture" tabindex="0" role="button" aria-label="Custom Culture Track — tap to see details">
+        <article class="reveal flip-card" data-package="custom-culture" tabindex="0" role="button" aria-label="Custom Culture Track, tap to see details">
           <span class="flip-ribbon">Organization</span>
           <div class="flip-inner">
             <!-- FRONT -->
@@ -2268,7 +2287,7 @@
         </article>
 
         <!-- ── 4. 1:1 Executive Coaching ── -->
-        <article class="reveal flip-card" data-package="one-on-one" tabindex="0" role="button" aria-label="1:1 Executive Coaching — tap to see details">
+        <article class="reveal flip-card" data-package="one-on-one" tabindex="0" role="button" aria-label="1:1 Executive Coaching, tap to see details">
           <span class="flip-ribbon">1:1</span>
           <div class="flip-inner">
             <!-- FRONT -->
@@ -2292,7 +2311,7 @@
                 <li>Practical, actionable outcomes</li>
                 <li>Zero long-term commitment</li>
               </ul>
-              <p class="flip-best-for"><strong>Best for:</strong> leaders who need targeted help on a specific decision, transition, or leadership challenge — without committing to an ongoing track.</p>
+              <p class="flip-best-for"><strong>Best for:</strong> leaders who need targeted help on a specific decision, transition, or leadership challenge, without committing to an ongoing track.</p>
               <div class="flip-back-price">
                 <span class="flip-back-price-from">Starts at</span>
                 <span class="flip-back-price-num">$300</span>
@@ -2318,13 +2337,12 @@
       <div class="text-center mb-14">
         <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">Real leaders · Real change</p>
         <h2 id="tst-heading" class="reveal display text-[clamp(2rem,4.5vw,3.4rem)] max-w-[22ch] mx-auto leading-[1.02]">What leaders say after the work.</h2>
-        <p class="reveal text-ink/65 mt-5 max-w-xl mx-auto">Tap a card to hear the fuller story.</p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-6 md:gap-7 tst-grid">
 
-        <!-- ── Testimonial 1 — Dougal Cameron ── -->
-        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Dougal Cameron — tap for the full story">
+        <!-- ── Testimonial 1, Dougal Cameron ── -->
+        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Dougal Cameron, tap for the full story">
           <div class="flip-inner">
             <!-- FRONT -->
             <div class="flip-front">
@@ -2332,7 +2350,7 @@
                 <div class="tst-avatar tst-avatar-dc" aria-hidden="true">DC</div>
               </div>
               <svg class="tst-quote-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z" fill="currentColor" opacity="0.55"/></svg>
-              <blockquote class="tst-quote">Heath helped us uncover blind spots we'd unintentionally neglected — we now operate with clarity, confidence, and alignment.</blockquote>
+              <blockquote class="tst-quote">Heath helped us uncover blind spots we'd unintentionally neglected, we now operate with clarity, confidence, and alignment.</blockquote>
               <div class="tst-attr">
                 <p class="tst-name">Dougal Cameron</p>
                 <p class="tst-role">CEO · Houston, TX</p>
@@ -2352,14 +2370,14 @@
                   <p class="tst-role">CEO · Houston, TX</p>
                 </div>
               </div>
-              <blockquote class="tst-quote-full">"Heath at L3 Coaching provided an invaluable experience for our team, guiding us through a deep dive into our individual giftings, personality dynamics, and leadership styles. His insight and structured approach helped us align more effectively around our firm's goals, sharpen our execution, and improve collaboration. Heath helped us uncover blind spots and address areas we had unintentionally neglected — we're now better equipped to operate with clarity, confidence, and alignment."</blockquote>
+              <blockquote class="tst-quote-full">"Heath at L3 Coaching provided an invaluable experience for our team, guiding us through a deep dive into our individual giftings, personality dynamics, and leadership styles. His insight and structured approach helped us align more effectively around our firm's goals, sharpen our execution, and improve collaboration. Heath helped us uncover blind spots and address areas we had unintentionally neglected, we're now better equipped to operate with clarity, confidence, and alignment."</blockquote>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
             </div>
           </div>
         </article>
 
-        <!-- ── Testimonial 2 — Chad Wilson ── -->
-        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Chad Wilson — tap for the full story">
+        <!-- ── Testimonial 2, Chad Wilson ── -->
+        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Chad Wilson, tap for the full story">
           <div class="flip-inner">
             <!-- FRONT -->
             <div class="flip-front">
@@ -2393,8 +2411,8 @@
           </div>
         </article>
 
-        <!-- ── Testimonial 3 — Kelly Moore ── -->
-        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Kelly Moore — tap for the full story">
+        <!-- ── Testimonial 3, Kelly Moore ── -->
+        <article class="reveal flip-card tst-card" tabindex="0" role="button" aria-label="Testimonial from Kelly Moore, tap for the full story">
           <div class="flip-inner">
             <!-- FRONT -->
             <div class="flip-front">
@@ -2422,7 +2440,7 @@
                   <p class="tst-role">Executive Director · Houston, TX</p>
                 </div>
               </div>
-              <blockquote class="tst-quote-full">"Working with Heath and L3 Coaching has been genuinely transformative for our leadership team and our broader organization. Heath created an environment where transparency was safe, accountability was expected, and growth was non-negotiable. We didn't just learn frameworks — we reshaped behaviors, built trust, and aligned execution to strategy. Our team is stronger, more connected, and better prepared to achieve meaningful outcomes because of the work we did together."</blockquote>
+              <blockquote class="tst-quote-full">"Working with Heath and L3 Coaching has been genuinely transformative for our leadership team and our broader organization. Heath created an environment where transparency was safe, accountability was expected, and growth was non-negotiable. We didn't just learn frameworks, we reshaped behaviors, built trust, and aligned execution to strategy. Our team is stronger, more connected, and better prepared to achieve meaningful outcomes because of the work we did together."</blockquote>
               <button type="button" class="flip-back-link" data-flip-back>← Back</button>
             </div>
           </div>
@@ -2467,7 +2485,7 @@
               </div>
               <div class="border-l border-ink/10 pl-4 sm:pl-6">
                 <p class="text-[10px] uppercase tracking-[.22em] text-clay mb-2">The reframe</p>
-                <p class="text-ink/80 text-[.95rem] leading-relaxed">What's the cost of <em>not</em> developing your leaders? You stay the bottleneck — and that compounds.</p>
+                <p class="text-ink/80 text-[.95rem] leading-relaxed">What's the cost of <em>not</em> developing your leaders? You stay the bottleneck, and that compounds.</p>
               </div>
             </article>
 
@@ -2489,7 +2507,7 @@
               </div>
               <div class="border-l border-ink/10 pl-4 sm:pl-6">
                 <p class="text-[10px] uppercase tracking-[.22em] text-clay mb-2">The reframe</p>
-                <p class="text-ink/80 text-[.95rem] leading-relaxed">Every leadership culture eventually becomes a mirror, reflecting back what's already there. Outside perspective doesn't replace what you've built — it shows you what you can't see from inside it.</p>
+                <p class="text-ink/80 text-[.95rem] leading-relaxed">Every leadership culture eventually becomes a mirror, reflecting back what's already there. Outside perspective doesn't replace what you've built, it shows you what you can't see from inside it.</p>
               </div>
             </article>
 
@@ -2535,7 +2553,7 @@
           <span class="reveal affiliate-tag">Partner · Your Culture Needs a System</span>
           <h2 id="affiliate-heading" class="reveal affiliate-title">Updating project software is exhausting. Workplace.io fixed it.</h2>
           <p class="reveal affiliate-copy">
-            Workplace turns your meetings into organized projects, notes, and next steps — always updated in real time.
+            Workplace turns your meetings into organized projects, notes, and next steps, always updated in real time.
           </p>
           <div class="reveal affiliate-actions">
             <a class="btn btn-tan" href="https://app.workplace.io/p/heath-haynes" target="_blank" rel="noopener">
@@ -2566,7 +2584,7 @@
           <div class="wp-how-step">
             <span class="wp-how-num">02</span>
             <h4 class="wp-how-title">Capture</h4>
-            <p class="wp-how-desc">It extracts decisions, action items, owners, and risks from every conversation — automatically routing each to the right project page.</p>
+            <p class="wp-how-desc">It extracts decisions, action items, owners, and risks from every conversation, automatically routing each to the right project page.</p>
           </div>
           <div class="wp-how-step">
             <span class="wp-how-num">03</span>
@@ -2584,7 +2602,7 @@
       <p class="final-cta-eyebrow">Free · 30 minutes · No pitch</p>
       <h2 id="final-cta-heading" class="final-cta-title">Ready for a real conversation?</h2>
       <p class="final-cta-sub">
-        Book a free consultation with Heath. We'll look at what's actually creating friction in your leadership — and what would change if it were gone.
+        Book a free consultation with Heath. We'll look at what's actually creating friction in your leadership, and what would change if it were gone.
       </p>
       <a class="btn btn-tan" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">
         Schedule a Free Consultation →
@@ -2607,7 +2625,7 @@
                  class="flex-1 bg-transparent border border-bone/25 rounded-full px-4 py-3 text-sm placeholder:text-bone/40 focus:border-tan outline-none" />
           <button class="btn btn-tan" type="submit">Join</button>
         </form>
-        <p id="footerFormMsg" class="text-xs text-tan mt-3 hidden">Thanks — we'll be in touch.</p>
+        <p id="footerFormMsg" class="text-xs text-tan mt-3 hidden">Thanks, we'll be in touch.</p>
       </div>
 
       <div class="md:col-span-3">
@@ -2690,10 +2708,10 @@
     <div id="modalBody" class="modal-body">
       <!-- Step 0: intro -->
       <div id="step-intro">
-        <p class="text-ink/80 leading-relaxed mb-4">A 12-question diagnostic that reveals where your leadership liberates your team — and where it quietly dominates them.</p>
+        <p class="text-ink/80 leading-relaxed mb-4">A 12-question diagnostic that reveals where your leadership liberates your team, and where it quietly dominates them.</p>
         <p class="text-ink/70 leading-relaxed mb-5">Takes about three minutes. You'll get a personalized result with the single highest-leverage shift to make next.</p>
         <p class="bg-bone border-l-2 border-clay px-5 py-4 italic text-ink/70 text-sm leading-relaxed mb-6">
-          Most teams operate well below their potential. Not because they lack talent — but because the leadership above them creates control instead of clarity. Answer honestly. The result is only useful if you do.
+          Most teams operate well below their potential. Not because they lack talent, but because the leadership above them creates control instead of clarity. Answer honestly. The result is only useful if you do.
         </p>
         <button id="startBtn" class="btn btn-primary w-full">Begin the Diagnostic →</button>
       </div>
@@ -2704,7 +2722,7 @@
           <span id="qProgress">Question 1 of 12</span>
           <button id="restartBtn" class="hover:text-ink transition">Restart</button>
         </div>
-        <p id="qDim" class="text-[11px] uppercase tracking-[.22em] text-clay mb-2">—</p>
+        <p id="qDim" class="text-[11px] uppercase tracking-[.22em] text-clay mb-2"></p>
         <p id="qText" class="font-serif text-xl md:text-2xl leading-snug min-h-[5rem] mb-6"></p>
 
         <div class="flex justify-between text-[11px] text-ink/50 mb-1 px-1">
@@ -2777,8 +2795,8 @@
       <div id="step-results" class="hidden">
         <div class="text-center mb-6">
           <p class="text-xs uppercase tracking-[.22em] text-clay mb-2">Your diagnostic result</p>
-          <p class="display text-5xl md:text-6xl"><span id="scoreNum">—</span><span class="text-ink/40 text-3xl"> / 60</span></p>
-          <p id="tierName" class="font-serif text-2xl mt-3 text-clay">—</p>
+          <p class="display text-5xl md:text-6xl"><span id="scoreNum"></span><span class="text-ink/40 text-3xl"> / 60</span></p>
+          <p id="tierName" class="font-serif text-2xl mt-3 text-clay"></p>
         </div>
 
         <p id="tierDiagnosis" class="text-ink/80 leading-relaxed mb-6"></p>
@@ -2808,8 +2826,8 @@
     <div class="pm-header">
       <div>
         <p id="pmEyebrow" class="pm-eyebrow">Get started</p>
-        <h3 id="pmTitle" class="pm-title">—</h3>
-        <p id="pmSubtitle" class="pm-subtitle">—</p>
+        <h3 id="pmTitle" class="pm-title"></h3>
+        <p id="pmSubtitle" class="pm-subtitle"></p>
       </div>
       <button id="pmClose" class="pm-close" aria-label="Close form">✕</button>
     </div>
@@ -2914,7 +2932,7 @@
       'leader-launch': {
         eyebrow: 'Consultation · Leader Launch Track',
         title: "Let's talk about your leader.",
-        subtitle: 'Starts at $1,500/month — share a few details and Heath will follow up within 1 business day to schedule a consultation.',
+        subtitle: 'Starts at $1,500/month, share a few details and Heath will follow up within 1 business day to schedule a consultation.',
         ctaLabel: 'Request Consultation →',
         emailSubject: 'New Leader Launch Track consultation request',
         fields: [
@@ -2929,7 +2947,7 @@
       'teamlift': {
         eyebrow: 'Consultation · TeamLift Track',
         title: "Let's talk about your team.",
-        subtitle: 'Starts at $2,500/month — tell us where the friction is and Heath will follow up within 1 business day to schedule a consultation.',
+        subtitle: 'Starts at $2,500/month, tell us where the friction is and Heath will follow up within 1 business day to schedule a consultation.',
         ctaLabel: 'Request Consultation →',
         emailSubject: 'New TeamLift Track consultation request',
         fields: [
@@ -3009,7 +3027,7 @@
         `Submitted: ${new Date().toLocaleString()}`,
         `Source: L3 Coaching website`
       ];
-      const subject = encodeURIComponent(pkg.emailSubject + ' — ' + (data.name || 'no name'));
+      const subject = encodeURIComponent(pkg.emailSubject + ', ' + (data.name || 'no name'));
       const body    = encodeURIComponent(bodyLines.join('\n'));
       const mailto  = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 
@@ -3061,17 +3079,17 @@
     });
 
     /* ──────────────────────────
-       Rolling logo marquee — GiANT client logos
+       Rolling logo marquee, GiANT client logos
        The track is duplicated so the CSS marquee loop is seamless.
        ────────────────────────── */
     // Logos pruned from this list because they don't tint cleanly under
     // the navy silhouette filter:
-    //   • Symmetry Financial — PNG has opaque white background, so the
+    //   • Symmetry Financial, PNG has opaque white background, so the
     //     whole image becomes a solid navy rectangle
-    //   • Ford — white "Ford" script inside the oval gets absorbed, leaving
+    //   • Ford, white "Ford" script inside the oval gets absorbed, leaving
     //     an unrecognizable solid navy oval blob
-    //   • Delta — V slash inside the triangle is white-painted (blobs)
-    //   • Loretto — dense heraldic crest + tall vertical aspect ratio
+    //   • Delta, V slash inside the triangle is white-painted (blobs)
+    //   • Loretto, dense heraldic crest + tall vertical aspect ratio
     const LOGOS = [
       { name: 'Chick-fil-A',          file: 'Chick-Fil-A-logo.png' },
       { name: 'Pfizer',               file: 'Pfizer_logo.png' },
@@ -3083,7 +3101,8 @@
       { name: 'Leidos',               file: 'Leidos-Logo.png' },
       { name: 'Sourcewell',           file: 'Sourcewell_logo.png' },
       { name: 'Creature Comforts',    file: 'Creature_Comforts_Logo.png' },
-      { name: 'Thousand Hills Coffee',file: 'Thousand_Hills_Coffee_Co_Logo.png' }
+      { name: 'Thousand Hills Coffee',file: 'Thousand_Hills_Coffee_Co_Logo.png' },
+      { name: 'Golden Section',       file: 'Golden_Section_logo.png' }
     ];
 
     function logoPlate(item) {
@@ -3095,13 +3114,13 @@
     if (reduced) track.style.animation = 'none';
 
     /* ──────────────────────────
-       Framework — interactive 5 Core Areas
+       Framework, interactive 5 Core Areas
        ────────────────────────── */
     const FRAMEWORK = [
       {
         title: 'Communication',
         tagline: 'Everyone speaks. Not everyone is heard.',
-        body: 'Leadership starts with how you speak — and how you listen. Most teams confuse talking with alignment. We help you discover the way you communicate under pressure and how to flex it for the people you lead.',
+        body: 'Leadership starts with how you speak, and how you listen. Most teams confuse talking with alignment. We help you discover the way you communicate under pressure and how to flex it for the people you lead.',
         tool: '5 Voices Framework',
         toolDesc: 'Discover your dominant voice and how it shows up to others.'
       },
@@ -3122,14 +3141,14 @@
       {
         title: 'Execution',
         tagline: 'Maximize your performance and results.',
-        body: 'Clarity without execution is wishful thinking. We install the rhythms and tools that turn priorities into outcomes — week after week.',
+        body: 'Clarity without execution is wishful thinking. We install the rhythms and tools that turn priorities into outcomes, week after week.',
         tool: 'Execution Toolkit',
         toolDesc: 'Practical systems for personal and team workflow.'
       },
       {
         title: 'Capacity',
         tagline: 'Get things done without burning out.',
-        body: 'Sustainable leadership is the goal. We help you grow your bandwidth by developing the people behind you — so the team\u2019s capacity grows with yours.',
+        body: 'Sustainable leadership is the goal. We help you grow your bandwidth by developing the people behind you, so the team\u2019s capacity grows with yours.',
         tool: 'Developing Others Roadmap',
         toolDesc: 'A clear path for growing leaders who grow other leaders.'
       }
@@ -3194,7 +3213,7 @@
       .filter(t => t.section);
 
     function updateActiveNav() {
-      // "activation line" — 35% down the viewport
+      // "activation line", 35% down the viewport
       const line = window.scrollY + window.innerHeight * 0.35;
       let active = null;
       for (const t of spyTargets) {
@@ -3220,48 +3239,48 @@
        Liberating Leader Diagnostic
        ────────────────────────── */
     // Set this to your Airtable / Make / Zapier webhook URL.
-    // Leave empty ("") to disable submission — useful for testing.
+    // Leave empty ("") to disable submission, useful for testing.
     const WEBHOOK_URL = "";
 
     const QUESTIONS = [
-      { dim: "Self-Awareness",         text: "I can name the specific leadership tendencies that energize my team — and the ones that drain it." },
+      { dim: "Self-Awareness",         text: "I can name the specific leadership tendencies that energize my team, and the ones that drain it." },
       { dim: "Self-Awareness",         text: "When I'm under pressure, I default to behaviors I've consciously chosen, not ones that just happen to me." },
       { dim: "Self-Awareness",         text: "I've received candid feedback on how I lead in the last 90 days, and I made a specific change because of it." },
       { dim: "Team Clarity",           text: "Every person on my team can articulate what success in their role looks like this quarter without checking a document." },
       { dim: "Team Clarity",           text: "My team can predict how I'll respond to common situations because my standards and decisions are consistent." },
-      { dim: "Team Clarity",           text: "We have a shared language for hard conversations — and we actually use it." },
+      { dim: "Team Clarity",           text: "We have a shared language for hard conversations, and we actually use it." },
       { dim: "Liberation vs. Control", text: "The people I lead bring me problems, ideas, and bad news without first calculating how I'll react." },
-      { dim: "Liberation vs. Control", text: "Decisions get made at the lowest level where the information lives — they don't get pushed up to me." },
+      { dim: "Liberation vs. Control", text: "Decisions get made at the lowest level where the information lives, they don't get pushed up to me." },
       { dim: "Liberation vs. Control", text: "When someone on my team disagrees with me, they say it directly, in real time, rather than working around me later." },
-      { dim: "Sustainability",         text: "If I were unavailable for 30 days, my team's performance would be steady — not dependent on my presence." },
+      { dim: "Sustainability",         text: "If I were unavailable for 30 days, my team's performance would be steady, not dependent on my presence." },
       { dim: "Sustainability",         text: "There are at least two people on my team I'm actively developing to replace or surpass me in key responsibilities." },
-      { dim: "Sustainability",         text: "The culture we've built reflects shared values that are written down, talked about, and lived — not just assumed." }
+      { dim: "Sustainability",         text: "The culture we've built reflects shared values that are written down, talked about, and lived, not just assumed." }
     ];
 
     const TIERS = [
       {
         min: 12, max: 30, name: "The Bottleneck Leader",
-        diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw — it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`,
-        shift: `Stop being the answer. For the next 30 days, when someone brings you a problem, ask "what do you recommend?" before you say anything else. If their recommendation is workable — even 70% as good as yours — let them run with it. The short-term cost in quality is the long-term price of building a team that can think.`,
+        diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw, it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`,
+        shift: `Stop being the answer. For the next 30 days, when someone brings you a problem, ask "what do you recommend?" before you say anything else. If their recommendation is workable, even 70% as good as yours, let them run with it. The short-term cost in quality is the long-term price of building a team that can think.`,
         closer: `This is the exact pattern Heath helps leaders break in 1:1 coaching.`
       },
       {
         min: 31, max: 44, name: "The Capable Manager",
-        diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden — the company runs, the numbers look fine — and the cost of breaking through (giving real authority away) feels disproportionate.`,
-        shift: `Identify the three decisions you currently own that you shouldn't, and transfer them this month. Not delegate — transfer. Owned by someone else, including the right to be wrong. You will hate this. That hatred is the proof it's the right move.`,
+        diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden, the company runs, the numbers look fine, and the cost of breaking through (giving real authority away) feels disproportionate.`,
+        shift: `Identify the three decisions you currently own that you shouldn't, and transfer them this month. Not delegate, transfer. Owned by someone else, including the right to be wrong. You will hate this. That hatred is the proof it's the right move.`,
         closer: `Heath works with leaders at this exact stage in Core Groups, where peer accountability makes the transfer actually stick.`
       },
       {
         min: 45, max: 54, name: "The Emerging Liberator",
-        diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more — they're about doing fewer things at higher resolution.`,
+        diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more, they're about doing fewer things at higher resolution.`,
         shift: `Pick the dimension where you scored lowest and treat it as a system, not a behavior. If your weakness is feedback, build a feedback ritual into your operating cadence. If it's succession, name your successors publicly and let the team see you train them. The leaders who break out of this tier do it by making their growth visible to the people they lead.`,
-        closer: `This is the territory Heath spends most of his time in — leaders who are good and want to compound that into something durable.`
+        closer: `This is the territory Heath spends most of his time in, leaders who are good and want to compound that into something durable.`
       },
       {
         min: 55, max: 60, name: "The Liberating Leader",
-        diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously — most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`,
+        diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously, most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`,
         shift: `Build a deliberate channel for hard feedback you can't ignore. A peer group. An outside coach. A 360 you actually act on. The next decade of your leadership will be shaped less by what you build and more by what you choose not to defend.`,
-        closer: `Heath runs Core Groups specifically for leaders in this air — peer accountability with people who can match your altitude.`
+        closer: `Heath runs Core Groups specifically for leaders in this air, peer accountability with people who can match your altitude.`
       }
     ];
 
@@ -3312,8 +3331,26 @@
       if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
     });
 
-    // Auto-open on load
-    setTimeout(() => { openModal(); }, 1200);
+    /* Auto-open once the user has scrolled past the diagnostic section
+       (heading + 4 cards + CTA). We observe the next section (#process);
+       when it enters the viewport, we pop the modal a single time per
+       page load. Users who dismiss it can always relaunch it via the
+       sticky "Free Leadership Diagnostic" tab on the right edge. */
+    let diagAutoOpened = false;
+    const processSection = document.getElementById('process');
+    if (processSection && 'IntersectionObserver' in window) {
+      const diagObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !diagAutoOpened) {
+            diagAutoOpened = true;
+            diagObserver.disconnect();
+            /* Only auto-open if the user hasn't already opened it manually. */
+            if (!modal.classList.contains('open')) openModal();
+          }
+        });
+      }, { threshold: 0.15 });
+      diagObserver.observe(processSection);
+    }
 
     function setProgress(stepName) {
       const total = QUESTIONS.length + 2; // questions + capture + result
@@ -3418,10 +3455,10 @@
       // Always also send via mailto: as the no-backend fallback so results
       // reach connect@l3leadershipcoaching.com.
       const answerLines = payload.answers
-        .map((v, i) => `  Q${i + 1} (${QUESTIONS[i].dim}): ${v ?? '-'} — ${QUESTIONS[i].text}`)
+        .map((v, i) => `  Q${i + 1} (${QUESTIONS[i].dim}): ${v ?? '-'}, ${QUESTIONS[i].text}`)
         .join('\n');
       const mailBody = [
-        `Liberating Leader Diagnostic — new submission`,
+        `Liberating Leader Diagnostic, new submission`,
         ``,
         `Name:     ${payload.firstName}`,
         `Email:    ${payload.email}`,
@@ -3442,7 +3479,7 @@
         `Source:    L3 Coaching website (diagnostic)`
       ].join('\n');
       const mailto =
-        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Liberating Leader Diagnostic — ' + payload.firstName)}` +
+        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Liberating Leader Diagnostic, ' + payload.firstName)}` +
         `&body=${encodeURIComponent(mailBody)}`;
       // Append a "send me a copy" link inside the result step so the user
       // can fire the mailto on demand without disrupting the result view.
@@ -3460,7 +3497,7 @@
     if (window.gsap && window.ScrollTrigger && !reduced) {
       gsap.registerPlugin(ScrollTrigger);
       gsap.utils.toArray('.section').forEach(sec => {
-        // very subtle — let CSS reveals do the heavy lifting
+        // very subtle, let CSS reveals do the heavy lifting
         gsap.fromTo(sec, { backgroundPosition: '50% 0%' }, {
           backgroundPosition: '50% 4%',
           ease: 'none',
