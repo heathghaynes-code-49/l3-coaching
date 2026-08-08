@@ -96,7 +96,7 @@ function buildInternalEmailHtml(payload) {
 
   return `
     <div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
-      <div style="background:#344960;color:#ffffff;padding:24px 28px;border-radius:10px 10px 0 0;">
+      <div style="background:#344960;color:#ffffff;padding:24px 28px;border-radius:10px 10px 0 0;">${LOGO_HTML}
         <p style="margin:0 0 4px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;">Liberating Leader Diagnostic — New Submission</p>
         <p style="margin:0;font-size:34px;font-weight:700;line-height:1.1;">${escapeHtml(payload.score)}<span style="font-size:18px;font-weight:400;opacity:.7;"> / 60</span></p>
         <p style="margin:6px 0 0;font-size:18px;font-weight:600;">${escapeHtml(payload.tier)}</p>
@@ -146,7 +146,7 @@ function buildVisitorEmailHtml(payload) {
 
   return `
     <div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
-      <div style="background:#344960;color:#ffffff;padding:32px 28px;border-radius:10px 10px 0 0;text-align:center;">
+      <div style="background:#344960;color:#ffffff;padding:32px 28px;border-radius:10px 10px 0 0;text-align:center;">${LOGO_HTML}
         <p style="margin:0 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;">Your Liberating Leader Diagnostic</p>
         <p style="margin:0;font-size:44px;font-weight:700;line-height:1.1;">${escapeHtml(payload.score)}<span style="font-size:20px;font-weight:400;opacity:.7;"> / 60</span></p>
         <p style="margin:8px 0 0;font-size:20px;font-weight:600;">${escapeHtml(payload.tier)}</p>
