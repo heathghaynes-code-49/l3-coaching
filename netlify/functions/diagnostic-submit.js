@@ -12,40 +12,49 @@
 
 // Mirrors the QUESTIONS array in index.html — keep the two in sync.
 const QUESTIONS = [
-  { dim: "Self-Awareness",         text: "I can name the specific leadership tendencies that energize my team, and the ones that drain it." },
-  { dim: "Self-Awareness",         text: "When I'm under pressure, I default to behaviors I've consciously chosen, not ones that just happen to me." },
-  { dim: "Self-Awareness",         text: "I've received candid feedback on how I lead in the last 90 days, and I made a specific change because of it." },
-  { dim: "Team Clarity",           text: "Every person on my team can articulate what success in their role looks like this quarter without checking a document." },
-  { dim: "Team Clarity",           text: "My team can predict how I'll respond to common situations because my standards and decisions are consistent." },
-  { dim: "Team Clarity",           text: "We have a shared language for hard conversations, and we actually use it." },
+  { dim: "Self-Awareness", text: "I can name the specific leadership tendencies that energize my team, and the ones that drain it." },
+  { dim: "Self-Awareness", text: "When I'm under pressure, I default to behaviors I've consciously chosen, not ones that just happen to me." },
+  { dim: "Self-Awareness", text: "I've received candid feedback on how I lead in the last 90 days, and I made a specific change because of it." },
+  { dim: "Team Clarity", text: "Every person on my team can articulate what success in their role looks like this quarter without checking a document." },
+  { dim: "Team Clarity", text: "My team can predict how I'll respond to common situations because my standards and decisions are consistent." },
+  { dim: "Team Clarity", text: "We have a shared language for hard conversations, and we actually use it." },
   { dim: "Liberation vs. Control", text: "The people I lead bring me problems, ideas, and bad news without first calculating how I'll react." },
   { dim: "Liberation vs. Control", text: "Decisions get made at the lowest level where the information lives, they don't get pushed up to me." },
   { dim: "Liberation vs. Control", text: "When someone on my team disagrees with me, they say it directly, in real time, rather than working around me later." },
-  { dim: "Sustainability",         text: "If I were unavailable for 30 days, my team's performance would be steady, not dependent on my presence." },
-  { dim: "Sustainability",         text: "There are at least two people on my team I'm actively developing to replace or surpass me in key responsibilities." },
-  { dim: "Sustainability",         text: "The culture we've built reflects shared values that are written down, talked about, and lived, not just assumed." }
+  { dim: "Sustainability", text: "If I were unavailable for 30 days, my team's performance would be steady, not dependent on my presence." },
+  { dim: "Sustainability", text: "There are at least two people on my team I'm actively developing to replace or surpass me in key responsibilities." },
+  { dim: "Sustainability", text: "The culture we've built reflects shared values that are written down, talked about, and lived, not just assumed." }
 ];
 
 const DIMENSIONS = ["Self-Awareness", "Team Clarity", "Liberation vs. Control", "Sustainability"];
 
-// Mirrors the TIERS array in index.html (name + diagnosis only — that's
-// all the visitor email needs) — keep the two in sync.
+// Mirrors the TIERS array in index.html — name, diagnosis, shift (the
+// single highest-leverage move for that tier) and closer (the line
+// connecting it to working with Heath). Keep the two in sync.
 const TIERS = [
   {
     name: "The Bottleneck Leader",
-    diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw, it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`
+    diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw, it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`,
+    shift: `Stop being the answer. For the next 30 days, when someone brings you a problem, ask "what do you recommend?" before you say anything else. If their recommendation is workable, even 70% as good as yours, let them run with it. The short-term cost in quality is the long-term price of building a team that can think.`,
+    closer: `This is the exact pattern Heath helps leaders break in 1:1 coaching.`
   },
   {
     name: "The Capable Manager",
-    diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden, the company runs, the numbers look fine, and the cost of breaking through (giving real authority away) feels disproportionate.`
+    diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden, the company runs, the numbers look fine, and the cost of breaking through (giving real authority away) feels disproportionate.`,
+    shift: `Identify the three decisions you currently own that you shouldn't, and transfer them this month. Not delegate, transfer. Owned by someone else, including the right to be wrong. You will hate this. That hatred is the proof it's the right move.`,
+    closer: `Heath works with leaders at this exact stage in Core Groups, where peer accountability makes the transfer actually stick.`
   },
   {
     name: "The Emerging Liberator",
-    diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more, they're about doing fewer things at higher resolution.`
+    diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more, they're about doing fewer things at higher resolution.`,
+    shift: `Pick the dimension where you scored lowest and treat it as a system, not a behavior. If your weakness is feedback, build a feedback ritual into your operating cadence. If it's succession, name your successors publicly and let the team see you train them. The leaders who break out of this tier do it by making their growth visible to the people they lead.`,
+    closer: `This is the territory Heath spends most of his time in, leaders who are good and want to compound that into something durable.`
   },
   {
     name: "The Liberating Leader",
-    diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously, most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`
+    diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously, most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`,
+    shift: `Build a deliberate channel for hard feedback you can't ignore. A peer group. An outside coach. A 360 you actually act on. The next decade of your leadership will be shaped less by what you build and more by what you choose not to defend.`,
+    closer: `Heath runs Core Groups specifically for leaders in this air, peer accountability with people who can match your altitude.`
   }
 ];
 
@@ -86,54 +95,70 @@ function buildInternalEmailHtml(payload) {
   ].filter(Boolean).join(" · ");
 
   return `
-<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
-  <div style="background:#344960;color:#ffffff;padding:24px 28px;border-radius:10px 10px 0 0;">
-    <p style="margin:0 0 4px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;">Liberating Leader Diagnostic — New Submission</p>
-    <p style="margin:0;font-size:34px;font-weight:700;line-height:1.1;">${escapeHtml(payload.score)}<span style="font-size:18px;font-weight:400;opacity:.7;"> / 60</span></p>
-    <p style="margin:6px 0 0;font-size:18px;font-weight:600;">${escapeHtml(payload.tier)}</p>
-  </div>
-  <div style="border:1px solid #e5e1d8;border-top:none;border-radius:0 0 10px 10px;padding:24px 28px;">
-    <p style="margin:0 0 4px;font:700 15px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">${escapeHtml(payload.firstName)} — ${escapeHtml(payload.company)}</p>
-    <p style="margin:0 0 16px;font:400 14px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">
-      ${escapeHtml(payload.email)}<br>
-      ${escapeHtml(payload.role)} · Team size ${escapeHtml(payload.teamSize)}
-    </p>
-    ${challengeBlock}
-    <table role="presentation" width="100%" style="border-collapse:collapse;margin-top:4px;">
-      <tbody>${dimensionRows}</tbody>
-    </table>
-    <p style="margin:20px 0 0;padding-top:16px;border-top:1px solid #e5e1d8;font:400 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">
-      Submitted ${escapeHtml(submittedAt.toLocaleString("en-US", { timeZone: "UTC" }))} UTC${sourceLine ? ` · ${sourceLine}` : ""}
-    </p>
-  </div>
-</div>`;
+    <div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
+      <div style="background:#344960;color:#ffffff;padding:24px 28px;border-radius:10px 10px 0 0;">
+        <p style="margin:0 0 4px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;">Liberating Leader Diagnostic — New Submission</p>
+        <p style="margin:0;font-size:34px;font-weight:700;line-height:1.1;">${escapeHtml(payload.score)}<span style="font-size:18px;font-weight:400;opacity:.7;"> / 60</span></p>
+        <p style="margin:6px 0 0;font-size:18px;font-weight:600;">${escapeHtml(payload.tier)}</p>
+      </div>
+      <div style="border:1px solid #e5e1d8;border-top:none;border-radius:0 0 10px 10px;padding:24px 28px;">
+        <p style="margin:0 0 4px;font:700 15px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">${escapeHtml(payload.firstName)} — ${escapeHtml(payload.company)}</p>
+        <p style="margin:0 0 16px;font:400 14px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">
+          ${escapeHtml(payload.email)}<br>
+          ${escapeHtml(payload.role)} · Team size ${escapeHtml(payload.teamSize)}
+        </p>
+        ${challengeBlock}
+        <table role="presentation" width="100%" style="border-collapse:collapse;margin-top:4px;">
+          <tbody>${dimensionRows}</tbody>
+        </table>
+        <p style="margin:20px 0 0;padding-top:16px;border-top:1px solid #e5e1d8;font:400 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">
+          Submitted ${escapeHtml(submittedAt.toLocaleString("en-US", { timeZone: "UTC" }))} UTC${sourceLine ? ` · ${sourceLine}` : ""}
+        </p>
+      </div>
+    </div>`;
 }
 
 function buildVisitorEmailHtml(payload) {
   const tier = TIERS.find((t) => t.name === payload.tier);
   const diagnosis = tier ? tier.diagnosis : "";
+  const shift = tier ? tier.shift : "";
+  const closer = tier ? tier.closer : "";
   const firstName = payload.firstName ? escapeHtml(payload.firstName) : "there";
 
+  const shiftBlock = shift
+    ? `<div style="margin:0 0 18px;padding:16px 18px;background:#e3dad0;border-left:3px solid #344960;border-radius:0 6px 6px 0;">
+        <p style="margin:0 0 6px;font:700 11px/1.3 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5a7390;">The Single Highest-Leverage Shift</p>
+        <p style="margin:0;font:400 14px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">${escapeHtml(shift)}</p>
+      </div>`
+    : "";
+
+  const closerBlock = closer
+    ? `<p style="margin:0 0 24px;padding-bottom:20px;border-bottom:1px solid #e5e1d8;font:italic 400 14px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#5a7390;">${escapeHtml(closer)}</p>`
+    : "";
+
   const ctaBlock = payload.calendlyUrl
-    ? `<div style="text-align:center;margin:28px 0 4px;">
-        <a href="${escapeHtml(payload.calendlyUrl)}" style="display:inline-block;background:#344960;color:#ffffff;text-decoration:none;font:600 15px/1 -apple-system,Helvetica,Arial,sans-serif;padding:14px 28px;border-radius:999px;">Book a Discovery Meeting →</a>
-      </div>
-      <p style="text-align:center;margin:12px 0 0;font:400 13px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>`
+    ? `<p style="margin:0 0 4px;font:600 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">Want a 30-minute conversation about your specific situation?</p>
+       <p style="margin:0 0 16px;font:400 13px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
+       <div style="text-align:center;margin:0 0 4px;">
+         <a href="${escapeHtml(payload.calendlyUrl)}" style="display:inline-block;background:#344960;color:#ffffff;text-decoration:none;font:600 15px/1 -apple-system,Helvetica,Arial,sans-serif;padding:14px 28px;border-radius:999px;">Book a Discovery Meeting →</a>
+       </div>`
     : "";
 
   return `
-<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
-  <div style="background:#344960;color:#ffffff;padding:32px 28px;border-radius:10px 10px 0 0;text-align:center;">
-    <p style="margin:0 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;">Your Liberating Leader Diagnostic</p>
-    <p style="margin:0;font-size:44px;font-weight:700;line-height:1.1;">${escapeHtml(payload.score)}<span style="font-size:20px;font-weight:400;opacity:.7;"> / 60</span></p>
-    <p style="margin:8px 0 0;font-size:20px;font-weight:600;">${escapeHtml(payload.tier)}</p>
-  </div>
-  <div style="border:1px solid #e5e1d8;border-top:none;border-radius:0 0 10px 10px;padding:28px 28px 32px;">
-    <p style="margin:0 0 18px;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">Hi ${firstName},</p>
-    <p style="margin:0 0 18px;font:400 15px/1.65 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">${escapeHtml(diagnosis)}</p>
-    ${ctaBlock}
-  </div>
-</div>`;
+    <div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
+      <div style="background:#344960;color:#ffffff;padding:32px 28px;border-radius:10px 10px 0 0;text-align:center;">
+        <p style="margin:0 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;">Your Liberating Leader Diagnostic</p>
+        <p style="margin:0;font-size:44px;font-weight:700;line-height:1.1;">${escapeHtml(payload.score)}<span style="font-size:20px;font-weight:400;opacity:.7;"> / 60</span></p>
+        <p style="margin:8px 0 0;font-size:20px;font-weight:600;">${escapeHtml(payload.tier)}</p>
+      </div>
+      <div style="border:1px solid #e5e1d8;border-top:none;border-radius:0 0 10px 10px;padding:28px 28px 32px;">
+        <p style="margin:0 0 18px;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">Hi ${firstName},</p>
+        <p style="margin:0 0 18px;font:400 15px/1.65 -apple-system,Helvetica,Arial,sans-serif;color:#344960;">${escapeHtml(diagnosis)}</p>
+        ${shiftBlock}
+        ${closerBlock}
+        ${ctaBlock}
+      </div>
+    </div>`;
 }
 
 async function sendResendEmail(apiKey, body) {
