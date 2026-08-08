@@ -2908,7 +2908,7 @@
         <div class="border-t border-ink/10 pt-6">
           <p class="font-medium mb-2">Want a 30-minute conversation about your specific situation?</p>
           <p class="text-sm text-ink/60 mb-4">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
-          <a class="btn btn-tan w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
+          <a id="calendlyLink" class="btn btn-tan w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
           <p id="resultsSent" class="text-xs text-ink/50 text-center mt-3">A copy of your result has been emailed to you.</p>
         </div>
       </div>
@@ -3355,10 +3355,6 @@
     /* ──────────────────────────
        Liberating Leader Diagnostic
        ────────────────────────── */
-    // Set this to your Airtable / Make / Zapier webhook URL.
-    // Leave empty ("") to disable submission, useful for testing.
-    const WEBHOOK_URL = "";
-
     const QUESTIONS = [
       { dim: "Self-Awareness",         text: "I can name the specific leadership tendencies that energize my team, and the ones that drain it." },
       { dim: "Self-Awareness",         text: "When I'm under pressure, I default to behaviors I've consciously chosen, not ones that just happen to me." },
@@ -3541,6 +3537,7 @@
         teamSize: document.getElementById('teamSize').value,
         challenge: document.getElementById('challenge').value.trim(),
         score, tier: tier.name, answers,
+        calendlyUrl: document.getElementById('calendlyLink')?.href || '',
         utmSource: new URLSearchParams(window.location.search).get('utm_source') || '',
         utmCampaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
         submittedAt: new Date().toISOString()
@@ -3554,57 +3551,18 @@
       document.getElementById('tierCloser').textContent = tier.closer;
       showStep('result');
 
-      // Fire-and-forget POST to webhook (if configured)
-      if (WEBHOOK_URL) {
-        try {
-          await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-        } catch (err) {
-          console.warn('Webhook submission failed:', err);
-        }
-      } else {
-        console.log('Diagnostic payload (WEBHOOK_URL not set):', payload);
-      }
-
-      // Always also send via mailto: as the no-backend fallback so results
-      // reach connect@l3leadershipcoaching.com.
-      const answerLines = payload.answers
-        .map((v, i) => `  Q${i + 1} (${QUESTIONS[i].dim}): ${v ?? '-'}, ${QUESTIONS[i].text}`)
-        .join('\n');
-      const mailBody = [
-        `Liberating Leader Diagnostic, new submission`,
-        ``,
-        `Name:     ${payload.firstName}`,
-        `Email:    ${payload.email}`,
-        `Company:  ${payload.company}`,
-        `Role:     ${payload.role}`,
-        `Team size:${payload.teamSize}`,
-        ``,
-        `Score:    ${payload.score} / 60`,
-        `Tier:     ${payload.tier}`,
-        ``,
-        `90-day challenge:`,
-        payload.challenge || '(blank)',
-        ``,
-        `--- Raw answers ---`,
-        answerLines,
-        ``,
-        `Submitted: ${new Date().toLocaleString()}`,
-        `Source:    L3 Coaching website (diagnostic)`
-      ].join('\n');
-      const mailto =
-        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Liberating Leader Diagnostic, ' + payload.firstName)}` +
-        `&body=${encodeURIComponent(mailBody)}`;
-      // Append a "send me a copy" link inside the result step so the user
-      // can fire the mailto on demand without disrupting the result view.
-      const sent = document.getElementById('resultsSent');
-      if (sent) {
-        sent.innerHTML =
-          `A copy of your result is ready to send to <strong>${CONTACT_EMAIL}</strong>. ` +
-          `<a href="${mailto}" class="text-clay underline-offset-2 hover:underline">Send it now →</a>`;
+      // Fire-and-forget POST to the Netlify Function, which emails the
+      // submission to connect@l3leadershipcoaching.com. Never blocks or
+      // alters what the visitor sees — the result screen above has
+      // already rendered.
+      try {
+        await fetch('/.netlify/functions/diagnostic-submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        // Fail silently — the visitor's result screen is unaffected.
       }
     });
 
