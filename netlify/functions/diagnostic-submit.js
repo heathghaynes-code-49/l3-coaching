@@ -60,7 +60,7 @@ const TIERS = [
 
 const INTERNAL_FROM_ADDRESS = "L3 Diagnostic <diagnostic@l3leadershipcoaching.com>";
 const INTERNAL_TO_ADDRESS = "connect@l3leadershipcoaching.com";
-const VISITOR_FROM_ADDRESS = "L3 Coaching <diagnostic@l3leadershipcoaching.com>";
+const VISITOR_FROM_ADDRESS = "L3 Coaching <diagnostic@l3leadershipcoaching.com>"; const LOGO_URL = "https://l3leadershipcoaching.com/2026%20L3%20Logos/2026%20L3%20Title%20Logo%20White%20Text%20Transparent%20BG.png"; const LOGO_HTML = '<div style="width:200px;height:33px;overflow:hidden;margin:0 auto 16px;line-height:0;"><img src="' + LOGO_URL + '" width="227" style="display:block;width:227px;height:auto;margin:-49px 0 0 -14px;border:0;" alt="L3 Coaching"></div>';
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (c) => ({
