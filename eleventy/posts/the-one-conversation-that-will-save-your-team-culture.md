@@ -39,12 +39,14 @@ When a team knows how to handle conflict the right way, it doesn't just prevent 
 
 ## The Tool: Go to the Source
 
-That's why one of the simplest and most powerful L3 Coaching tools is called **Go to the Source**. Here's how it works:
+That's why one of the simplest and most powerful L3 Coaching tools is called **Go to the Source**.
+
+{% toolImage "/blog/images/the-one-conversation-that-will-save-your-team-culture-tool.png", "Go to the Source — Person 1 takes an issue directly to Person 2, instead of routing it through Person 3 as a conduit for drama and gossip", "Go to the Source (© GiANT Worldwide)" %}
+
+Here's how it works:
 
 - If Person 1 has an issue with Person 2, they go directly to them — not to Person 3.
 - If Person 1 does go to Person 3, then it's Person 3's responsibility to be a firewall, not a conduit.
-
-{% toolImage "/blog/images/the-one-conversation-that-will-save-your-team-culture-tool.png", "Go to the Source — Person 1 takes an issue directly to Person 2, instead of routing it through Person 3 as a conduit for drama and gossip", "Go to the Source (© GiANT Worldwide)" %}
 
 The firewall says:
 
