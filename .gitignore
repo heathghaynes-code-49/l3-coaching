@@ -18,8 +18,9 @@ L3_Website_Change_Request_Form.pdf
 *~
 Thumbs.db
 
-# ── Node / build artifacts (future-proofing) ─────────────────────
+# ── Node / build artifacts ─────────────────────────────────────────
 node_modules/
+_site/
 .env
 .env.*
 !.env.example

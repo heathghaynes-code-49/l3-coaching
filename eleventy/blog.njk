@@ -1,0 +1,40 @@
+---
+permalink: blog.html
+layout: base.njk
+pageTitle: "Blog | L3 Coaching"
+pageDescription: "Leadership insights and practical next steps from L3 Coaching — Liberating Leaders that Last."
+---
+{#
+  Blog index. Loops over every file in eleventy/posts/ (the "post"
+  tag + layout come from posts.json), sorted newest → oldest by
+  each post's own `date` front matter — no manual ordering needed.
+#}
+
+<section class="section" style="padding-top: clamp(8rem, 14vw, 11rem); padding-bottom: 2rem;">
+  <div class="container-x">
+    <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">L3 Coaching</p>
+    <h1 class="reveal display text-[clamp(2.5rem,6vw,4.5rem)] max-w-[16ch]">The Blog</h1>
+    <p class="reveal text-ink/65 mt-5 max-w-xl text-lg leading-relaxed">Practical insight on leadership, communication, and building teams that last.</p>
+  </div>
+</section>
+
+<section class="section pt-0">
+  <div class="container-x">
+    <div id="postGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% set posts = collections.post | reverse %}
+      {% for post in posts %}
+        <article class="post-card reveal">
+          <a href="{{ post.url }}">
+            {% if post.data.heroImage %}<img src="{{ post.data.heroImage }}" alt="{{ post.data.heroAlt }}" />{% endif %}
+          </a>
+          <p class="post-date">{{ post.data.displayDate }} · Heath Haynes</p>
+          <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+          <p class="excerpt">{{ post.data.excerpt }}</p>
+          <a class="read-more" href="{{ post.url }}">Read more</a>
+        </article>
+      {% else %}
+        <p class="text-ink/55 col-span-full text-center py-16">New posts coming soon.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>

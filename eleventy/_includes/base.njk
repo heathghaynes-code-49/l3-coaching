@@ -1,30 +1,18 @@
 <!--
-  L3 Coaching — Blog index
+  L3 Coaching — shared blog layout (header / nav / footer / CSS / JS)
   ────────────────────────────────────────────────────────────────
-  Lists all posts newest → oldest by ORIGINAL publish date (not
-  today's date). Each card links to /blog/<slug>.html.
+  Single source of truth for every generated blog page (blog.html
+  and blog/<slug>.html). Edit THIS file to change the nav, footer,
+  fonts, or colors across the whole blog section — no more hunting
+  through individual post files.
 
-  To add a new post:
-    1. Copy /blog/_post-template.html to /blog/your-slug.html and
-       fill in the title, original date, hero image, and body.
-    2. Copy one <article class="post-card"> block below (see the
-       HTML comment inside #postGrid) and fill in the same image,
-       title, date, and a short excerpt. Link all href's to your
-       new file.
-    3. Place the new card in date order (newest first) — cards are
-       NOT auto-sorted, ordering is just top-to-bottom in the HTML.
+  index.html and scorecard.html are separate, hand-edited static
+  files and are NOT affected by this layout.
 
-  Layout: 3-column card grid (thumbnail, date/byline, title, excerpt,
-  "Read more"). An alternate full-width row layout was designed and
-  approved for later use — see blog-layout-option-b.html (not linked
-  anywhere, kept for reference only).
-
-  Same header/nav/footer as index.html. Nav links point back to the
-  homepage sections since those sections don't exist on this page.
-  "Blog" is intentionally NOT in the nav yet — Heath will ask for
-  that once all posts are live and reviewed.
-
-  Tech: Tailwind CDN, Google Fonts (Syne / Montserrat). No build step.
+  Expects: pageTitle, pageDescription (page <title>/meta — named to
+  avoid colliding with each post's own `title`/`excerpt` front
+  matter). Content is supplied by whichever template uses
+  `layout: base.njk`.
 -->
 <!doctype html>
 <html lang="en">
@@ -32,8 +20,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#E3DAD0" />
-  <title>Blog | L3 Coaching</title>
-  <meta name="description" content="Leadership insights and practical next steps from L3 Coaching — Liberating Leaders that Last." />
+  <title>{{ pageTitle }}</title>
+  <meta name="description" content="{{ pageDescription }}" />
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -179,7 +167,7 @@
     /* Focus rings */
     a:focus-visible, button:focus-visible { outline: 3px solid var(--tan); outline-offset: 3px; border-radius: 6px; }
 
-    /* Blog post cards */
+    /* Blog index cards */
     .post-card {
       background:#fff;
       border: 1px solid rgba(52,73,96,.10);
@@ -199,6 +187,30 @@
     .post-card .read-more { font-weight:600; font-size:.9rem; color: var(--clay); display:inline-flex; align-items:center; gap:.4rem; }
     .post-card .read-more::after { content:"→"; transition: transform .2s ease; }
     .post-card:hover .read-more::after { transform: translateX(3px); }
+
+    /* Post body typography */
+    .post-body { max-width: 68ch; margin-inline: auto; }
+    .post-body p { margin-bottom: 1.5rem; line-height: 1.75; color: rgba(28,28,28,.85); font-size: 1.05rem; }
+    .post-body h2 { font-family:'Syne', Georgia, serif; font-weight:700; font-size: 1.6rem; line-height:1.2; margin: 2.75rem 0 1rem; color: var(--ink); }
+    .post-body h3 { font-family:'Syne', Georgia, serif; font-weight:700; font-size: 1.2rem; line-height:1.3; margin: 2rem 0 .75rem; color: var(--ink); }
+    .post-body a { color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
+    .post-body ul, .post-body ol { margin: 0 0 1.5rem 1.25rem; }
+    .post-body ul { list-style: disc; }
+    .post-body ol { list-style: decimal; }
+    .post-body li { margin-bottom: .5rem; line-height: 1.7; color: rgba(28,28,28,.85); }
+    .post-body blockquote { border-left: 3px solid var(--tan); padding-left: 1.25rem; margin: 2rem 0; font-style: italic; color: var(--ink); }
+
+    /* Featured photo (thematic image) — banner under the title */
+    .hero-img { width: 100%; aspect-ratio: 16 / 8; object-fit: cover; border-radius: 20px; box-shadow: 0 30px 60px -32px rgba(28,28,28,.35); margin: 2rem 0 2.5rem; display: block; }
+    .photo-credit { font-size: .78rem; color: rgba(28,28,28,.45); margin-top: -1.75rem; margin-bottom: 2.5rem; }
+
+    /* Pull-line — an italic standout sentence for emphasis mid-post */
+    .pull-line { font-family:'Syne', Georgia, serif; font-style: italic; font-weight: 500; font-size: 1.3rem; color: var(--ink); margin: 2.25rem 0; padding-left: 1.5rem; border-left: 3px solid rgba(90,115,144,.4); }
+
+    /* Inline tool image — smaller, centered, with an optional caption */
+    .tool-img-wrap { margin: 2.5rem auto; max-width: 520px; }
+    .tool-img-wrap img { width: 100%; border-radius: 14px; border: 1px solid rgba(52,73,96,.15); box-shadow: 0 20px 40px -28px rgba(28,28,28,.3); display: block; }
+    .tool-img-wrap .caption { text-align: center; font-size: .8rem; color: rgba(28,28,28,.5); font-style: italic; margin-top: .6rem; }
   </style>
 </head>
 <body>
@@ -206,17 +218,17 @@
   <!-- ───── NAV (same as index.html; links point back to homepage sections) ───── -->
   <header id="nav" class="nav fixed top-0 inset-x-0 z-50 text-ink">
     <div class="container-x flex items-center justify-between h-20 md:h-24">
-      <a href="index.html#top" class="flex items-center" aria-label="L3 Coaching home">
-        <img class="l3-logo-nav light" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
-        <img class="l3-logo-nav dark" src="2026 L3 Logos/2026 Full L3 Logo Transparent.png" alt="L3 Coaching" />
+      <a href="/index.html#top" class="flex items-center" aria-label="L3 Coaching home">
+        <img class="l3-logo-nav light" src="/2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
+        <img class="l3-logo-nav dark" src="/2026 L3 Logos/2026 Full L3 Logo Transparent.png" alt="L3 Coaching" />
       </a>
 
       <nav class="nav-links flex items-center gap-1" aria-label="Primary">
-        <a href="index.html#about" class="nav-link">About</a>
-        <a href="index.html#offers" class="nav-link">Services</a>
-        <a href="index.html#process" class="nav-link">How We Work</a>
+        <a href="/index.html#about" class="nav-link">About</a>
+        <a href="/index.html#offers" class="nav-link">Services</a>
+        <a href="/index.html#process" class="nav-link">How We Work</a>
         <span class="w-px h-5 bg-current opacity-20 mx-2"></span>
-        <a href="index.html#diagnostic" class="btn btn-tan">Free Diagnostic</a>
+        <a href="/index.html#diagnostic" class="btn btn-tan">Free Diagnostic</a>
       </nav>
 
       <button class="hamburger btn btn-outline" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false" id="hamburgerBtn">
@@ -228,51 +240,21 @@
   <!-- Mobile menu -->
   <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
     <button id="mobileClose" class="absolute top-5 right-5 btn btn-outline" aria-label="Close menu">✕</button>
-    <a href="index.html#about" class="font-serif text-3xl" data-mobile>About</a>
-    <a href="index.html#offers" class="font-serif text-3xl" data-mobile>Services</a>
-    <a href="index.html#process" class="font-serif text-3xl" data-mobile>How We Work</a>
-    <a href="index.html#diagnostic" class="font-serif text-3xl text-clay" data-mobile>Free Diagnostic</a>
+    <a href="/index.html#about" class="font-serif text-3xl" data-mobile>About</a>
+    <a href="/index.html#offers" class="font-serif text-3xl" data-mobile>Services</a>
+    <a href="/index.html#process" class="font-serif text-3xl" data-mobile>How We Work</a>
+    <a href="/index.html#diagnostic" class="font-serif text-3xl text-clay" data-mobile>Free Diagnostic</a>
   </div>
 
   <a id="top"></a>
 
-  <!-- ───── PAGE HEADER ───── -->
-  <section class="section" style="padding-top: clamp(8rem, 14vw, 11rem); padding-bottom: 2rem;">
-    <div class="container-x">
-      <p class="reveal text-xs uppercase tracking-[.22em] text-clay mb-5">L3 Coaching</p>
-      <h1 class="reveal display text-[clamp(2.5rem,6vw,4.5rem)] max-w-[16ch]">The Blog</h1>
-      <p class="reveal text-ink/65 mt-5 max-w-xl text-lg leading-relaxed">Practical insight on leadership, communication, and building teams that last.</p>
-    </div>
-  </section>
-
-  <!-- ───── POST GRID ───── -->
-  <section class="section pt-0">
-    <div class="container-x">
-      <div id="postGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-        <!--
-          POST CARD TEMPLATE — copy this block for each new post,
-          fill in the image/title/date/excerpt/link, and place newest-first.
-
-        <article class="post-card reveal">
-          <a href="blog/your-slug.html"><img src="blog/images/your-slug-hero.jpg" alt="Descriptive alt text for the photo" /></a>
-          <p class="post-date">Month D, YYYY · Heath Haynes</p>
-          <h2><a href="blog/your-slug.html">Post Title</a></h2>
-          <p class="excerpt">Short one- or two-sentence excerpt pulled from the top of the post.</p>
-          <a class="read-more" href="blog/your-slug.html">Read more</a>
-        </article>
-        -->
-
-        <p class="text-ink/55 col-span-full text-center py-16">New posts coming soon.</p>
-      </div>
-    </div>
-  </section>
+  {{ content | safe }}
 
   <!-- ───── FOOTER (same as index.html) ───── -->
   <footer class="bg-ink text-bone py-16">
     <div class="container-x grid md:grid-cols-12 gap-10">
       <div class="md:col-span-5">
-        <img class="l3-logo-footer mb-4" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
+        <img class="l3-logo-footer mb-4" src="/2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
         <p class="text-bone/75 max-w-sm leading-relaxed">Liberating leaders that last. A licensed GiANT Worldwide partner.</p>
       </div>
 
