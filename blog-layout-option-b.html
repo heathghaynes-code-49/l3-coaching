@@ -1,30 +1,20 @@
 <!--
-  L3 Coaching — Blog index
+  L3 Coaching — Blog index, ALTERNATE LAYOUT (Option B: Row List)
   ────────────────────────────────────────────────────────────────
-  Lists all posts newest → oldest by ORIGINAL publish date (not
-  today's date). Each card links to /blog/<slug>.html.
+  NOT LINKED ANYWHERE. This is a saved, ready-to-use alternate to
+  blog.html's card-grid layout — full-width rows with a large photo,
+  date/byline, and bold title (closer to the reference site,
+  theculturepath.com/blog). Heath chose the card grid for now but
+  wanted this kept around in case he wants to switch later.
 
-  To add a new post:
-    1. Copy /blog/_post-template.html to /blog/your-slug.html and
-       fill in the title, original date, hero image, and body.
-    2. Copy one <article class="post-card"> block below (see the
-       HTML comment inside #postGrid) and fill in the same image,
-       title, date, and a short excerpt. Link all href's to your
-       new file.
-    3. Place the new card in date order (newest first) — cards are
-       NOT auto-sorted, ordering is just top-to-bottom in the HTML.
+  If switching to this layout later: rename this file to blog.html
+  (replacing the card-grid version), then port over the real
+  <article class="post-row"> entries using the same title/date/
+  image/link data already in blog.html's cards (excerpts are simply
+  dropped — this layout doesn't show them).
 
-  Layout: 3-column card grid (thumbnail, date/byline, title, excerpt,
-  "Read more"). An alternate full-width row layout was designed and
-  approved for later use — see blog-layout-option-b.html (not linked
-  anywhere, kept for reference only).
-
-  Same header/nav/footer as index.html. Nav links point back to the
-  homepage sections since those sections don't exist on this page.
-  "Blog" is intentionally NOT in the nav yet — Heath will ask for
-  that once all posts are live and reviewed.
-
-  Tech: Tailwind CDN, Google Fonts (Syne / Montserrat). No build step.
+  Same header/nav/footer as index.html / blog.html. Tech: Tailwind
+  CDN, Google Fonts (Syne / Montserrat). No build step.
 -->
 <!doctype html>
 <html lang="en">
@@ -90,7 +80,7 @@
       line-height: 1.02;
     }
 
-    .container-x { max-width: 1240px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
+    .container-x { max-width: 980px; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 2.5rem); }
     .section { padding-block: clamp(5rem, 10vw, 8rem); }
 
     /* Buttons */
@@ -179,33 +169,34 @@
     /* Focus rings */
     a:focus-visible, button:focus-visible { outline: 3px solid var(--tan); outline-offset: 3px; border-radius: 6px; }
 
-    /* Blog post cards */
-    .post-card {
-      background:#fff;
-      border: 1px solid rgba(52,73,96,.10);
-      border-radius: 20px;
-      padding: 1.75rem;
-      display: flex;
-      flex-direction: column;
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    /* Blog post rows */
+    .post-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2.5rem;
+      align-items: center;
+      padding-block: 2.5rem;
+      border-bottom: 1px solid rgba(52,73,96,.14);
+      transition: opacity .2s ease;
     }
-    .post-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(28,28,28,.18); border-color: rgba(90,115,144,.4); }
-    .post-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; margin-bottom: 1.25rem; }
-    .post-card .post-date { font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color: var(--tan); font-weight:700; margin-bottom:.85rem; }
-    .post-card h2 { font-family:'Syne', Georgia, serif; font-weight:600; font-size:1.35rem; line-height:1.25; color: var(--ink); margin-bottom:.75rem; }
-    .post-card h2 a { color: inherit; }
-    .post-card h2 a:hover { color: var(--clay); }
-    .post-card .excerpt { color: rgba(28,28,28,.7); font-size:.95rem; line-height:1.65; flex: 1; margin-bottom: 1.5rem; }
-    .post-card .read-more { font-weight:600; font-size:.9rem; color: var(--clay); display:inline-flex; align-items:center; gap:.4rem; }
-    .post-card .read-more::after { content:"→"; transition: transform .2s ease; }
-    .post-card:hover .read-more::after { transform: translateX(3px); }
+    .post-row:first-child { padding-top: 0; }
+    .post-row:hover { opacity: .82; }
+    .post-row img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; box-shadow: 0 20px 40px -28px rgba(28,28,28,.35); }
+    .post-row .post-date { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); font-weight: 700; margin-bottom: .75rem; }
+    .post-row h2 { font-family:'Syne', Georgia, serif; font-weight: 700; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.15; color: var(--ink); }
+    .post-row h2 a { color: inherit; }
+    .post-row h2 a:hover { color: var(--clay); }
+    .post-row a.row-link { display: contents; }
+    @media (max-width: 640px) {
+      .post-row { grid-template-columns: 1fr; gap: 1.25rem; }
+    }
   </style>
 </head>
 <body>
 
   <!-- ───── NAV (same as index.html; links point back to homepage sections) ───── -->
   <header id="nav" class="nav fixed top-0 inset-x-0 z-50 text-ink">
-    <div class="container-x flex items-center justify-between h-20 md:h-24">
+    <div class="container-x flex items-center justify-between h-20 md:h-24" style="max-width:1240px;">
       <a href="index.html#top" class="flex items-center" aria-label="L3 Coaching home">
         <img class="l3-logo-nav light" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
         <img class="l3-logo-nav dark" src="2026 L3 Logos/2026 Full L3 Logo Transparent.png" alt="L3 Coaching" />
@@ -245,32 +236,34 @@
     </div>
   </section>
 
-  <!-- ───── POST GRID ───── -->
+  <!-- ───── POST ROWS ───── -->
   <section class="section pt-0">
     <div class="container-x">
-      <div id="postGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div id="postRows">
 
         <!--
-          POST CARD TEMPLATE — copy this block for each new post,
-          fill in the image/title/date/excerpt/link, and place newest-first.
+          POST ROW TEMPLATE — copy this block for each new post,
+          fill in the image/title/date/link, and place newest-first.
 
-        <article class="post-card reveal">
-          <a href="blog/your-slug.html"><img src="blog/images/your-slug-hero.jpg" alt="Descriptive alt text for the photo" /></a>
-          <p class="post-date">Month D, YYYY · Heath Haynes</p>
-          <h2><a href="blog/your-slug.html">Post Title</a></h2>
-          <p class="excerpt">Short one- or two-sentence excerpt pulled from the top of the post.</p>
-          <a class="read-more" href="blog/your-slug.html">Read more</a>
+        <article class="post-row reveal">
+          <a class="row-link" href="blog/your-slug.html">
+            <img src="blog/images/your-slug-hero.jpg" alt="Descriptive alt text for the photo" />
+            <div>
+              <p class="post-date">Month D, YYYY · Heath Haynes</p>
+              <h2>Post Title</h2>
+            </div>
+          </a>
         </article>
         -->
 
-        <p class="text-ink/55 col-span-full text-center py-16">New posts coming soon.</p>
+        <p class="text-ink/55 text-center py-16">New posts coming soon.</p>
       </div>
     </div>
   </section>
 
   <!-- ───── FOOTER (same as index.html) ───── -->
   <footer class="bg-ink text-bone py-16">
-    <div class="container-x grid md:grid-cols-12 gap-10">
+    <div class="container-x grid md:grid-cols-12 gap-10" style="max-width:1240px;">
       <div class="md:col-span-5">
         <img class="l3-logo-footer mb-4" src="2026 L3 Logos/2026 Full L3 Logo White Text Transparent BG.png" alt="L3 Coaching" />
         <p class="text-bone/75 max-w-sm leading-relaxed">Liberating leaders that last. A licensed GiANT Worldwide partner.</p>

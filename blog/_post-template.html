@@ -5,8 +5,12 @@
     1. Copy this file to a new slug, e.g. blog/why-leaders-plateau.html
        (lowercase, hyphens, no spaces — this becomes the URL).
     2. Fill in the <title>, meta description, POST TITLE, POST DATE,
-       and POST BODY placeholders below.
-    3. Add a matching card to #postGrid in ../blog.html, placed in
+       hero image, and POST BODY placeholders below.
+    3. Put the post's images in blog/images/ (create the folder the
+       first time), named <slug>-hero.jpg (thematic photo, also used
+       as the blog.html thumbnail) and <slug>-tool.png (tool
+       screenshot/diagram, if the post has one).
+    4. Add a matching card to #postGrid in ../blog.html, placed in
        date order (newest first).
 
   This file itself is not linked anywhere and won't be published as
@@ -174,14 +178,26 @@
     /* Post body typography */
     .post-body { max-width: 68ch; margin-inline: auto; }
     .post-body p { margin-bottom: 1.5rem; line-height: 1.75; color: rgba(28,28,28,.85); font-size: 1.05rem; }
-    .post-body h2 { font-family:'Syne', Georgia, serif; font-weight:600; font-size: 1.5rem; line-height:1.25; margin: 2.5rem 0 1rem; color: var(--ink); }
-    .post-body h3 { font-family:'Syne', Georgia, serif; font-weight:600; font-size: 1.2rem; line-height:1.3; margin: 2rem 0 .75rem; color: var(--ink); }
+    .post-body h2 { font-family:'Syne', Georgia, serif; font-weight:700; font-size: 1.6rem; line-height:1.2; margin: 2.75rem 0 1rem; color: var(--ink); }
+    .post-body h3 { font-family:'Syne', Georgia, serif; font-weight:700; font-size: 1.2rem; line-height:1.3; margin: 2rem 0 .75rem; color: var(--ink); }
     .post-body a { color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
     .post-body ul, .post-body ol { margin: 0 0 1.5rem 1.25rem; }
     .post-body ul { list-style: disc; }
     .post-body ol { list-style: decimal; }
     .post-body li { margin-bottom: .5rem; line-height: 1.7; color: rgba(28,28,28,.85); }
     .post-body blockquote { border-left: 3px solid var(--tan); padding-left: 1.25rem; margin: 2rem 0; font-style: italic; color: var(--ink); }
+
+    /* Featured photo (thematic image) — banner under the title */
+    .hero-img { width: 100%; aspect-ratio: 16 / 8; object-fit: cover; border-radius: 20px; box-shadow: 0 30px 60px -32px rgba(28,28,28,.35); margin: 2rem 0 2.5rem; display: block; }
+    .photo-credit { font-size: .78rem; color: rgba(28,28,28,.45); margin-top: -1.75rem; margin-bottom: 2.5rem; }
+
+    /* Pull-line — an italic standout sentence for emphasis mid-post */
+    .pull-line { font-family:'Syne', Georgia, serif; font-style: italic; font-weight: 500; font-size: 1.3rem; color: var(--ink); margin: 2.25rem 0; padding-left: 1.5rem; border-left: 3px solid rgba(90,115,144,.4); }
+
+    /* Inline tool image — smaller, centered, with an optional caption */
+    .tool-img-wrap { margin: 2.5rem auto; max-width: 520px; }
+    .tool-img-wrap img { width: 100%; border-radius: 14px; border: 1px solid rgba(52,73,96,.15); box-shadow: 0 20px 40px -28px rgba(28,28,28,.3); display: block; }
+    .tool-img-wrap .caption { text-align: center; font-size: .8rem; color: rgba(28,28,28,.5); font-style: italic; margin-top: .6rem; }
   </style>
 </head>
 <body>
@@ -223,17 +239,57 @@
   <section class="section" style="padding-top: clamp(8rem, 14vw, 11rem); padding-bottom: 1rem;">
     <div class="container-x post-body">
       <a href="../blog.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">← Back to Blog</a>
-      <p class="reveal text-xs uppercase tracking-[.22em] text-clay mt-8 mb-4">POST DATE (e.g. March 4, 2024)</p>
+      <p class="reveal text-xs uppercase tracking-[.22em] text-clay mt-8 mb-4">POST DATE (e.g. March 4, 2024) · Heath Haynes</p>
       <h1 class="reveal display text-[clamp(2rem,5vw,3.2rem)] leading-[1.08]">POST TITLE</h1>
     </div>
   </section>
 
-  <!-- ───── POST BODY ───── -->
+  <!-- ───── FEATURED / THEMATIC IMAGE ─────
+       This is the same photo used as the thumbnail on blog.html.
+       Store it at ../blog/images/your-slug-hero.jpg (create the
+       images/ folder the first time you add one). Remove the
+       .photo-credit line if there's no photographer to credit. -->
+  <div class="container-x post-body">
+    <img class="hero-img reveal" src="images/your-slug-hero.jpg" alt="Descriptive alt text for the photo" />
+    <!-- <p class="photo-credit">Photo by NAME on Unsplash</p> -->
+  </div>
+
+  <!-- ───── POST BODY ─────
+       Formatting reference — delete whichever of these you don't need:
+         <h2>            → major section header
+         <h3>             → numbered/minor sub-header
+         <strong>         → bold a key phrase inline
+         <p class="pull-line">…</p>  → italic standout line for emphasis
+         <ul>/<ol>        → lists
+         <blockquote>     → indented quote
+         .tool-img-wrap   → inline "tool" screenshot/diagram with caption
+  -->
   <section class="section pt-8">
     <div class="container-x">
       <div class="post-body reveal">
 
-        <p>POST BODY GOES HERE. Replace this paragraph and everything below with the migrated post content. Use additional &lt;p&gt; tags for paragraphs, &lt;h2&gt;/&lt;h3&gt; for subheadings, &lt;ul&gt;/&lt;ol&gt; for lists, and &lt;blockquote&gt; for pull quotes.</p>
+        <p>Opening paragraph — replace with the migrated post content.</p>
+
+        <h2>A Major Section Header</h2>
+        <p>Body copy with a <strong>bolded key phrase</strong> for emphasis.</p>
+
+        <p class="pull-line">"An italic standout line — use sparingly, for the one sentence you want to hit hardest."</p>
+
+        <h3>1. A Numbered Sub-Point</h3>
+        <p>More body copy.</p>
+        <ul>
+          <li>List item one</li>
+          <li>List item two</li>
+        </ul>
+
+        <!-- TOOL IMAGE — a screenshot/diagram of a framework or tool referenced
+             in the post. Store at ../blog/images/your-slug-tool.png -->
+        <div class="tool-img-wrap">
+          <img src="images/your-slug-tool.png" alt="Descriptive alt text for the tool image" />
+          <p class="caption">Optional one-line caption explaining the image.</p>
+        </div>
+
+        <blockquote>An indented pull quote, if the post has one worth calling out.</blockquote>
 
       </div>
 
