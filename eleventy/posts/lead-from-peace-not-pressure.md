@@ -21,6 +21,8 @@ That's why we teach leaders to use a simple but profound diagnostic tool: **the 
 
 ## The Peace Index: A Leadership Vital Sign
 
+{% toolImage "/blog/images/lead-from-peace-not-pressure-tool.png", "The Peace Index — Purpose, Place, People, Personal Health, and Provision surrounding a central Peace score", "The Peace Index (source credit: Frog Orr-Ewing, Dr. Joe Hill / © GiANT Worldwide)" %}
+
 The Peace Index helps you evaluate five core areas that directly impact your leadership presence: People, Purpose, Place, Personal Health, and Provision. Each area can be rated from 0 to 100. When your peace is high, you lead with clarity, strength, and calm. When it's low, pressure takes the driver's seat.
 
 Here's a quick breakdown:
@@ -36,8 +38,6 @@ Your overall Peace Index is the average of these 5 areas.
 The Peace Index isn't just about self-care; it's about **self-leadership**. It equips you to make wise, courageous decisions from a grounded place, rather than a frantic one.
 
 It is also about working with and leading others. The Peace Index enables you to lead with **strength AND empathy** as you gain understanding that everyone has more than what you see affecting how they show up.
-
-{% toolImage "/blog/images/lead-from-peace-not-pressure-tool.png", "The Peace Index — Purpose, Place, People, Personal Health, and Provision surrounding a central Peace score", "The Peace Index (source credit: Frog Orr-Ewing, Dr. Joe Hill / © GiANT Worldwide)" %}
 
 ## Now What?: Controlling the Controllables
 
