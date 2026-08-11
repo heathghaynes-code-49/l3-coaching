@@ -23,21 +23,21 @@ eleventyComputed:
       <span class="text-ink/30">·</span>
       <a href="/index.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">Home</a>
     </div>
-    <p class="reveal text-xs uppercase tracking-[.22em] text-clay mt-8 mb-4">{{ displayDate }} · Heath Haynes</p>
-    <h1 class="reveal display text-[clamp(2rem,5vw,3.2rem)] leading-[1.08]">{{ title }}</h1>
+    <p class="text-xs uppercase tracking-[.22em] text-clay mt-8 mb-4">{{ displayDate }} · Heath Haynes</p>
+    <h1 class="display text-[clamp(2rem,5vw,3.2rem)] leading-[1.08]">{{ title }}</h1>
   </div>
 </section>
 
 {% if heroImage %}
 <div class="container-x post-body">
-  <img class="hero-img reveal" src="{{ heroImage }}" alt="{{ heroAlt }}" />
+  <img class="hero-img" src="{{ heroImage }}" alt="{{ heroAlt }}" />
   {% if photoCredit %}<p class="photo-credit">{{ photoCredit }}</p>{% endif %}
 </div>
 {% endif %}
 
 <section class="section pt-8">
   <div class="container-x">
-    <div class="post-body reveal">
+    <div class="post-body">
       {{ content | safe }}
     </div>
 

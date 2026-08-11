@@ -2981,10 +2981,15 @@
     });
     window.addEventListener('load', () => {
       const savedScroll = sessionStorage.getItem(HOME_SCROLL_KEY);
-      if (savedScroll !== null) {
-        sessionStorage.removeItem(HOME_SCROLL_KEY);
-        window.scrollTo(0, parseInt(savedScroll, 10));
-      }
+      if (savedScroll === null) return;
+      sessionStorage.removeItem(HOME_SCROLL_KEY);
+      const y = parseInt(savedScroll, 10);
+      // Re-apply a few times: GSAP/ScrollTrigger setup and image loads can
+      // shift layout and reset scroll shortly after 'load' fires, so a
+      // single scrollTo() here can lose the race.
+      const restore = () => window.scrollTo(0, y);
+      restore();
+      [50, 150, 300, 600, 1000].forEach(ms => setTimeout(restore, ms));
     });
 
     /* ──────────────────────────
