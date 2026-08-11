@@ -126,6 +126,8 @@
       transition: width .25s ease;
     }
     .nav-link:hover::after { width: 60%; }
+    .nav-link.active { color: var(--clay); }
+    .nav-link.active::after { width: 60%; }
 
     /* L3 brand logos in nav and footer */
     .l3-logo-nav { height: 76px; width: auto; display: block; transition: opacity .25s ease; }
@@ -227,6 +229,7 @@
         <a href="/index.html#about" class="nav-link">About</a>
         <a href="/index.html#offers" class="nav-link">Services</a>
         <a href="/index.html#process" class="nav-link">How We Work</a>
+        <a href="/blog.html" class="nav-link active">Blog</a>
         <span class="w-px h-5 bg-current opacity-20 mx-2"></span>
         <a href="/index.html#diagnostic" class="btn btn-tan">Free Diagnostic</a>
       </nav>
@@ -243,6 +246,7 @@
     <a href="/index.html#about" class="font-serif text-3xl" data-mobile>About</a>
     <a href="/index.html#offers" class="font-serif text-3xl" data-mobile>Services</a>
     <a href="/index.html#process" class="font-serif text-3xl" data-mobile>How We Work</a>
+    <a href="/blog.html" class="font-serif text-3xl text-clay" data-mobile>Blog</a>
     <a href="/index.html#diagnostic" class="font-serif text-3xl text-clay" data-mobile>Free Diagnostic</a>
   </div>
 
