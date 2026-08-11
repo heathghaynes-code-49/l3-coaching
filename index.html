@@ -24,6 +24,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#E3DAD0" />
+  <script>
+    /* If a "Home" round-trip scroll position is pending, hide the page
+       until it's been applied — otherwise the page flashes at the top
+       before visibly jumping to the restored spot. See the restore
+       logic near the end of <body>, which reveals the page again.
+       Hard fallback below guarantees the page can never stay hidden
+       if that later script fails to run for any reason. */
+    if (sessionStorage.getItem('l3-home-scroll') !== null) {
+      document.documentElement.style.visibility = 'hidden';
+      setTimeout(() => { document.documentElement.style.visibility = ''; }, 2000);
+    }
+  </script>
   <title>L3 Coaching, Liberating Leaders that Last.</title>
   <meta name="description" content="L3 Coaching develops leaders who develop other leaders. Licensed GiANT Worldwide partner. Take the free leadership assessment, join a free workshop, or book a consultation." />
 
@@ -2986,10 +2998,20 @@
       const y = parseInt(savedScroll, 10);
       // Re-apply a few times: GSAP/ScrollTrigger setup and image loads can
       // shift layout and reset scroll shortly after 'load' fires, so a
-      // single scrollTo() here can lose the race.
+      // single scrollTo() here can lose the race. The page stays hidden
+      // (see the inline <head> script) until the early reapplications
+      // below have had a chance to settle, so the jump itself is never
+      // visible — then we reveal. A couple of later safety-net
+      // reapplications keep running after reveal in case something
+      // shifts the layout late.
       const restore = () => window.scrollTo(0, y);
       restore();
-      [50, 150, 300, 600, 1000].forEach(ms => setTimeout(restore, ms));
+      [50, 150, 300].forEach(ms => setTimeout(restore, ms));
+      setTimeout(() => {
+        restore();
+        document.documentElement.style.visibility = '';
+      }, 350);
+      [600, 1000].forEach(ms => setTimeout(restore, ms));
     });
 
     /* ──────────────────────────
@@ -3443,7 +3465,9 @@
     let answers = Array(QUESTIONS.length).fill(null);
     let qIndex = 0;
 
+    const DIAG_SEEN_KEY = 'l3-diagnostic-seen';
     function openModal() {
+      sessionStorage.setItem(DIAG_SEEN_KEY, '1');
       modal.classList.add('open');
       modal.setAttribute('aria-hidden','false');
       backdrop.classList.add('show');
@@ -3472,11 +3496,14 @@
     /* Auto-open once the user has scrolled past the diagnostic section
        (heading + 4 cards + CTA). We observe the next section (#process);
        when it enters the viewport, we pop the modal a single time per
-       page load. Users who dismiss it can always relaunch it via the
-       sticky "Free Leadership Diagnostic" tab on the right edge. */
-    let diagAutoOpened = false;
+       session (not per page load — otherwise a "Home" round-trip from
+       the blog that lands below this point would re-trigger a modal
+       the user already saw and dismissed). Users who dismiss it can
+       always relaunch it via the sticky "Free Leadership Diagnostic"
+       tab on the right edge. */
+    let diagAutoOpened = sessionStorage.getItem(DIAG_SEEN_KEY) === '1';
     const processSection = document.getElementById('process');
-    if (processSection && 'IntersectionObserver' in window) {
+    if (processSection && 'IntersectionObserver' in window && !diagAutoOpened) {
       const diagObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !diagAutoOpened) {
