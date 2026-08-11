@@ -1,0 +1,11 @@
+[build]
+  command = "npx @11ty/eleventy"
+  publish = "_site"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[dev]
+  command = "npx @11ty/eleventy --serve"
+  targetPort = 8080
