@@ -213,6 +213,18 @@
     .tool-img-wrap { margin: 2.5rem auto; max-width: 520px; }
     .tool-img-wrap img { width: 100%; border-radius: 14px; border: 1px solid rgba(52,73,96,.15); box-shadow: 0 20px 40px -28px rgba(28,28,28,.3); display: block; }
     .tool-img-wrap .caption { text-align: center; font-size: .8rem; color: rgba(28,28,28,.5); font-style: italic; margin-top: .6rem; }
+
+    /* Prev/next post pager */
+    .post-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .post-pager-link { display: block; padding: 1.25rem 1.5rem; border: 1px solid rgba(52,73,96,.14); border-radius: 14px; transition: border-color .2s ease, transform .2s ease; text-decoration: none; }
+    .post-pager-link:hover { border-color: var(--tan); transform: translateY(-2px); }
+    .post-pager-newer { text-align: right; }
+    .post-pager-label { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); font-weight: 700; margin-bottom: .5rem; }
+    .post-pager-title { display: block; font-family: 'Syne', Georgia, serif; font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--ink); }
+    @media (max-width: 640px) {
+      .post-pager { grid-template-columns: 1fr; }
+      .post-pager-newer { text-align: left; }
+    }
   </style>
 </head>
 <body>

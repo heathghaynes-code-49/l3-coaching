@@ -18,7 +18,11 @@ eleventyComputed:
 
 <section class="section" style="padding-top: clamp(8rem, 14vw, 11rem); padding-bottom: 1rem;">
   <div class="container-x post-body">
-    <a href="/blog.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">← Back to Blog</a>
+    <div class="flex items-center gap-4">
+      <a href="/blog.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">← Back to Blog</a>
+      <span class="text-ink/30">·</span>
+      <a href="/index.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">Home</a>
+    </div>
     <p class="reveal text-xs uppercase tracking-[.22em] text-clay mt-8 mb-4">{{ displayDate }} · Heath Haynes</p>
     <h1 class="reveal display text-[clamp(2rem,5vw,3.2rem)] leading-[1.08]">{{ title }}</h1>
   </div>
@@ -37,8 +41,34 @@ eleventyComputed:
       {{ content | safe }}
     </div>
 
+    {% set allPosts = collections.post %}
+    {% set currentIndex = 0 %}
+    {% for p in allPosts %}{% if p.url == page.url %}{% set currentIndex = loop.index0 %}{% endif %}{% endfor %}
+    {% set olderPost = allPosts[currentIndex - 1] if currentIndex > 0 else null %}
+    {% set newerPost = allPosts[currentIndex + 1] if currentIndex < allPosts.length - 1 else null %}
+    {% if olderPost or newerPost %}
     <div class="post-body mt-16 pt-8" style="border-top: 1px solid rgba(52,73,96,.12);">
+      <div class="post-pager">
+        {% if olderPost %}
+        <a href="{{ olderPost.url }}" class="post-pager-link post-pager-older">
+          <span class="post-pager-label">← Older post</span>
+          <span class="post-pager-title">{{ olderPost.data.title }}</span>
+        </a>
+        {% else %}<div></div>{% endif %}
+        {% if newerPost %}
+        <a href="{{ newerPost.url }}" class="post-pager-link post-pager-newer">
+          <span class="post-pager-label">Newer post →</span>
+          <span class="post-pager-title">{{ newerPost.data.title }}</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="post-body mt-8 pt-8 flex items-center gap-4" style="border-top: 1px solid rgba(52,73,96,.12);">
       <a href="/blog.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">← Back to Blog</a>
+      <span class="text-ink/30">·</span>
+      <a href="/index.html" class="text-sm text-clay hover:text-ink transition inline-flex items-center gap-2">Home</a>
     </div>
   </div>
 </section>

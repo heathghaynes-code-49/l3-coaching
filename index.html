@@ -2970,6 +2970,24 @@
     }
 
     /* ──────────────────────────
+       Blog round-trip scroll memory — remember where you were on the
+       homepage when you leave it, and restore that spot (once) when
+       you come back via a "Home" link from the blog. The nav logo
+       still jumps straight to #top, unaffected by this.
+       ────────────────────────── */
+    const HOME_SCROLL_KEY = 'l3-home-scroll';
+    window.addEventListener('pagehide', () => {
+      sessionStorage.setItem(HOME_SCROLL_KEY, String(window.scrollY));
+    });
+    window.addEventListener('load', () => {
+      const savedScroll = sessionStorage.getItem(HOME_SCROLL_KEY);
+      if (savedScroll !== null) {
+        sessionStorage.removeItem(HOME_SCROLL_KEY);
+        window.scrollTo(0, parseInt(savedScroll, 10));
+      }
+    });
+
+    /* ──────────────────────────
        Sticky nav
        ────────────────────────── */
     const nav = document.getElementById('nav');
