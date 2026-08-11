@@ -7,9 +7,7 @@ heroImage: "/blog/images/how-culture-actually-gets-built-its-not-what-you-think-
 heroAlt: "A high-rise office tower at night with different floors lit in contrasting warm and cool tones"
 ---
 
-> "Culture eats strategy for breakfast."
->
-> —Peter Drucker (widely credited)
+{% pullQuote "There's a saying in leadership circles: \"Culture eats strategy for breakfast.\"" %}
 
 The line gets nodded along in nearly every strategy offsite. Leaders agree with it, then go build a culture initiative anyway that treats culture like a communications problem: a values statement, a kickoff, a poster on the wall.
 
