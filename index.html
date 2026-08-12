@@ -3321,12 +3321,41 @@
     /* Framework drawer open/close */
     const fwDrawer = document.getElementById('fwDrawer');
     const fwDrawerClose = document.getElementById('fwDrawerClose');
+    const fwProcessSection = document.getElementById('process');
+
+    /* Drag-to-close state: continuing to scroll past the top/bottom of the
+       drawer's content drags it off screen in step with the gesture (not a
+       fixed-duration snap), revealing the How We Work section underneath at
+       the edge that matches the scroll direction. */
+    let fwDragDir = null;      // 'down' | 'up' | null
+    let fwDragOffset = 0;      // px dragged so far, 0..viewport height
+    let fwSettleTimer = null;
+    let fwAnimating = false;
+    const FW_COMMIT_RATIO = 0.22;
+
+    function fwResetDrag() {
+      fwDragDir = null;
+      fwDragOffset = 0;
+      clearTimeout(fwSettleTimer);
+      // Drop the inline transform/opacity with no transition first, so handing
+      // control back to the base .fw-drawer rule (which has its own .55s
+      // transition) doesn't get picked up and re-animate the reset itself.
+      fwDrawer.style.transition = 'none';
+      fwDrawer.style.transform = '';
+      fwDrawer.style.opacity = '';
+      void fwDrawer.offsetWidth;
+      fwDrawer.style.transition = '';
+    }
     function openFw() {
+      fwAnimating = false;
+      fwResetDrag();
       fwDrawer.classList.add('open');
       fwDrawer.setAttribute('aria-hidden','false');
       document.body.style.overflow = 'hidden';
     }
     function closeFw() {
+      fwAnimating = false;
+      fwResetDrag();
       fwDrawer.classList.remove('open');
       fwDrawer.setAttribute('aria-hidden','true');
       document.body.style.overflow = '';
@@ -3337,6 +3366,112 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && fwDrawer.classList.contains('open')) closeFw();
     });
+
+    function fwAtBottom() { return fwDrawer.scrollTop + fwDrawer.clientHeight >= fwDrawer.scrollHeight - 2; }
+    function fwAtTop() { return fwDrawer.scrollTop <= 2; }
+
+    function fwHeaderOffset() {
+      const nav = document.getElementById('nav');
+      return nav ? nav.offsetHeight : 0;
+    }
+    /* Where the underlying page should be scrolled to so the How We Work
+       section is aligned at the edge the drawer is being dragged away from. */
+    function fwAlignScroll(dir) {
+      if (!fwProcessSection) return;
+      const rect = fwProcessSection.getBoundingClientRect();
+      const target = dir === 'down'
+        ? rect.top + window.scrollY - fwHeaderOffset() - 12
+        : rect.bottom + window.scrollY - window.innerHeight;
+      window.scrollTo(0, Math.max(0, target));
+    }
+
+    function fwApplyDragTransform() {
+      fwDrawer.style.transition = 'none';
+      fwDrawer.style.transform = `translateY(${fwDragDir === 'down' ? -fwDragOffset : fwDragOffset}px)`;
+    }
+    function fwCancelDrag() {
+      if (fwAnimating) return;
+      fwAnimating = true;
+      fwDrawer.style.transition = 'transform .32s cubic-bezier(.2,.8,.2,1)';
+      fwDrawer.style.transform = 'translateY(0)';
+      fwDrawer.addEventListener('transitionend', function onEnd() {
+        fwDrawer.removeEventListener('transitionend', onEnd);
+        fwResetDrag();
+        fwAnimating = false;
+      });
+    }
+    function fwCommitClose(dir) {
+      if (fwAnimating) return;
+      fwAnimating = true;
+      fwAlignScroll(dir);
+      fwDrawer.style.transition = 'transform .38s cubic-bezier(.2,.8,.2,1), opacity .38s ease';
+      void fwDrawer.offsetWidth; // ensure the transition applies from the current dragged position
+      fwDrawer.style.transform = `translateY(${dir === 'down' ? '-100%' : '100%'})`;
+      fwDrawer.style.opacity = '0';
+      fwDrawer.addEventListener('transitionend', function onEnd() {
+        fwDrawer.removeEventListener('transitionend', onEnd);
+        fwDrawer.classList.remove('open');
+        fwDrawer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        fwResetDrag();
+        fwAnimating = false;
+      });
+    }
+    function fwSettle() {
+      if (fwDragDir === null || fwAnimating) return;
+      if (fwDragOffset / window.innerHeight >= FW_COMMIT_RATIO) fwCommitClose(fwDragDir);
+      else fwCancelDrag();
+    }
+    function fwAdvanceDrag(delta) {
+      // delta > 0 extends the exit gesture further, delta < 0 pulls it back
+      fwDragOffset = Math.max(0, Math.min(window.innerHeight, fwDragOffset + delta));
+      if (fwDragOffset <= 0) { fwCancelDrag(); return; }
+      if (fwDragOffset >= window.innerHeight) { fwCommitClose(fwDragDir); return; }
+      fwApplyDragTransform();
+    }
+
+    fwDrawer.addEventListener('wheel', (e) => {
+      if (!fwDrawer.classList.contains('open') || fwAnimating) return;
+      if (fwDragDir === null) {
+        if (fwAtBottom() && e.deltaY > 0) { fwDragDir = 'down'; fwAlignScroll('down'); }
+        else if (fwAtTop() && e.deltaY < 0) { fwDragDir = 'up'; fwAlignScroll('up'); }
+        else return;
+      }
+      const extending = (fwDragDir === 'down' && e.deltaY > 0) || (fwDragDir === 'up' && e.deltaY < 0);
+      const retracting = (fwDragDir === 'down' && e.deltaY < 0) || (fwDragDir === 'up' && e.deltaY > 0);
+      if (!extending && !retracting) return;
+      e.preventDefault();
+      fwAdvanceDrag(Math.abs(e.deltaY) * (extending ? 1 : -1));
+      clearTimeout(fwSettleTimer);
+      fwSettleTimer = setTimeout(fwSettle, 450);
+    }, { passive: false });
+
+    let fwTouchY = null;
+    fwDrawer.addEventListener('touchstart', (e) => {
+      if (!fwDrawer.classList.contains('open') || fwAnimating) return;
+      fwTouchY = e.touches[0].clientY;
+    }, { passive: true });
+    fwDrawer.addEventListener('touchmove', (e) => {
+      if (!fwDrawer.classList.contains('open') || fwAnimating || fwTouchY === null) return;
+      const currentY = e.touches[0].clientY;
+      const draggedUp = fwTouchY - currentY; // finger moving up the screen = scrolling down
+      if (fwDragDir === null) {
+        if (fwAtBottom() && draggedUp > 0) { fwDragDir = 'down'; fwAlignScroll('down'); }
+        else if (fwAtTop() && draggedUp < 0) { fwDragDir = 'up'; fwAlignScroll('up'); }
+        else { fwTouchY = currentY; return; }
+      }
+      const extending = (fwDragDir === 'down' && draggedUp > 0) || (fwDragDir === 'up' && draggedUp < 0);
+      const retracting = (fwDragDir === 'down' && draggedUp < 0) || (fwDragDir === 'up' && draggedUp > 0);
+      fwTouchY = currentY;
+      if (!extending && !retracting) return;
+      e.preventDefault();
+      fwAdvanceDrag(Math.abs(draggedUp) * (extending ? 1 : -1));
+    }, { passive: false });
+    fwDrawer.addEventListener('touchend', () => {
+      fwTouchY = null;
+      fwSettle();
+    });
+
     const openFwBtn = document.getElementById('openFramework');
     if (openFwBtn) openFwBtn.addEventListener('click', openFw);
 
@@ -3351,7 +3486,7 @@
         <p class="font-serif italic text-ink/60 mb-5">${f.tagline}</p>
         <p class="text-ink/80 leading-relaxed mb-6">${f.body}</p>
         <div class="border-t border-ink/10 pt-5">
-          <p class="text-[11px] uppercase tracking-[.22em] text-ink/45 mb-1">The tool we use</p>
+          <p class="text-[11px] uppercase tracking-[.22em] text-ink/45 mb-1">A tool we use</p>
           <p class="font-serif text-xl text-clay">${f.tool}</p>
           <p class="text-ink/65 text-sm mt-1">${f.toolDesc}</p>
         </div>`;
