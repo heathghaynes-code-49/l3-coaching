@@ -2898,6 +2898,10 @@
             <label class="text-xs text-ink/60 mb-1 block">What's the one leadership challenge you'd most like to solve in the next 90 days? <span class="text-ink/40 normal-case">(optional)</span></label>
             <textarea id="challenge" rows="3" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none resize-y"></textarea>
           </div>
+          <div class="absolute -left-[9999px]" aria-hidden="true">
+            <label for="hpWebsite">Leave this field blank</label>
+            <input type="text" id="hpWebsite" name="website" tabindex="-1" autocomplete="off"/>
+          </div>
           <button class="btn btn-primary w-full" type="submit">See My Result →</button>
         </form>
       </div>
@@ -3599,6 +3603,7 @@
 
     let answers = Array(QUESTIONS.length).fill(null);
     let qIndex = 0;
+    let quizStartedAt = null;
 
     const DIAG_SEEN_KEY = 'l3-diagnostic-seen';
     function openModal() {
@@ -3671,6 +3676,7 @@
 
     document.getElementById('startBtn').addEventListener('click', () => {
       qIndex = 0;
+      quizStartedAt = Date.now();
       renderQ();
       showStep('question');
     });
@@ -3727,7 +3733,9 @@
         calendlyUrl: document.getElementById('calendlyLink')?.href || '',
         utmSource: new URLSearchParams(window.location.search).get('utm_source') || '',
         utmCampaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
+        website: document.getElementById('hpWebsite').value,
+        formStartedAt: quizStartedAt
       };
 
       // Render result instantly

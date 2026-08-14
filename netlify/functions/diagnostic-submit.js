@@ -33,30 +33,81 @@ const DIMENSIONS = ["Self-Awareness", "Team Clarity", "Liberation vs. Control", 
 // connecting it to working with Heath). Keep the two in sync.
 const TIERS = [
   {
+    min: 12, max: 30,
     name: "The Bottleneck Leader",
     diagnosis: `Your score puts you in the territory where the team's pace, quality, and morale are tied to your daily presence. That isn't a character flaw, it's almost always the result of habits formed when you were the one doing the work. The cost compounds quietly: decisions stall when you're traveling, the team shows you what they think you want to see, and your "best" people start optimizing around your moods instead of the mission.`,
     shift: `Stop being the answer. For the next 30 days, when someone brings you a problem, ask "what do you recommend?" before you say anything else. If their recommendation is workable, even 70% as good as yours, let them run with it. The short-term cost in quality is the long-term price of building a team that can think.`,
     closer: `This is the exact pattern Heath helps leaders break in 1:1 coaching.`
   },
   {
+    min: 31, max: 44,
     name: "The Capable Manager",
     diagnosis: `You're competent, you're available, and your team mostly delivers. The risk in your tier is invisible: the system holds because you hold it. When you're at full capacity, the team performs. When you're stretched, they flatline. Most leaders never get past this tier because the cost of staying here is hidden, the company runs, the numbers look fine, and the cost of breaking through (giving real authority away) feels disproportionate.`,
     shift: `Identify the three decisions you currently own that you shouldn't, and transfer them this month. Not delegate, transfer. Owned by someone else, including the right to be wrong. You will hate this. That hatred is the proof it's the right move.`,
     closer: `Heath works with leaders at this exact stage in Core Groups, where peer accountability makes the transfer actually stick.`
   },
   {
+    min: 45, max: 54,
     name: "The Emerging Liberator",
     diagnosis: `You score well above where most leaders ever get. Your team has clarity, your decisions are mostly distributed, and you're investing in the people behind you. From here, the gains are no longer about doing more, they're about doing fewer things at higher resolution.`,
     shift: `Pick the dimension where you scored lowest and treat it as a system, not a behavior. If your weakness is feedback, build a feedback ritual into your operating cadence. If it's succession, name your successors publicly and let the team see you train them. The leaders who break out of this tier do it by making their growth visible to the people they lead.`,
     closer: `This is the territory Heath spends most of his time in, leaders who are good and want to compound that into something durable.`
   },
   {
+    min: 55, max: 60,
     name: "The Liberating Leader",
     diagnosis: `This score is rare. You're operating at a level where the team functions whether or not you're in the room, where the people behind you are visibly growing, and where your culture is something more than a poster on a wall. Take the win seriously, most leaders never get here. The risk in your tier is the one you can't see: you're now the most senior person in most rooms, and the feedback that got you here will quietly stop arriving.`,
     shift: `Build a deliberate channel for hard feedback you can't ignore. A peer group. An outside coach. A 360 you actually act on. The next decade of your leadership will be shaped less by what you build and more by what you choose not to defend.`,
     closer: `Heath runs Core Groups specifically for leaders in this air, peer accountability with people who can match your altitude.`
   }
 ];
+
+function tierFor(score) {
+  return TIERS.find((t) => score >= t.min && score <= t.max) || TIERS[0];
+}
+
+// Rejects spam/bot submissions before anything gets emailed. Real
+// submissions always come from the quiz UI, which guarantees valid
+// answers and a minimum time-on-form; bots that POST directly to this
+// endpoint skip the quiz and send incomplete or instant payloads.
+const MIN_SUBMIT_MS = 3000;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ROLES = ["CEO / Owner", "VP / Director", "Manager", "Other"];
+const TEAM_SIZES = ["1–5", "6–15", "16–50", "51+"];
+
+function validatePayload(payload) {
+  if (payload.website) return "honeypot filled";
+
+  if (
+    !Array.isArray(payload.answers) ||
+    payload.answers.length !== QUESTIONS.length ||
+    !payload.answers.every((v) => Number.isInteger(v) && v >= 1 && v <= 5)
+  ) {
+    return "invalid answers";
+  }
+
+  if (typeof payload.email !== "string" || payload.email.length > 320 || !EMAIL_RE.test(payload.email) || /[\r\n]/.test(payload.email)) {
+    return "invalid email";
+  }
+
+  if (typeof payload.firstName !== "string" || !payload.firstName.trim() || payload.firstName.length > 100 || /[\r\n]/.test(payload.firstName)) {
+    return "invalid firstName";
+  }
+
+  if (typeof payload.company !== "string" || !payload.company.trim() || payload.company.length > 200 || /[\r\n]/.test(payload.company)) {
+    return "invalid company";
+  }
+
+  if (!ROLES.includes(payload.role)) return "invalid role";
+  if (!TEAM_SIZES.includes(payload.teamSize)) return "invalid teamSize";
+
+  if (typeof payload.challenge === "string" && payload.challenge.length > 2000) return "challenge too long";
+
+  const startedAt = Number(payload.formStartedAt);
+  if (!startedAt || Date.now() - startedAt < MIN_SUBMIT_MS) return "submitted too fast";
+
+  return null;
+}
 
 const INTERNAL_FROM_ADDRESS = "L3 Diagnostic <diagnostic@l3leadershipcoaching.com>";
 const INTERNAL_TO_ADDRESS = "connect@l3leadershipcoaching.com";
@@ -188,6 +239,18 @@ exports.handler = async (event) => {
   } catch (err) {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
+
+  const rejectReason = validatePayload(payload);
+  if (rejectReason) {
+    console.log("Rejected diagnostic submission:", rejectReason);
+    return { statusCode: 400, body: JSON.stringify({ error: "Invalid submission" }) };
+  }
+
+  // Recompute score/tier from the answers rather than trusting the
+  // client-supplied values, so they can't be spoofed independently of
+  // the answers array.
+  payload.score = payload.answers.reduce((a, b) => a + b, 0);
+  payload.tier = tierFor(payload.score).name;
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
