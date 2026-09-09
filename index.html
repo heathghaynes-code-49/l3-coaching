@@ -3805,29 +3805,6 @@
           parentElement: container,
           prefill: { name: firstName || '', email: email || '' }
         });
-        /* Calendly's embed tries to scroll itself into view once it
-           finishes loading, assuming it's on a full page — inside this
-           modal that hijacks the scroll position away from the score/
-           tier/diagnosis someone should read first. Its iframe posts a
-           message on every load/resize, so ride those (rather than a
-           guessed fixed delay, which the calendar's own async load can
-           outlast) for a short grace window, then stop listening so it
-           never fights the visitor's own scrolling once they're
-           actually browsing dates. */
-        const resetScrollTop = () => {
-          const body = document.getElementById('modalBody');
-          if (body) body.scrollTop = 0;
-        };
-        resetScrollTop();
-        const graceEnds = Date.now() + 6000;
-        const onCalendlyMessage = (msgEvent) => {
-          if (typeof msgEvent.origin === 'string' && msgEvent.origin.includes('calendly.com')) {
-            if (Date.now() < graceEnds) resetScrollTop();
-            else window.removeEventListener('message', onCalendlyMessage);
-          }
-        };
-        window.addEventListener('message', onCalendlyMessage);
-        setTimeout(() => window.removeEventListener('message', onCalendlyMessage), 6000);
       } else {
         let attempts = 0;
         const poll = setInterval(() => {
@@ -3848,12 +3825,19 @@
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
       e.currentTarget.classList.add('hidden');
-      document.getElementById('calendlyInline').classList.remove('hidden');
+      const calendlyContainer = document.getElementById('calendlyInline');
+      calendlyContainer.classList.remove('hidden');
       document.getElementById('calendlyFallback').classList.remove('hidden');
       initCalendlyInline(
         document.getElementById('firstName').value.trim(),
         document.getElementById('email').value.trim()
       );
+      // Bring the scheduler into focus once the browser has laid out
+      // the now-visible container (a plain call right here would still
+      // measure it as hidden/zero-height).
+      requestAnimationFrame(() => {
+        calendlyContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
 
     document.getElementById('captureForm').addEventListener('submit', async (e) => {
