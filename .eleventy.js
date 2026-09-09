@@ -5,6 +5,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("index.html");
   eleventyConfig.addPassthroughCopy("scorecard.html");
   eleventyConfig.addPassthroughCopy("blog-layout-option-b.html");
+  eleventyConfig.addPassthroughCopy("favicon.ico");
+  eleventyConfig.addPassthroughCopy("favicon-32x32.png");
+  eleventyConfig.addPassthroughCopy("favicon-192x192.png");
+  eleventyConfig.addPassthroughCopy("apple-touch-icon.png");
   eleventyConfig.addPassthroughCopy("2026 L3 Logos");
   eleventyConfig.addPassthroughCopy("Cert Badges");
   eleventyConfig.addPassthroughCopy("Individual GiANT Client Logos");
