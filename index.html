@@ -2941,10 +2941,11 @@
 
         <div class="border-t border-ink/10 pt-6">
           <p class="font-medium mb-2">Want a 30-minute conversation about your specific situation?</p>
-          <p class="text-sm text-ink/60 mb-4">No pitch, no deck. Just a real outside read on what's actually creating friction. Pick a time below, right here, no need to leave this page.</p>
-          <div id="calendlyInline" class="rounded-lg overflow-hidden" style="min-width:280px;height:650px;"></div>
-          <p class="text-center mt-3">
-            <a id="calendlyLink" class="text-xs text-ink/50 hover:text-ink underline underline-offset-2" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Prefer a new tab? Open in Calendly →</a>
+          <p class="text-sm text-ink/60 mb-4">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
+          <a id="calendlyLink" class="btn btn-tan w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
+          <div id="calendlyInline" class="hidden rounded-lg overflow-hidden mt-4" style="min-width:280px;height:650px;"></div>
+          <p id="calendlyFallback" class="hidden text-center mt-2">
+            <a class="text-xs text-ink/50 hover:text-ink underline underline-offset-2" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Trouble loading? Open in a new tab →</a>
           </p>
           <p id="resultsSent" class="text-xs text-ink/50 text-center mt-3">A copy of your result has been emailed to you.</p>
         </div>
@@ -3776,13 +3777,21 @@
       else { showStep('intro'); }
     });
 
-    /* Loads the real Calendly picker directly into the results step so
-       booking a call never leaves the diagnostic popup. Calendly's
-       widget.js is loaded async in <head>, so on the rare slow
-       connection it may not have defined window.Calendly yet by the
-       time someone finishes the quiz — poll briefly, then give up
-       quietly; the "open in a new tab" link right below still works
-       either way. Only ever initialized once per page load. */
+    /* Loads the real Calendly picker into the results step, in place of
+       the "Book a Discovery Meeting" link, so booking never leaves the
+       diagnostic popup — but only once someone actually clicks that
+       link (see the click handler below), not automatically. Calendly
+       auto-injecting itself the moment the results screen appeared was
+       showing its loading spinner indefinitely for some visitors —
+       almost certainly ad blockers / privacy extensions blocking a
+       third-party iframe that wasn't tied to a direct click. Initializing
+       from a real click is both what a "click to schedule" button should
+       do anyway and far more likely to actually load.
+       Calendly's widget.js is loaded async in <head>, so on the rare
+       slow connection it may not have defined window.Calendly yet by
+       the time someone clicks — poll briefly, then give up quietly;
+       the "open in a new tab" fallback link still works either way.
+       Only ever initialized once per page load. */
     let calendlyInitialized = false;
     function initCalendlyInline(firstName, email) {
       if (calendlyInitialized) return;
@@ -3833,6 +3842,20 @@
       }
     }
 
+    document.getElementById('calendlyLink').addEventListener('click', (e) => {
+      // A modified or non-primary click (middle-click, cmd/ctrl-click, etc.)
+      // should still behave like a normal link and open in a new tab.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      e.currentTarget.classList.add('hidden');
+      document.getElementById('calendlyInline').classList.remove('hidden');
+      document.getElementById('calendlyFallback').classList.remove('hidden');
+      initCalendlyInline(
+        document.getElementById('firstName').value.trim(),
+        document.getElementById('email').value.trim()
+      );
+    });
+
     document.getElementById('captureForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const score = answers.reduce((a, b) => a + (b || 0), 0);
@@ -3869,7 +3892,6 @@
       }
 
       showStep('result');
-      initCalendlyInline(payload.firstName, payload.email);
 
       // Fire-and-forget POST to the Netlify Function, which emails the
       // submission to connect@l3leadershipcoaching.com. Never blocks or
