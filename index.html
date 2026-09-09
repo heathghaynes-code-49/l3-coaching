@@ -79,6 +79,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
+  <!-- Calendly (inline scheduling on the diagnostic's results step) -->
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
   <style>
     :root {
       --bone:#E3DAD0;
@@ -2013,7 +2017,7 @@
         <a href="#process" class="nav-link">How We Work</a>
         <a href="blog.html" class="nav-link">Blog</a>
         <span class="w-px h-5 bg-current opacity-20 mx-2"></span>
-        <a href="#" class="btn btn-tan" data-open-modal>Free Diagnostic</a>
+        <a href="#open-diagnostic" class="btn btn-tan" data-open-modal>Free Diagnostic</a>
       </nav>
 
       <button class="hamburger btn btn-outline" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false" id="hamburgerBtn">
@@ -2029,7 +2033,7 @@
     <a href="#offers" class="font-serif text-3xl" data-mobile>Services</a>
     <a href="#process" class="font-serif text-3xl" data-mobile>How We Work</a>
     <a href="blog.html" class="font-serif text-3xl" data-mobile>Blog</a>
-    <a href="#" class="font-serif text-3xl text-clay" data-open-modal data-mobile>Free Diagnostic</a>
+    <a href="#open-diagnostic" class="font-serif text-3xl text-clay" data-open-modal data-mobile>Free Diagnostic</a>
   </div>
 
   <a id="top"></a>
@@ -2939,6 +2943,10 @@
           <p class="font-medium mb-2">Want a 30-minute conversation about your specific situation?</p>
           <p class="text-sm text-ink/60 mb-4">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
           <a id="calendlyLink" class="btn btn-tan w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
+          <div id="calendlyInline" class="hidden rounded-lg overflow-hidden mt-4" style="min-width:280px;height:650px;"></div>
+          <p id="calendlyFallback" class="hidden text-center mt-2">
+            <a class="text-xs text-ink/50 hover:text-ink underline underline-offset-2" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Trouble loading? Open in a new tab →</a>
+          </p>
           <p id="resultsSent" class="text-xs text-ink/50 text-center mt-3">A copy of your result has been emailed to you.</p>
         </div>
       </div>
@@ -3667,6 +3675,25 @@
       if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
     });
 
+    let diagAutoOpened = sessionStorage.getItem(DIAG_SEEN_KEY) === '1';
+
+    /* Shareable direct link: https://…/#open-diagnostic pops the
+       diagnostic open immediately, from a fresh load or an in-page
+       hash change alike (e.g. a link pasted into an email or a text).
+       The hash is stripped right after so a refresh or back/forward
+       doesn't reopen it, and it's deliberately a different fragment
+       than "#diagnostic" (the on-page section anchor a few sections
+       up) so this never fires just from someone scrolling there. */
+    function openFromHash() {
+      if (location.hash === '#open-diagnostic') {
+        diagAutoOpened = true;
+        openModal();
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    }
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+
     /* Auto-open once the user has scrolled past the diagnostic section
        (heading + 4 cards + CTA). We observe the next section (#process);
        when it enters the viewport, we pop the modal a single time per
@@ -3675,7 +3702,6 @@
        the user already saw and dismissed). Users who dismiss it can
        always relaunch it via the sticky "Free Leadership Diagnostic"
        tab on the right edge. */
-    let diagAutoOpened = sessionStorage.getItem(DIAG_SEEN_KEY) === '1';
     const processSection = document.getElementById('process');
     if (processSection && 'IntersectionObserver' in window && !diagAutoOpened) {
       const diagObserver = new IntersectionObserver((entries) => {
@@ -3749,6 +3775,69 @@
     prevBtn.addEventListener('click', () => {
       if (qIndex > 0) { qIndex--; renderQ(); }
       else { showStep('intro'); }
+    });
+
+    /* Loads the real Calendly picker into the results step, in place of
+       the "Book a Discovery Meeting" link, so booking never leaves the
+       diagnostic popup — but only once someone actually clicks that
+       link (see the click handler below), not automatically. Calendly
+       auto-injecting itself the moment the results screen appeared was
+       showing its loading spinner indefinitely for some visitors —
+       almost certainly ad blockers / privacy extensions blocking a
+       third-party iframe that wasn't tied to a direct click. Initializing
+       from a real click is both what a "click to schedule" button should
+       do anyway and far more likely to actually load.
+       Calendly's widget.js is loaded async in <head>, so on the rare
+       slow connection it may not have defined window.Calendly yet by
+       the time someone clicks — poll briefly, then give up quietly;
+       the "open in a new tab" fallback link still works either way.
+       Only ever initialized once per page load. */
+    let calendlyInitialized = false;
+    function initCalendlyInline(firstName, email) {
+      if (calendlyInitialized) return;
+      const container = document.getElementById('calendlyInline');
+      const url = document.getElementById('calendlyLink')?.href;
+      if (!container || !url) return;
+      if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+        calendlyInitialized = true;
+        window.Calendly.initInlineWidget({
+          url,
+          parentElement: container,
+          prefill: { name: firstName || '', email: email || '' }
+        });
+      } else {
+        let attempts = 0;
+        const poll = setInterval(() => {
+          attempts++;
+          if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
+            clearInterval(poll);
+            initCalendlyInline(firstName, email);
+          } else if (attempts > 15) {
+            clearInterval(poll); // ~3s of polling, then let the fallback link carry it
+          }
+        }, 200);
+      }
+    }
+
+    document.getElementById('calendlyLink').addEventListener('click', (e) => {
+      // A modified or non-primary click (middle-click, cmd/ctrl-click, etc.)
+      // should still behave like a normal link and open in a new tab.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      e.currentTarget.classList.add('hidden');
+      const calendlyContainer = document.getElementById('calendlyInline');
+      calendlyContainer.classList.remove('hidden');
+      document.getElementById('calendlyFallback').classList.remove('hidden');
+      initCalendlyInline(
+        document.getElementById('firstName').value.trim(),
+        document.getElementById('email').value.trim()
+      );
+      // Bring the scheduler into focus once the browser has laid out
+      // the now-visible container (a plain call right here would still
+      // measure it as hidden/zero-height).
+      requestAnimationFrame(() => {
+        calendlyContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
 
     document.getElementById('captureForm').addEventListener('submit', async (e) => {
