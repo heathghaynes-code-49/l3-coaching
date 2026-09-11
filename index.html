@@ -79,10 +79,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <!-- Calendly (inline scheduling on the diagnostic's results step) -->
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-
   <style>
     :root {
       --bone:#E3DAD0;
@@ -2942,11 +2938,63 @@
         <div class="border-t border-ink/10 pt-6">
           <p class="font-medium mb-2">Want a 30-minute conversation about your specific situation?</p>
           <p class="text-sm text-ink/60 mb-4">No pitch, no deck. Just a real outside read on what's actually creating friction.</p>
-          <a id="calendlyLink" class="btn btn-tan w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book a Discovery Meeting →</a>
-          <div id="calendlyInline" class="hidden rounded-lg overflow-hidden mt-4" style="min-width:280px;height:650px;"></div>
-          <p id="calendlyFallback" class="hidden text-center mt-2">
-            <a class="text-xs text-ink/50 hover:text-ink underline underline-offset-2" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Trouble loading? Open in a new tab →</a>
-          </p>
+
+          <button id="schedStart" type="button" class="btn btn-tan w-full">Book a Discovery Meeting →</button>
+
+          <div id="schedLoading" class="hidden text-center text-sm text-ink/50 py-8">Checking Heath's calendar…</div>
+
+          <div id="schedPicker" class="hidden">
+            <p class="text-[11px] uppercase tracking-[.22em] text-ink/50 mb-2">Pick a day</p>
+            <div id="schedDays" class="flex gap-2 overflow-x-auto pb-2 mb-4"></div>
+            <p class="text-[11px] uppercase tracking-[.22em] text-ink/50 mb-2">Pick a time <span id="schedTz" class="normal-case text-ink/40"></span></p>
+            <div id="schedTimes" class="grid grid-cols-3 gap-2"></div>
+          </div>
+
+          <div id="schedDetails" class="hidden">
+            <button id="schedBack" type="button" class="text-xs text-ink/50 hover:text-ink mb-3">← Pick a different time</button>
+            <p id="schedChosenTime" class="font-serif text-lg mb-4 text-clay"></p>
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs text-ink/60 mb-1 block">Email *</label>
+                <input id="schedEmail" required type="email" autocomplete="email" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none"/>
+              </div>
+              <div>
+                <label class="text-xs text-ink/60 mb-1 block">Phone number *</label>
+                <input id="schedPhone" required type="tel" autocomplete="tel" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none"/>
+              </div>
+              <div>
+                <label class="text-xs text-ink/60 mb-1 block">Meeting location</label>
+                <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                  <label class="flex items-center gap-2"><input type="radio" name="schedLocation" value="zoom_conference" checked> Zoom video call</label>
+                  <label class="flex items-center gap-2"><input type="radio" name="schedLocation" value="physical"> In person (Houston)</label>
+                </div>
+              </div>
+              <div id="schedAddressWrap" class="hidden">
+                <p class="text-sm text-ink/60 bg-bone rounded-lg px-3 py-2.5">We'll follow up for a location after the meeting is confirmed.</p>
+              </div>
+              <div class="absolute -left-[9999px]" aria-hidden="true">
+                <label for="schedHpBlank">Leave this field blank</label>
+                <input type="text" id="schedHpBlank" name="l3_leave_blank" tabindex="-1" autocomplete="off"/>
+              </div>
+            </div>
+            <button id="schedConfirm" type="button" class="btn btn-primary w-full mt-4">Confirm Booking →</button>
+            <p id="schedError" class="hidden text-sm text-red-700 mt-2"></p>
+          </div>
+
+          <div id="schedSuccess" class="hidden text-center">
+            <p class="font-serif text-xl mb-2 text-clay">You're booked →</p>
+            <p id="schedSuccessTime" class="text-ink/70 mb-4"></p>
+            <p class="text-xs text-ink/50">
+              Need to change it? <a id="schedReschedule" href="#" target="_blank" rel="noopener" class="underline hover:text-ink">Reschedule</a> ·
+              <a id="schedCancel" href="#" target="_blank" rel="noopener" class="underline hover:text-ink">Cancel</a>
+            </p>
+          </div>
+
+          <div id="schedFallback" class="hidden text-center mt-3">
+            <p class="text-sm text-ink/60 mb-3">Live scheduling isn't available right now — book directly on Calendly instead.</p>
+            <a id="calendlyLink" class="btn btn-outline w-full" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book on Calendly →</a>
+          </div>
+
           <p id="resultsSent" class="text-xs text-ink/50 text-center mt-3">A copy of your result has been emailed to you.</p>
         </div>
       </div>
@@ -3777,67 +3825,206 @@
       else { showStep('intro'); }
     });
 
-    /* Loads the real Calendly picker into the results step, in place of
-       the "Book a Discovery Meeting" link, so booking never leaves the
-       diagnostic popup — but only once someone actually clicks that
-       link (see the click handler below), not automatically. Calendly
-       auto-injecting itself the moment the results screen appeared was
-       showing its loading spinner indefinitely for some visitors —
-       almost certainly ad blockers / privacy extensions blocking a
-       third-party iframe that wasn't tied to a direct click. Initializing
-       from a real click is both what a "click to schedule" button should
-       do anyway and far more likely to actually load.
-       Calendly's widget.js is loaded async in <head>, so on the rare
-       slow connection it may not have defined window.Calendly yet by
-       the time someone clicks — poll briefly, then give up quietly;
-       the "open in a new tab" fallback link still works either way.
-       Only ever initialized once per page load. */
-    let calendlyInitialized = false;
-    function initCalendlyInline(firstName, email) {
-      if (calendlyInitialized) return;
-      const container = document.getElementById('calendlyInline');
-      const url = document.getElementById('calendlyLink')?.href;
-      if (!container || !url) return;
-      if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
-        calendlyInitialized = true;
-        window.Calendly.initInlineWidget({
-          url,
-          parentElement: container,
-          prefill: { name: firstName || '', email: email || '' }
-        });
-      } else {
-        let attempts = 0;
-        const poll = setInterval(() => {
-          attempts++;
-          if (window.Calendly && typeof window.Calendly.initInlineWidget === 'function') {
-            clearInterval(poll);
-            initCalendlyInline(firstName, email);
-          } else if (attempts > 15) {
-            clearInterval(poll); // ~3s of polling, then let the fallback link carry it
-          }
-        }, 200);
+    /* Custom Calendly-backed scheduler for the results step: a real day/
+       time picker built from scratch, showing Heath's actual availability
+       and booking directly through Calendly's API — no Calendly iframe or
+       branding anywhere. Two Netlify Functions (calendly-availability,
+       calendly-book) proxy the real Calendly REST API server-side so the
+       API token never reaches the browser. On Deploy Previews the token
+       is deliberately left unset, so the functions report no slots and
+       this falls back to the plain "book on Calendly" link instead of
+       ever touching the real calendar during testing. */
+    const schedStart = document.getElementById('schedStart');
+    const schedLoading = document.getElementById('schedLoading');
+    const schedPicker = document.getElementById('schedPicker');
+    const schedDetails = document.getElementById('schedDetails');
+    const schedSuccess = document.getElementById('schedSuccess');
+    const schedFallback = document.getElementById('schedFallback');
+    const schedDays = document.getElementById('schedDays');
+    const schedTimes = document.getElementById('schedTimes');
+    const schedTz = document.getElementById('schedTz');
+    const schedChosenTime = document.getElementById('schedChosenTime');
+    const schedError = document.getElementById('schedError');
+    const schedConfirmBtn = document.getElementById('schedConfirm');
+
+    const VISITOR_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let schedSlotsByDay = new Map(); // 'YYYY-MM-DD' (visitor-local day) -> [Date, ...]
+    let schedSelectedSlot = null;
+
+    function schedShowStep(step) {
+      // schedFallback is deliberately left visible alongside schedDetails
+      // when a booking attempt fails (it's an additional escape hatch,
+      // not a replacement for the form) — but any other transition,
+      // successful or not, should always start from a clean slate.
+      [schedStart, schedLoading, schedPicker, schedDetails, schedSuccess, schedFallback].forEach(el => el.classList.add('hidden'));
+      step.classList.remove('hidden');
+      if (step !== schedStart) {
+        requestAnimationFrame(() => step.scrollIntoView({ behavior: 'smooth', block: 'start' }));
       }
     }
 
-    document.getElementById('calendlyLink').addEventListener('click', (e) => {
-      // A modified or non-primary click (middle-click, cmd/ctrl-click, etc.)
-      // should still behave like a normal link and open in a new tab.
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      e.preventDefault();
-      e.currentTarget.classList.add('hidden');
-      const calendlyContainer = document.getElementById('calendlyInline');
-      calendlyContainer.classList.remove('hidden');
-      document.getElementById('calendlyFallback').classList.remove('hidden');
-      initCalendlyInline(
-        document.getElementById('firstName').value.trim(),
-        document.getElementById('email').value.trim()
-      );
-      // Bring the scheduler into focus once the browser has laid out
-      // the now-visible container (a plain call right here would still
-      // measure it as hidden/zero-height).
-      requestAnimationFrame(() => {
-        calendlyContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function schedDayKey(date) {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: VISITOR_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+    }
+
+    function schedFallToLink() {
+      // Don't re-show the "Book a Discovery Meeting" button here — it
+      // would just fail the same way again. Show the fallback message
+      // and link as the only visible option instead of a silent revert.
+      [schedStart, schedLoading, schedPicker, schedDetails, schedSuccess].forEach(el => el.classList.add('hidden'));
+      schedFallback.classList.remove('hidden');
+      requestAnimationFrame(() => schedFallback.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+
+    async function schedLoadAvailability() {
+      schedShowStep(schedLoading);
+      try {
+        const res = await fetch('/.netlify/functions/calendly-availability');
+        const data = await res.json();
+        if (!res.ok || !data.slots || !data.slots.length) {
+          schedFallToLink();
+          return;
+        }
+        schedSlotsByDay = new Map();
+        data.slots.forEach((iso) => {
+          const d = new Date(iso);
+          const key = schedDayKey(d);
+          if (!schedSlotsByDay.has(key)) schedSlotsByDay.set(key, []);
+          schedSlotsByDay.get(key).push(d);
+        });
+        schedRenderDays();
+        schedShowStep(schedPicker);
+      } catch (err) {
+        schedFallToLink();
+      }
+    }
+
+    function schedRenderDays() {
+      schedDays.innerHTML = '';
+      const keys = [...schedSlotsByDay.keys()].sort();
+      keys.forEach((key, i) => {
+        const [y, m, d] = key.split('-').map(Number);
+        const label = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'shrink-0 px-3 py-2 rounded-lg border text-sm transition';
+        btn.textContent = label;
+        btn.dataset.key = key;
+        btn.addEventListener('click', () => schedSelectDay(key));
+        schedDays.appendChild(btn);
       });
+      if (keys.length) schedSelectDay(keys[0]);
+    }
+
+    function schedSelectDay(key) {
+      [...schedDays.children].forEach((b) => {
+        const active = b.dataset.key === key;
+        b.classList.toggle('border-clay', active);
+        b.classList.toggle('bg-clay/10', active);
+        b.classList.toggle('text-clay', active);
+        b.classList.toggle('border-ink/15', !active);
+        b.classList.toggle('text-ink/70', !active);
+      });
+      schedTz.textContent = `(${VISITOR_TZ.replace(/_/g, ' ')})`;
+      schedTimes.innerHTML = '';
+      (schedSlotsByDay.get(key) || []).forEach((d) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'px-2 py-2 rounded-lg border border-ink/15 text-sm hover:border-clay hover:text-clay transition';
+        btn.textContent = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+        btn.addEventListener('click', () => schedSelectSlot(d));
+        schedTimes.appendChild(btn);
+      });
+    }
+
+    function schedFormatSlot(d) {
+      return d.toLocaleString(undefined, { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    }
+
+    function schedSelectSlot(d) {
+      schedSelectedSlot = d;
+      schedChosenTime.textContent = schedFormatSlot(d);
+      schedError.classList.add('hidden');
+      // Prefill with the email already given earlier in the diagnostic,
+      // but only if this field hasn't been touched — don't clobber an
+      // edit if they've been back and forth between steps.
+      const schedEmailInput = document.getElementById('schedEmail');
+      if (!schedEmailInput.value) {
+        schedEmailInput.value = document.getElementById('email').value.trim();
+      }
+      schedShowStep(schedDetails);
+    }
+
+    schedStart.addEventListener('click', schedLoadAvailability);
+    document.getElementById('schedBack').addEventListener('click', () => schedShowStep(schedPicker));
+
+    document.querySelectorAll('input[name="schedLocation"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        const isPhysical = document.querySelector('input[name="schedLocation"]:checked').value === 'physical';
+        document.getElementById('schedAddressWrap').classList.toggle('hidden', !isPhysical);
+      });
+    });
+
+    const SCHED_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    schedConfirmBtn.addEventListener('click', async () => {
+      const email = document.getElementById('schedEmail').value.trim();
+      const phone = document.getElementById('schedPhone').value.trim();
+      const locationKind = document.querySelector('input[name="schedLocation"]:checked').value;
+      const honeypot = document.getElementById('schedHpBlank').value;
+
+      schedError.classList.add('hidden');
+      if (!SCHED_EMAIL_RE.test(email)) {
+        schedError.textContent = 'Please enter a valid email address.';
+        schedError.classList.remove('hidden');
+        return;
+      }
+      if (!phone) {
+        schedError.textContent = 'Please enter a phone number.';
+        schedError.classList.remove('hidden');
+        return;
+      }
+      if (honeypot) return;
+
+      schedConfirmBtn.disabled = true;
+      schedConfirmBtn.textContent = 'Booking…';
+
+      try {
+        const res = await fetch('/.netlify/functions/calendly-book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            startTime: schedSelectedSlot.toISOString(),
+            name: document.getElementById('firstName').value.trim(),
+            email,
+            timezone: VISITOR_TZ,
+            phone,
+            locationKind,
+            website: honeypot
+          })
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          schedError.textContent = data.error || 'Something went wrong. Please try again or use the link below.';
+          schedError.classList.remove('hidden');
+          schedFallback.classList.remove('hidden');
+          schedConfirmBtn.disabled = false;
+          schedConfirmBtn.textContent = 'Confirm Booking →';
+          return;
+        }
+
+        document.getElementById('schedSuccessTime').textContent = schedFormatSlot(schedSelectedSlot);
+        if (data.rescheduleUrl) document.getElementById('schedReschedule').href = data.rescheduleUrl;
+        if (data.cancelUrl) document.getElementById('schedCancel').href = data.cancelUrl;
+        schedShowStep(schedSuccess);
+      } catch (err) {
+        schedError.textContent = 'Something went wrong. Please try again or use the link below.';
+        schedError.classList.remove('hidden');
+        schedFallback.classList.remove('hidden');
+        schedConfirmBtn.disabled = false;
+        schedConfirmBtn.textContent = 'Confirm Booking →';
+      }
     });
 
     document.getElementById('captureForm').addEventListener('submit', async (e) => {
