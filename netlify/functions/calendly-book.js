@@ -9,6 +9,13 @@
 
 const EVENT_TYPE_URI = "https://api.calendly.com/event_types/497a3b8f-c2c8-4d14-851a-d9206fc68fa4";
 
+// For a "physical" location, Calendly requires location.location to be
+// the exact preset text configured on the event type (it's a fixed
+// choice, not free text) — the visitor's actual address only goes into
+// the "Address for in-person" custom question below. Sending the
+// visitor's address here instead fails with "invalid_location_choice".
+const PHYSICAL_LOCATION_TEXT = "I can come to you if you are in Houston. (share address below)";
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LOCATION_KINDS = ["zoom_conference", "physical"];
 
@@ -48,7 +55,7 @@ exports.handler = async (event) => {
   }
 
   const location = payload.locationKind === "physical"
-    ? { kind: "physical", location: (payload.address || "").trim() || "Address to be confirmed" }
+    ? { kind: "physical", location: PHYSICAL_LOCATION_TEXT }
     : { kind: "zoom_conference" };
 
   const body = {
@@ -80,11 +87,19 @@ exports.handler = async (event) => {
 
     if (!res.ok) {
       console.error("Calendly booking error:", res.status, JSON.stringify(data));
-      // Most failures at this point are a slot that was just taken by
-      // someone else between the availability fetch and this request.
+      // Only Calendly's own "already_filled" code means someone else
+      // took the slot between the availability fetch and this request —
+      // everything else (bad location config, invalid params, etc.) is
+      // a real error and should say so rather than blaming a race
+      // condition that didn't happen.
+      const alreadyFilled = (data.details || []).some((d) => d.code === "already_filled");
       return {
-        statusCode: 409,
-        body: JSON.stringify({ error: "That time was just taken. Please pick another." })
+        statusCode: alreadyFilled ? 409 : 502,
+        body: JSON.stringify({
+          error: alreadyFilled
+            ? "That time was just taken. Please pick another."
+            : "Something went wrong booking that time. Please try again or use the link below."
+        })
       };
     }
 
