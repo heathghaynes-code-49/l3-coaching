@@ -2909,8 +2909,8 @@
             <textarea id="challenge" rows="3" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none resize-y"></textarea>
           </div>
           <div class="absolute -left-[9999px]" aria-hidden="true">
-            <label for="hpWebsite">Leave this field blank</label>
-            <input type="text" id="hpWebsite" name="website" tabindex="-1" autocomplete="off"/>
+            <label for="hpConfirm">Leave this field blank</label>
+            <input type="text" id="hpConfirm" name="l3_leave_blank" tabindex="-1" autocomplete="off"/>
           </div>
           <button class="btn btn-primary w-full" type="submit">See My Result →</button>
         </form>
@@ -3857,7 +3857,7 @@
         utmSource: new URLSearchParams(window.location.search).get('utm_source') || '',
         utmCampaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
         submittedAt: new Date().toISOString(),
-        website: document.getElementById('hpWebsite').value,
+        website: document.getElementById('hpConfirm').value,
         formStartedAt: quizStartedAt
       };
 
