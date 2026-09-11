@@ -2905,8 +2905,8 @@
             <textarea id="challenge" rows="3" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none resize-y"></textarea>
           </div>
           <div class="absolute -left-[9999px]" aria-hidden="true">
-            <label for="hpWebsite">Leave this field blank</label>
-            <input type="text" id="hpWebsite" name="website" tabindex="-1" autocomplete="off"/>
+            <label for="hpConfirm">Leave this field blank</label>
+            <input type="text" id="hpConfirm" name="l3_leave_blank" tabindex="-1" autocomplete="off"/>
           </div>
           <button class="btn btn-primary w-full" type="submit">See My Result →</button>
         </form>
@@ -2973,8 +2973,8 @@
                 <p class="text-sm text-ink/60 bg-bone rounded-lg px-3 py-2.5">We'll follow up for a location after the meeting is confirmed.</p>
               </div>
               <div class="absolute -left-[9999px]" aria-hidden="true">
-                <label for="schedWebsite">Leave this field blank</label>
-                <input type="text" id="schedWebsite" tabindex="-1" autocomplete="off"/>
+                <label for="schedHpBlank">Leave this field blank</label>
+                <input type="text" id="schedHpBlank" name="l3_leave_blank" tabindex="-1" autocomplete="off"/>
               </div>
             </div>
             <button id="schedConfirm" type="button" class="btn btn-primary w-full mt-4">Confirm Booking →</button>
@@ -3971,7 +3971,7 @@
       const email = document.getElementById('schedEmail').value.trim();
       const phone = document.getElementById('schedPhone').value.trim();
       const locationKind = document.querySelector('input[name="schedLocation"]:checked').value;
-      const honeypot = document.getElementById('schedWebsite').value;
+      const honeypot = document.getElementById('schedHpBlank').value;
 
       schedError.classList.add('hidden');
       if (!SCHED_EMAIL_RE.test(email)) {
@@ -4044,7 +4044,7 @@
         utmSource: new URLSearchParams(window.location.search).get('utm_source') || '',
         utmCampaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
         submittedAt: new Date().toISOString(),
-        website: document.getElementById('hpWebsite').value,
+        website: document.getElementById('hpConfirm').value,
         formStartedAt: quizStartedAt
       };
 
