@@ -27,7 +27,6 @@ function validate(payload) {
   if (typeof payload.timezone !== "string" || !payload.timezone.trim() || payload.timezone.length > 100) return "invalid timezone";
   if (typeof payload.phone !== "string" || !payload.phone.trim() || payload.phone.length > 40) return "invalid phone";
   if (!LOCATION_KINDS.includes(payload.locationKind)) return "invalid locationKind";
-  if (typeof payload.address === "string" && payload.address.length > 300) return "address too long";
   return null;
 }
 
@@ -58,18 +57,13 @@ exports.handler = async (event) => {
     ? { kind: "physical", location: PHYSICAL_LOCATION_TEXT }
     : { kind: "zoom_conference" };
 
+  // Address isn't collected from the visitor for an in-person meeting —
+  // Heath follows up separately once the booking is confirmed — so the
+  // "Address for in-person" custom question is simply left unanswered.
   // Calendly rejects a questions_and_answers entry with an empty
   // "answer" outright ("must be filled"), even for a question that
-  // isn't required on the event type — an unanswered optional question
-  // must be omitted entirely, not sent blank.
-  const questionsAndAnswers = [
-    { question: "Phone Number", answer: payload.phone.trim(), position: 0 }
-  ];
-  const trimmedAddress = (payload.address || "").trim();
-  if (trimmedAddress) {
-    questionsAndAnswers.push({ question: "Address for in-person", answer: trimmedAddress, position: 1 });
-  }
-
+  // isn't required on the event type, so it's omitted entirely rather
+  // than sent blank.
   const body = {
     event_type: EVENT_TYPE_URI,
     start_time: payload.startTime,
@@ -79,7 +73,9 @@ exports.handler = async (event) => {
       timezone: payload.timezone
     },
     location,
-    questions_and_answers: questionsAndAnswers
+    questions_and_answers: [
+      { question: "Phone Number", answer: payload.phone.trim(), position: 0 }
+    ]
   };
 
   try {

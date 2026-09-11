@@ -2966,8 +2966,7 @@
                 </div>
               </div>
               <div id="schedAddressWrap" class="hidden">
-                <label class="text-xs text-ink/60 mb-1 block">Where should Heath meet you?</label>
-                <input id="schedAddress" type="text" class="w-full bg-white border border-ink/15 rounded-lg px-3 py-2.5 text-sm focus:border-clay outline-none"/>
+                <p class="text-sm text-ink/60 bg-bone rounded-lg px-3 py-2.5">We'll follow up for a location after the meeting is confirmed.</p>
               </div>
               <div class="absolute -left-[9999px]" aria-hidden="true">
                 <label for="schedWebsite">Leave this field blank</label>
@@ -3958,7 +3957,6 @@
     schedConfirmBtn.addEventListener('click', async () => {
       const phone = document.getElementById('schedPhone').value.trim();
       const locationKind = document.querySelector('input[name="schedLocation"]:checked').value;
-      const address = document.getElementById('schedAddress').value.trim();
       const honeypot = document.getElementById('schedWebsite').value;
 
       schedError.classList.add('hidden');
@@ -3983,7 +3981,6 @@
             timezone: VISITOR_TZ,
             phone,
             locationKind,
-            address,
             website: honeypot
           })
         });
