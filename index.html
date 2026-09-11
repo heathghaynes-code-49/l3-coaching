@@ -3849,7 +3849,11 @@
     let schedSelectedSlot = null;
 
     function schedShowStep(step) {
-      [schedStart, schedLoading, schedPicker, schedDetails, schedSuccess].forEach(el => el.classList.add('hidden'));
+      // schedFallback is deliberately left visible alongside schedDetails
+      // when a booking attempt fails (it's an additional escape hatch,
+      // not a replacement for the form) — but any other transition,
+      // successful or not, should always start from a clean slate.
+      [schedStart, schedLoading, schedPicker, schedDetails, schedSuccess, schedFallback].forEach(el => el.classList.add('hidden'));
       step.classList.remove('hidden');
       if (step !== schedStart) {
         requestAnimationFrame(() => step.scrollIntoView({ behavior: 'smooth', block: 'start' }));
