@@ -58,6 +58,18 @@ exports.handler = async (event) => {
     ? { kind: "physical", location: PHYSICAL_LOCATION_TEXT }
     : { kind: "zoom_conference" };
 
+  // Calendly rejects a questions_and_answers entry with an empty
+  // "answer" outright ("must be filled"), even for a question that
+  // isn't required on the event type — an unanswered optional question
+  // must be omitted entirely, not sent blank.
+  const questionsAndAnswers = [
+    { question: "Phone Number", answer: payload.phone.trim(), position: 0 }
+  ];
+  const trimmedAddress = (payload.address || "").trim();
+  if (trimmedAddress) {
+    questionsAndAnswers.push({ question: "Address for in-person", answer: trimmedAddress, position: 1 });
+  }
+
   const body = {
     event_type: EVENT_TYPE_URI,
     start_time: payload.startTime,
@@ -67,10 +79,7 @@ exports.handler = async (event) => {
       timezone: payload.timezone
     },
     location,
-    questions_and_answers: [
-      { question: "Phone Number", answer: payload.phone.trim(), position: 0 },
-      { question: "Address for in-person", answer: payload.locationKind === "physical" ? (payload.address || "").trim() : "", position: 1 }
-    ]
+    questions_and_answers: questionsAndAnswers
   };
 
   try {
