@@ -250,7 +250,43 @@
     .status.err { color: #a12a1a; }
     .thanks { text-align: left; }
     .thanks h3 { margin-bottom: .6rem; }
-    @media (max-width: 860px) { .questions .grid { grid-template-columns: 1fr; } }
+    .questions .grid > * { min-width: 0; }
+    @media (max-width: 860px) { .questions .grid { grid-template-columns: minmax(0, 1fr); } }
+
+    /* Tabs + scheduler (Meet with Heath) */
+    [hidden] { display: none !important; }
+    .tabs { display: flex; gap: .35rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: .3rem; margin-bottom: 1.6rem; }
+    .tab { flex: 1; padding: .8rem 1rem; border: 0; border-radius: 999px; background: transparent; color: var(--navy); font: 600 .92rem/1 'Poppins', sans-serif; cursor: pointer; transition: background .2s ease, color .2s ease; }
+    .tab:hover { background: rgba(4,51,112,.06); }
+    @media (max-width: 480px) { .tab { padding: .8rem .4rem; font-size: .84rem; white-space: nowrap; } }
+    .tab[aria-selected="true"] { background: var(--navy); color: #fff; }
+    .pills { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .5rem; margin-bottom: 1.1rem; }
+    .pill, .time { padding: .65rem .9rem; border-radius: 12px; border: 1px solid rgba(19,35,59,.2); background: #fff; color: var(--ink); font: 600 .92rem/1 'Quicksand', sans-serif; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
+    .pill { flex: none; white-space: nowrap; }
+    .time { white-space: nowrap; }
+    @media (max-width: 480px) { .times { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    .pill:hover, .time:hover { border-color: var(--gold); }
+    .pill.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .times { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .5rem; }
+    .step-label { font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--navy); opacity: .7; margin: 0 0 .6rem; }
+    .step-label span { text-transform: none; letter-spacing: 0; font-weight: 600; opacity: .8; }
+    .back-link { background: none; border: 0; padding: 0; margin: 0 0 .9rem; font: 600 .85rem 'Quicksand', sans-serif; color: var(--muted); cursor: pointer; }
+    .back-link:hover { color: var(--navy); }
+    .chosen { font-family: 'League Spartan', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.1; color: var(--navy); margin: 0 0 1.2rem; }
+    .radios { display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; font-size: .95rem; margin-bottom: .6rem; }
+    .radios label { display: flex; gap: .5rem; align-items: center; cursor: pointer; }
+    .radios input { accent-color: var(--navy); }
+    .hint { font-size: .88rem; color: var(--muted); background: #fff; border-radius: 12px; padding: .65rem .85rem; margin: 0 0 1rem; }
+    .loading { text-align: center; color: var(--muted); padding: 1.6rem 0; margin: 0; }
+    .success h3 { margin-bottom: .5rem; }
+    .success .links { font-size: .9rem; color: var(--muted); margin: 1.1rem 0 0; }
+    .success .links a { color: var(--navy); font-weight: 700; }
+    .fallback { background: #fff; border-radius: 12px; padding: 1.1rem 1.2rem; margin-top: 1rem; font-size: .95rem; }
+    .fallback p { margin: 0 0 .8rem; }
+    .talk { margin: 1.6rem 0 0; font-weight: 700; }
+    .talk a { color: var(--navy); text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+    .talk a:hover { color: var(--navy-deep); }
+    .form-card { scroll-margin-top: 90px; }
 
     /* Invite band */
     .invite { background: var(--gold); color: var(--navy-deep); }
@@ -548,11 +584,18 @@
               <summary>I can't make November 17. What now?</summary>
               <p>Use the form and check the box to be notified. We'll email you when registration opens for the Pilot Forum on December 10 and the January 14 kickoff.</p>
             </details>
+            <p class="talk"><a href="#meet" data-open-tab="meet">Prefer to talk it through? Book an hour with Heath →</a></p>
           </div>
 
-          <div class="form-card" id="formCard">
+          <div class="form-card" id="meet">
+            <div class="tabs" role="tablist" aria-label="How would you like to connect?">
+              <button class="tab" role="tab" type="button" id="tabNote" aria-selected="true" aria-controls="panelNote">Send a note</button>
+              <button class="tab" role="tab" type="button" id="tabMeet" aria-selected="false" aria-controls="panelMeet" tabindex="-1">Meet with Heath</button>
+            </div>
+
+            <div id="panelNote" role="tabpanel" aria-labelledby="tabNote">
             <h3>Send a note.</h3>
-            <p class="sub">Ask a question, or just tell us you're interested. Prefer coffee? Say so and Heath will reach out.</p>
+            <p class="sub">Ask a question, or just tell us you're interested.</p>
             <form id="ifForm" novalidate>
               <div class="field">
                 <label class="lbl" for="ifName">Name</label>
@@ -577,6 +620,62 @@
               <button class="btn btn-navy" type="submit" id="ifSubmit" style="width:100%">Send</button>
               <p class="status" id="ifStatus" role="status" aria-live="polite"></p>
             </form>
+            </div>
+
+            <div id="panelMeet" role="tabpanel" aria-labelledby="tabMeet" hidden>
+              <h3>Meet with Heath.</h3>
+              <p class="sub">An hour to ask your questions, hear how Iron Forums works, and see if it's a fit. In person in Houston or on Zoom.</p>
+
+              <button class="btn btn-navy" type="button" id="mtStart" style="width:100%">Find a time →</button>
+              <p class="loading" id="mtLoading" hidden>Checking Heath's calendar…</p>
+
+              <div id="mtPicker" hidden>
+                <p class="step-label">Pick a day</p>
+                <div class="pills" id="mtDays"></div>
+                <p class="step-label">Pick a time <span id="mtTz"></span></p>
+                <div class="times" id="mtTimes"></div>
+              </div>
+
+              <div id="mtDetails" hidden>
+                <button class="back-link" type="button" id="mtBack">← Pick a different time</button>
+                <p class="chosen" id="mtChosen"></p>
+                <div class="field">
+                  <label class="lbl" for="mtName">Name</label>
+                  <input type="text" id="mtName" autocomplete="name" />
+                </div>
+                <div class="field">
+                  <label class="lbl" for="mtEmail">Email</label>
+                  <input type="email" id="mtEmail" autocomplete="email" />
+                </div>
+                <div class="field">
+                  <label class="lbl" for="mtPhone">Phone</label>
+                  <input type="text" id="mtPhone" inputmode="tel" autocomplete="tel" />
+                </div>
+                <p class="lbl" style="margin-bottom:.5rem">How would you like to meet?</p>
+                <div class="radios">
+                  <label><input type="radio" name="mtLocation" value="physical" checked /> In person in Houston</label>
+                  <label><input type="radio" name="mtLocation" value="zoom_conference" /> Zoom video call</label>
+                </div>
+                <p class="hint" id="mtHint">We'll follow up for a place once your time is confirmed.</p>
+                <div class="hp" aria-hidden="true">
+                  <label for="mtHpBlank">Leave this field blank</label>
+                  <input type="text" id="mtHpBlank" name="mt_leave_blank" tabindex="-1" autocomplete="off" />
+                </div>
+                <button class="btn btn-navy" type="button" id="mtConfirm" style="width:100%">Confirm meeting →</button>
+                <p class="status err" id="mtError" role="alert" hidden></p>
+              </div>
+
+              <div class="success" id="mtSuccess" hidden>
+                <h3>You're booked.</h3>
+                <p class="sub" id="mtSuccessTime" style="margin:0"></p>
+                <p class="links">A confirmation is on its way from Calendly. Need to change it? <a id="mtReschedule" href="#" target="_blank" rel="noopener">Reschedule</a> · <a id="mtCancel" href="#" target="_blank" rel="noopener">Cancel</a></p>
+              </div>
+
+              <div class="fallback" id="mtFallback" hidden>
+                <p>Live scheduling isn't available right now. You can book directly on Calendly, or send Heath a note instead.</p>
+                <a class="btn btn-ghost-dark btn-sm" href="https://calendly.com/heath-rws/l3-coaching-call" target="_blank" rel="noopener">Book on Calendly →</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -753,13 +852,180 @@
           })
         });
         if (!res.ok) throw new Error('bad response');
-        document.getElementById('formCard').innerHTML =
+        document.getElementById('panelNote').innerHTML =
           '<div class="thanks"><h3>Got it. Thank you.</h3><p class="sub" style="margin:0">Heath will be in touch soon. In the meantime, save the date for the Discovery Lunch: Tuesday, November 17, 11:30 AM.</p></div>';
       } catch (err) {
         statusEl.className = 'status err';
         statusEl.textContent = "That didn't go through. Please try again, or email connect@l3leadershipcoaching.com.";
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send';
+      }
+    });
+
+    /* Tabs: Send a note / Meet with Heath */
+    const tabNote = document.getElementById('tabNote');
+    const tabMeet = document.getElementById('tabMeet');
+    const panelNote = document.getElementById('panelNote');
+    const panelMeet = document.getElementById('panelMeet');
+    function showTab(which) {
+      const meet = which === 'meet';
+      tabNote.setAttribute('aria-selected', String(!meet));
+      tabMeet.setAttribute('aria-selected', String(meet));
+      tabNote.tabIndex = meet ? -1 : 0;
+      tabMeet.tabIndex = meet ? 0 : -1;
+      panelNote.hidden = meet;
+      panelMeet.hidden = !meet;
+    }
+    tabNote.addEventListener('click', () => showTab('note'));
+    tabMeet.addEventListener('click', () => showTab('meet'));
+    [tabNote, tabMeet].forEach((t) => t.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        const next = t === tabNote ? 'meet' : 'note';
+        showTab(next);
+        (next === 'meet' ? tabMeet : tabNote).focus();
+      }
+    }));
+    document.querySelectorAll('[data-open-tab]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      showTab(a.dataset.openTab);
+      document.getElementById('meet').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    if (location.hash === '#meet') showTab('meet');
+
+    /* Meet with Heath: a custom picker over Heath's real calendar, using the
+       same two Netlify Functions (calendly-availability, calendly-book) and
+       the same one-hour meeting as the L3 diagnostic. The Calendly API token
+       stays on the server. If availability can't load, it falls back to a
+       plain Calendly link. */
+    const mt = {
+      start: document.getElementById('mtStart'),
+      loading: document.getElementById('mtLoading'),
+      picker: document.getElementById('mtPicker'),
+      details: document.getElementById('mtDetails'),
+      success: document.getElementById('mtSuccess'),
+      fallback: document.getElementById('mtFallback'),
+      days: document.getElementById('mtDays'),
+      times: document.getElementById('mtTimes'),
+      tz: document.getElementById('mtTz'),
+      chosen: document.getElementById('mtChosen'),
+      error: document.getElementById('mtError'),
+      confirm: document.getElementById('mtConfirm')
+    };
+    const MT_STEPS = [mt.start, mt.loading, mt.picker, mt.details, mt.success, mt.fallback];
+    const VISITOR_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let mtSlotsByDay = new Map();
+    let mtSlot = null;
+
+    function mtShow(step) {
+      MT_STEPS.forEach((el) => { el.hidden = true; });
+      step.hidden = false;
+      if (step !== mt.start) panelMeet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    const mtDayKey = (d) => new Intl.DateTimeFormat('en-CA', { timeZone: VISITOR_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+    const mtFormat = (d) => d.toLocaleString(undefined, { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+    async function mtLoad() {
+      mtShow(mt.loading);
+      try {
+        const res = await fetch('/.netlify/functions/calendly-availability');
+        const data = await res.json();
+        if (!res.ok || !data.slots || !data.slots.length) { mtShow(mt.fallback); return; }
+        mtSlotsByDay = new Map();
+        data.slots.forEach((iso) => {
+          const d = new Date(iso);
+          const key = mtDayKey(d);
+          if (!mtSlotsByDay.has(key)) mtSlotsByDay.set(key, []);
+          mtSlotsByDay.get(key).push(d);
+        });
+        mt.days.innerHTML = '';
+        const keys = [...mtSlotsByDay.keys()].sort();
+        keys.forEach((key) => {
+          const [y, m, d] = key.split('-').map(Number);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'pill';
+          btn.dataset.key = key;
+          btn.textContent = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+          btn.addEventListener('click', () => mtSelectDay(key));
+          mt.days.appendChild(btn);
+        });
+        mtSelectDay(keys[0]);
+        mtShow(mt.picker);
+      } catch (err) {
+        mtShow(mt.fallback);
+      }
+    }
+
+    function mtSelectDay(key) {
+      [...mt.days.children].forEach((b) => b.classList.toggle('active', b.dataset.key === key));
+      mt.tz.textContent = '(' + VISITOR_TZ.replace(/_/g, ' ') + ')';
+      mt.times.innerHTML = '';
+      (mtSlotsByDay.get(key) || []).forEach((d) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'time';
+        btn.textContent = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+        btn.addEventListener('click', () => mtSelectSlot(d));
+        mt.times.appendChild(btn);
+      });
+    }
+
+    function mtSelectSlot(d) {
+      mtSlot = d;
+      mt.chosen.textContent = mtFormat(d);
+      mt.error.hidden = true;
+      // Carry over anything already typed into the note form
+      const nameEl = document.getElementById('mtName'), emailEl = document.getElementById('mtEmail');
+      if (!nameEl.value) nameEl.value = document.getElementById('ifName').value.trim();
+      if (!emailEl.value) emailEl.value = document.getElementById('ifEmail').value.trim();
+      mtShow(mt.details);
+    }
+
+    mt.start.addEventListener('click', mtLoad);
+    document.getElementById('mtBack').addEventListener('click', () => mtShow(mt.picker));
+    document.querySelectorAll('input[name="mtLocation"]').forEach((r) => r.addEventListener('change', () => {
+      document.getElementById('mtHint').hidden = document.querySelector('input[name="mtLocation"]:checked').value !== 'physical';
+    }));
+
+    mt.confirm.addEventListener('click', async () => {
+      const name = document.getElementById('mtName').value.trim();
+      const email = document.getElementById('mtEmail').value.trim();
+      const phone = document.getElementById('mtPhone').value.trim();
+      const locationKind = document.querySelector('input[name="mtLocation"]:checked').value;
+      const honeypot = document.getElementById('mtHpBlank').value;
+      const fail = (msg) => { mt.error.textContent = msg; mt.error.hidden = false; };
+
+      mt.error.hidden = true;
+      if (!name) return fail('Please add your name.');
+      if (!EMAIL_RE.test(email)) return fail('Please enter a valid email address.');
+      if (!phone) return fail('Please add a phone number.');
+      if (honeypot) return;
+
+      mt.confirm.disabled = true;
+      mt.confirm.textContent = 'Booking…';
+      try {
+        const res = await fetch('/.netlify/functions/calendly-book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ startTime: mtSlot.toISOString(), name, email, timezone: VISITOR_TZ, phone, locationKind, website: honeypot })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          fail(data.error || 'Something went wrong. Please try again, or book directly on Calendly.');
+          mt.fallback.hidden = false;
+          mt.confirm.disabled = false;
+          mt.confirm.textContent = 'Confirm meeting →';
+          return;
+        }
+        document.getElementById('mtSuccessTime').textContent = mtFormat(mtSlot) + (locationKind === 'physical' ? ' · In person in Houston. Heath will follow up with a place.' : ' · Zoom');
+        if (data.rescheduleUrl) document.getElementById('mtReschedule').href = data.rescheduleUrl;
+        if (data.cancelUrl) document.getElementById('mtCancel').href = data.cancelUrl;
+        mtShow(mt.success);
+      } catch (err) {
+        fail('Something went wrong. Please try again, or book directly on Calendly.');
+        mt.fallback.hidden = false;
+        mt.confirm.disabled = false;
+        mt.confirm.textContent = 'Confirm meeting →';
       }
     });
   </script>
