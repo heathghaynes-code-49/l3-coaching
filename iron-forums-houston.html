@@ -273,9 +273,6 @@
     .back-link { background: none; border: 0; padding: 0; margin: 0 0 .9rem; font: 600 .85rem 'Quicksand', sans-serif; color: var(--muted); cursor: pointer; }
     .back-link:hover { color: var(--navy); }
     .chosen { font-family: 'League Spartan', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.1; color: var(--navy); margin: 0 0 1.2rem; }
-    .radios { display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; font-size: .95rem; margin-bottom: .6rem; }
-    .radios label { display: flex; gap: .5rem; align-items: center; cursor: pointer; }
-    .radios input { accent-color: var(--navy); }
     .hint { font-size: .88rem; color: var(--muted); background: #fff; border-radius: 12px; padding: .65rem .85rem; margin: 0 0 1rem; }
     .loading { text-align: center; color: var(--muted); padding: 1.6rem 0; margin: 0; }
     .success h3 { margin-bottom: .5rem; }
@@ -584,7 +581,7 @@
               <summary>I can't make November 17. What now?</summary>
               <p>Use the form and check the box to be notified. We'll email you when registration opens for the Pilot Forum on December 10 and the January 14 kickoff.</p>
             </details>
-            <p class="talk"><a href="#meet" data-open-tab="meet">Prefer to talk it through? Book an hour with Heath →</a></p>
+            <p class="talk"><a href="#meet" data-open-tab="meet">Prefer to talk it through? Book time with Heath →</a></p>
           </div>
 
           <div class="form-card" id="meet">
@@ -624,7 +621,7 @@
 
             <div id="panelMeet" role="tabpanel" aria-labelledby="tabMeet" hidden>
               <h3>Meet with Heath.</h3>
-              <p class="sub">An hour to ask your questions, hear how Iron Forums works, and see if it's a fit. In person in Houston or on Zoom.</p>
+              <p class="sub">Time with Heath to ask your questions, hear how Iron Forums works, and see if it's a fit.</p>
 
               <button class="btn btn-navy" type="button" id="mtStart" style="width:100%">Find a time →</button>
               <p class="loading" id="mtLoading" hidden>Checking Heath's calendar…</p>
@@ -651,12 +648,7 @@
                   <label class="lbl" for="mtPhone">Phone</label>
                   <input type="text" id="mtPhone" inputmode="tel" autocomplete="tel" />
                 </div>
-                <p class="lbl" style="margin-bottom:.5rem">How would you like to meet?</p>
-                <div class="radios">
-                  <label><input type="radio" name="mtLocation" value="physical" checked /> In person in Houston</label>
-                  <label><input type="radio" name="mtLocation" value="zoom_conference" /> Zoom video call</label>
-                </div>
-                <p class="hint" id="mtHint">We'll follow up for a place once your time is confirmed.</p>
+                <p class="hint">An in-person meeting in Houston. We'll follow up with a place once your time is confirmed.</p>
                 <div class="hp" aria-hidden="true">
                   <label for="mtHpBlank">Leave this field blank</label>
                   <input type="text" id="mtHpBlank" name="mt_leave_blank" tabindex="-1" autocomplete="off" />
@@ -894,7 +886,7 @@
 
     /* Meet with Heath: a custom picker over Heath's real calendar, using the
        same two Netlify Functions (calendly-availability, calendly-book) and
-       the same one-hour meeting as the L3 diagnostic. The Calendly API token
+       the same Calendly meeting as the L3 diagnostic. The Calendly API token
        stays on the server. If availability can't load, it falls back to a
        plain Calendly link. */
     const mt = {
@@ -983,15 +975,12 @@
 
     mt.start.addEventListener('click', mtLoad);
     document.getElementById('mtBack').addEventListener('click', () => mtShow(mt.picker));
-    document.querySelectorAll('input[name="mtLocation"]').forEach((r) => r.addEventListener('change', () => {
-      document.getElementById('mtHint').hidden = document.querySelector('input[name="mtLocation"]:checked').value !== 'physical';
-    }));
 
     mt.confirm.addEventListener('click', async () => {
       const name = document.getElementById('mtName').value.trim();
       const email = document.getElementById('mtEmail').value.trim();
       const phone = document.getElementById('mtPhone').value.trim();
-      const locationKind = document.querySelector('input[name="mtLocation"]:checked').value;
+      const locationKind = 'physical'; // the meeting is configured in Calendly as in person; no Zoom here
       const honeypot = document.getElementById('mtHpBlank').value;
       const fail = (msg) => { mt.error.textContent = msg; mt.error.hidden = false; };
 
@@ -1017,7 +1006,7 @@
           mt.confirm.textContent = 'Confirm meeting →';
           return;
         }
-        document.getElementById('mtSuccessTime').textContent = mtFormat(mtSlot) + (locationKind === 'physical' ? ' · In person in Houston. Heath will follow up with a place.' : ' · Zoom');
+        document.getElementById('mtSuccessTime').textContent = mtFormat(mtSlot) + ' · In person in Houston. Heath will follow up with a place.';
         if (data.rescheduleUrl) document.getElementById('mtReschedule').href = data.rescheduleUrl;
         if (data.cancelUrl) document.getElementById('mtCancel').href = data.cancelUrl;
         mtShow(mt.success);
