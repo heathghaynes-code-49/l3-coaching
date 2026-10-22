@@ -5,6 +5,8 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("index.html");
   eleventyConfig.addPassthroughCopy("scorecard.html");
   eleventyConfig.addPassthroughCopy("blog-layout-option-b.html");
+  eleventyConfig.addPassthroughCopy("iron-forums-houston.html");
+  eleventyConfig.addPassthroughCopy("iron-forums");
   eleventyConfig.addPassthroughCopy("favicon.ico");
   eleventyConfig.addPassthroughCopy("favicon-32x32.png");
   eleventyConfig.addPassthroughCopy("favicon-192x192.png");
