@@ -14,6 +14,11 @@
   <meta property="og:url" content="https://l3leadershipcoaching.com/iron-forums-houston" />
   <meta property="og:image" content="https://l3leadershipcoaching.com/iron-forums/iron-forums-logo.png" />
 
+  <script>
+    /* Always open at the top, even on a refresh or back-button return. */
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  </script>
+
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -646,6 +651,13 @@
       }
     });
     if (REGISTRATION_URL && regNote) regNote.hidden = true;
+
+    /* Start every visit at the top. A link that points at a section
+       (e.g. /iron-forums-houston#discovery) is left alone so it still
+       lands where it says. 'instant' beats the page's smooth scrolling. */
+    const toTop = () => { if (!location.hash) window.scrollTo({ top: 0, behavior: 'instant' }); };
+    toTop();
+    window.addEventListener('pageshow', (e) => { if (e.persisted) { toTop(); onScroll(); } });
 
     /* Header shrinks slightly once you start scrolling */
     const header = document.getElementById('siteHeader');
