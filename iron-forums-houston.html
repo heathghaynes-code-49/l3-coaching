@@ -350,7 +350,7 @@
         <a class="link" href="#forum">The Forum</a>
         <a class="link" href="#leader">Your Facilitator</a>
         <a class="link" href="#questions">Questions</a>
-        <a class="btn btn-navy btn-sm" href="#questions" data-register data-live="Be Our Guest" data-pending="Get the link">Be Our Guest</a>
+        <a class="btn btn-navy btn-sm" href="#questions" data-register data-hide-until-live data-live="Register" data-pending="" hidden>Register</a>
       </nav>
     </div>
   </header>
@@ -750,14 +750,16 @@
        Paste the Discovery Lunch registration link between the quotes
        below when it's ready. Until then, every "register" button
        honestly reads "Get the registration link" and points to the
-       form, so no one hits a dead end. Once it's set, they all switch
-       to the real link automatically.
+       form, so no one hits a dead end. The header button stays hidden
+       until then. Once it's set, they all switch to the real link
+       automatically.
        ────────────────────────────────────────────── */
     const REGISTRATION_URL = "";
 
     const regButtons = document.querySelectorAll('[data-register]');
     const regNote = document.getElementById('regNote');
     regButtons.forEach((el) => {
+      if (el.hasAttribute('data-hide-until-live')) el.hidden = !REGISTRATION_URL;
       if (REGISTRATION_URL) {
         el.href = REGISTRATION_URL;
         el.target = '_blank';
@@ -765,7 +767,7 @@
         el.textContent = el.dataset.live;
       } else {
         el.href = '#questions';
-        el.textContent = el.dataset.pending;
+        if (el.dataset.pending) el.textContent = el.dataset.pending;
       }
     });
     if (REGISTRATION_URL && regNote) regNote.hidden = true;
