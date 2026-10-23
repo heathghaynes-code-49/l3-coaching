@@ -93,6 +93,9 @@
     .section { padding-block: clamp(4rem, 9vw, 7rem); scroll-margin-top: 84px; }
     .eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; margin: 0 0 1.1rem; color: var(--navy); opacity: .75; }
     .on-dark .eyebrow { color: var(--gold); opacity: 1; }
+    .eyebrow.badge { display: inline-flex; align-items: center; gap: .65rem; padding: .5rem 1rem; font-size: .95rem; letter-spacing: .2em; background: rgba(220,152,27,.14); border: 1px solid rgba(220,152,27,.55); border-radius: 999px; margin-bottom: 1.4rem; }
+    .eyebrow.badge::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+    @media (max-width: 520px) { .eyebrow.badge { font-size: .78rem; letter-spacing: .16em; padding: .45rem .85rem; } .eyebrow.badge .soon { display: none; } }
     h2 { font-size: clamp(2.3rem, 5.2vw, 3.9rem); margin-bottom: 1.4rem; }
     .lede { font-size: clamp(1.14rem, 1.7vw, 1.3rem); max-width: 60ch; }
     .on-dark { color: #fff; }
@@ -102,7 +105,7 @@
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
       padding: 1rem 1.55rem; border-radius: 999px; border: 2px solid transparent;
-      font: 600 .98rem/1 'Poppins', sans-serif; letter-spacing: .01em; text-decoration: none; cursor: pointer;
+      font: 600 .98rem/1.25 'Poppins', sans-serif; letter-spacing: .01em; text-decoration: none; cursor: pointer;
       transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
     }
     @media (hover: hover) { .btn:hover { transform: translateY(-2px); } }
@@ -123,8 +126,9 @@
        the body reserves the full-size header height. */
     /* The shrink is pure transform (scale + translate), so scrolling never
        triggers layout. The numbers are the full-size vs. shrunk (64px) ratios:
-       --bar = 64 / --hdr, --logo = 50px / logo height, --shift = half the lost height. */
-    :root { --hdr: 132px; --bar: .485; --shift: -34px; --logo: .463; --nav-scale: .82; }
+       --bar = 64 / --hdr, --logo = 50px / logo height, --shift = half the lost height,
+       --loc-dx = how far the Houston label slides left to follow the shrinking logo. */
+    :root { --hdr: 132px; --bar: .485; --shift: -34px; --logo: .463; --nav-scale: .82; --loc-dx: -101px; }
     body { padding-top: var(--hdr); }
     .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
     /* The material: a translucent, blurred layer that content scrolls beneath. */
@@ -137,13 +141,21 @@
     @media (prefers-reduced-transparency: reduce) { .site-header::before { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; } }
     @media (prefers-contrast: more) { .site-header::before { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; } .site-header::after { opacity: 1; background: var(--ink); } }
     .site-header .wrap { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: var(--hdr); }
-    .brand { display: block; transform-origin: left center; transition: translate .3s var(--ease), scale .3s var(--ease); }
-    .site-header.shrunk .brand { translate: 0 var(--shift); scale: var(--logo); }
+    .brand { display: flex; align-items: center; text-decoration: none; transition: translate .3s var(--ease); }
+    .site-header.shrunk .brand { translate: 0 var(--shift); }
+    .brand img { height: 108px; width: auto; transform-origin: left center; transition: scale .3s var(--ease); }
+    .site-header.shrunk .brand img { scale: var(--logo); }
+    /* The Houston label: a thin rule and a plain-type name, clearly separate from the logo. */
+    .loc { display: flex; align-items: center; transform-origin: left center; transition: translate .3s var(--ease), scale .3s var(--ease); }
+    .site-header.shrunk .loc { translate: var(--loc-dx) 0; scale: .85; }
+    .loc-rule { width: 1px; height: 40px; margin: 0 18px; background: rgba(19,35,59,.28); }
+    .loc-name { display: flex; flex-direction: column; font: 700 15px/1.25 'League Spartan', system-ui, sans-serif; letter-spacing: .22em; text-transform: uppercase; color: var(--navy); white-space: nowrap; }
+    .loc-name small { font: 600 .75rem/1.25 'Quicksand', system-ui, sans-serif; letter-spacing: .2em; color: var(--muted); }
     .header-right { display: flex; align-items: center; gap: 2rem; transform-origin: right center; transition: translate .3s var(--ease), scale .3s var(--ease); }
     .site-header.shrunk .header-right { translate: 0 var(--shift); scale: var(--nav-scale); }
-    .brand img { height: 108px; width: auto; }
     .nav { display: flex; align-items: center; gap: 2rem; }
-    .nav a.link { text-decoration: none; font-size: 1.08rem; font-weight: 600; color: var(--ink); opacity: .85; }
+    .nav .nav-register { display: none; }
+    .nav a.link { white-space: nowrap; text-decoration: none; font-size: 1.08rem; font-weight: 600; color: var(--ink); opacity: .85; }
     .nav a.link:hover { opacity: 1; color: var(--navy); }
     .header-right .btn-sm { padding: 1rem 1.6rem; font-size: 1rem; }
     .menu-btn { display: none; position: relative; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--navy); cursor: pointer; }
@@ -152,10 +164,15 @@
     .menu-btn span:nth-child(2) { top: 25px; }
     .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
     .menu-btn[aria-expanded="true"] span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
-    @media (max-width: 860px) {
-      :root { --hdr: 96px; --bar: .667; --shift: -16px; --logo: .676; }
+    @media (max-width: 1040px) {
+      :root { --hdr: 96px; --bar: .667; --shift: -16px; --logo: .676; --loc-dx: -42px; }
       .brand img { height: 74px; }
+      .loc-rule { height: 30px; margin: 0 12px; }
+      .loc-name { font-size: 12px; letter-spacing: .2em; }
       .header-right { gap: .5rem; }
+      /* No room beside the logo and label: Register lives in the menu on phones. */
+      .header-right > .btn { display: none; }
+      .nav .nav-register { display: flex; margin-top: .7rem; }
       /* The dropdown lives inside .header-right, so that wrapper must not carry a transform
          here (it would become the dropdown's containing block). Shift the two controls instead. */
       .site-header.shrunk .header-right { translate: none; scale: none; }
@@ -417,6 +434,7 @@
     <div class="wrap">
       <a class="brand" href="#top" aria-label="Iron Forums Houston — back to top">
         <img src="iron-forums/iron-forums-logo.png" alt="Iron Forums — Connect, Sharpen, Grow" width="900" height="518" />
+        <span class="loc" aria-hidden="true"><span class="loc-rule"></span><span class="loc-name">Houston<small>Texas</small></span></span>
       </a>
       <div class="header-right">
         <nav class="nav" id="siteNav" aria-label="Page sections">
@@ -424,6 +442,7 @@
           <a class="link" href="#forum">The Forum</a>
           <a class="link" href="#leader">Your Facilitator</a>
           <a class="link" href="#questions">Questions</a>
+          <a class="btn btn-navy nav-register" href="#register" data-register data-live="Register">Register</a>
         </nav>
         <a class="btn btn-navy btn-sm" href="#register" data-register data-live="Register">Register</a>
         <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="siteNav"><span></span><span></span></button>
@@ -440,7 +459,7 @@
       </svg>
       <div class="wrap on-dark">
         <div>
-          <p class="eyebrow">Coming to Houston, TX</p>
+          <p class="eyebrow badge">Iron Forums Houston<span class="soon"> · Coming soon</span></p>
           <h1>You don't have to <em>lead alone.</em></h1>
           <p class="lede">A community in Houston for <strong>kingdom-minded small business owners who get what you carry.</strong></p>
           <p class="lede">Men and women running real companies, growing in faith, family, and business, together, with people who won't let you coast.</p>
@@ -970,7 +989,7 @@
     document.addEventListener('click', (e) => {
       if (siteNav.classList.contains('open') && !siteNav.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false);
     });
-    window.matchMedia('(min-width: 861px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
+    window.matchMedia('(min-width: 1041px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
 
     /* Start every visit at the top. A link that points at a section
        (e.g. /iron-forums-houston#discovery) is left alone so it still

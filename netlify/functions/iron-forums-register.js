@@ -1,13 +1,25 @@
 // Receives a Discovery Lunch registration from the Iron Forums Houston page.
-// Two emails go out via Resend: a notification to the L3 inbox (sent first, so
-// every registration is captured even if the second email has trouble) and a
-// confirmation to the registrant with the details, parking steps, and a
-// calendar file. Mirrors iron-forums-inquiry.js: if RESEND_API_KEY isn't set
-// (Deploy Previews, where it's deliberately left unconfigured so testing never
-// sends real email), this logs the payload and reports success.
+//
+// For each registration:
+//   1. A notification goes to Heath at his Iron Forums address (must succeed).
+//   2. In parallel: the registrant gets a personal confirmation with the
+//      details, parking steps, and a real calendar invite; and, if the Google
+//      Sheet hook is configured, a row is added to the registration sheet.
+//      Neither of these can fail the sign-up, since step 1 already captured it.
+//
+// Mirrors iron-forums-inquiry.js: if RESEND_API_KEY isn't set (Deploy Previews,
+// where it's deliberately left unconfigured so testing never sends real email),
+// this logs the payload and reports success.
+//
+// Optional environment variables (set in Netlify):
+//   REGISTRATION_SHEET_URL    the Google Apps Script web-app URL for the sheet
+//   REGISTRATION_SHEET_TOKEN  the shared secret the Apps Script checks
 
-const INTERNAL_FROM_ADDRESS = "Iron Forums Houston <diagnostic@l3leadershipcoaching.com>";
-const INTERNAL_TO_ADDRESS = "connect@l3leadershipcoaching.com";
+const HEATH_ADDRESS = "hhaynes@ironforums.org";
+const NOTIFY_FROM = "Iron Forums Houston <diagnostic@l3leadershipcoaching.com>";
+const CONFIRM_FROM = "Heath Haynes <connect@l3leadershipcoaching.com>";
+const SHEET_VIEW_URL = "https://docs.google.com/spreadsheets/d/19qE7wVJd7mAnjNRcGstj_z1ZHsE7rMXgjkGgi_wUVSU/edit";
+const PAGE_URL = "https://l3leadershipcoaching.com/iron-forums-houston";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_SUBMIT_MS = 2000;
@@ -27,23 +39,15 @@ const PARKING_STEPS = [
 ];
 
 // Nov 17, 2026 is Central Standard Time (UTC-6): 11:30 AM = 17:30Z.
-const ICS = [
-  "BEGIN:VCALENDAR",
-  "VERSION:2.0",
-  "PRODID:-//Iron Forums Houston//Discovery Lunch//EN",
-  "CALSCALE:GREGORIAN",
-  "METHOD:PUBLISH",
-  "BEGIN:VEVENT",
-  "UID:discovery-lunch-20261117@ironforums-houston",
-  "DTSTAMP:20261001T000000Z",
-  "DTSTART:20261117T173000Z",
-  "DTEND:20261117T190000Z",
-  "SUMMARY:Iron Forums Houston - Discovery Lunch",
-  "LOCATION:1801 Main St.\\, 11th Floor (The Exchange Room)\\, Houston\\, TX 77002",
-  "DESCRIPTION:Free lunch and an honest conversation. Parking instructions are in your confirmation email.",
-  "END:VEVENT",
-  "END:VCALENDAR"
-].join("\r\n");
+const EVENT = {
+  title: "Iron Forums Houston: Discovery Lunch",
+  startUtc: "20261117T173000Z",
+  endUtc: "20261117T190000Z",
+  startIso: "2026-11-17T17:30:00Z",
+  endIso: "2026-11-17T19:00:00Z",
+  location: "1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002",
+  description: "Free lunch and an honest conversation. No pitch, no pressure. Parking instructions are in your confirmation email."
+};
 
 function clean(value) {
   return typeof value === "string" ? value.trim() : "";
@@ -73,8 +77,99 @@ function escapeHtml(value) {
   }[c]));
 }
 
-function internalHtml(p) {
+// ── Calendar ───────────────────────────────────────────────────────────────
+
+const icsEscape = (text) => String(text).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+
+// iCalendar lines may not exceed 75 octets; longer ones continue on the next
+// line starting with a space.
+function icsFold(line) {
+  const out = [];
+  let current = "";
+  let bytes = 0;
+  for (const ch of line) {
+    const size = Buffer.byteLength(ch);
+    if (bytes + size > 74) {
+      out.push(current);
+      current = " " + ch;
+      bytes = 1 + size;
+    } else {
+      current += ch;
+      bytes += size;
+    }
+  }
+  out.push(current);
+  return out.join("\r\n");
+}
+
+// A real invitation (METHOD:REQUEST with an organizer and this attendee), so
+// Gmail, Outlook, and Apple Mail show a native invite card with a one-tap
+// "Add" / "Yes" instead of a plain file.
+function buildIcs(p) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const cn = (p.firstName + " " + p.lastName).replace(/["\\;:,]/g, "");
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Iron Forums Houston//Discovery Lunch//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    "UID:discovery-lunch-20261117@ironforums-houston",
+    "DTSTAMP:" + stamp,
+    "DTSTART:" + EVENT.startUtc,
+    "DTEND:" + EVENT.endUtc,
+    "SEQUENCE:0",
+    "STATUS:CONFIRMED",
+    "TRANSP:OPAQUE",
+    "SUMMARY:" + icsEscape(EVENT.title),
+    "LOCATION:" + icsEscape(EVENT.location),
+    "DESCRIPTION:" + icsEscape(EVENT.description),
+    "URL:" + PAGE_URL,
+    "ORGANIZER;CN=\"Heath Haynes\":mailto:" + HEATH_ADDRESS,
+    "ATTENDEE;CN=\"" + cn + "\";ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:" + p.email,
+    "BEGIN:VALARM",
+    "TRIGGER:-P1D",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Iron Forums Houston Discovery Lunch is tomorrow",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ];
+  return lines.map(icsFold).join("\r\n") + "\r\n";
+}
+
+function googleCalendarUrl() {
+  const q = new URLSearchParams({
+    action: "TEMPLATE",
+    text: EVENT.title,
+    dates: EVENT.startUtc + "/" + EVENT.endUtc,
+    details: EVENT.description,
+    location: EVENT.location
+  });
+  return "https://calendar.google.com/calendar/render?" + q.toString();
+}
+
+function outlookCalendarUrl() {
+  const q = new URLSearchParams({
+    path: "/calendar/action/compose",
+    rru: "addevent",
+    subject: EVENT.title,
+    startdt: EVENT.startIso,
+    enddt: EVENT.endIso,
+    location: EVENT.location,
+    body: EVENT.description
+  });
+  return "https://outlook.live.com/calendar/0/deeplink/compose?" + q.toString();
+}
+
+// ── Emails ─────────────────────────────────────────────────────────────────
+
+function internalHtml(p, sheetWired) {
   const row = (label, value) => `<tr><td style="padding:6px 14px 6px 0;font:700 12px/1.4 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5b6b82;vertical-align:top;">${label}</td><td style="padding:6px 0;font:400 15px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">${value}</td></tr>`;
+  const sheetLine = sheetWired
+    ? `<p style="margin:14px 0 0;font:400 14px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Added to your <a href="${SHEET_VIEW_URL}" style="color:#043370;font-weight:700;">registration sheet</a>.</p>`
+    : "";
   return `
     <div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
       <div style="background:#043370;color:#ffffff;padding:22px 26px;border-radius:10px 10px 0 0;">
@@ -88,14 +183,23 @@ function internalHtml(p) {
           ${row("Phone", p.phone ? escapeHtml(p.phone) : "<em style=\"color:#8a97a5;\">not given</em>")}
           ${row("Describes them", escapeHtml(p.role))}
         </table>
-        <p style="margin:18px 0 0;padding-top:14px;border-top:1px solid #e5e1d8;font:400 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">Reply to this email to respond directly to ${escapeHtml(p.firstName)}. A confirmation with parking steps was sent to them automatically.</p>
+        ${sheetLine}
+        <p style="margin:18px 0 0;padding-top:14px;border-top:1px solid #e5e1d8;font:400 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">Reply to this email to respond directly to ${escapeHtml(p.firstName)}. A personal confirmation with parking steps and a calendar invite was sent to them automatically.</p>
       </div>
     </div>`;
 }
 
+const PERSONAL_PARAGRAPHS = (first) => [
+  "It's Heath. I'm glad you're coming. You don't have to lead alone, and on November 17 you'll get a chance to see what that looks like.",
+  "Come hungry, bring your questions, and bring whatever you're carrying. No pitch, no pressure. I'm saving you a seat.",
+  "Everything you need is below. If anything comes up before then, just reply to this email. It comes straight to me."
+];
+
 function confirmationHtml(p) {
+  const para = (t) => `<p style="margin:0 0 14px;font:400 16px/1.65 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">${escapeHtml(t)}</p>`;
   const steps = PARKING_STEPS.map((s, i) => `<tr><td style="padding:5px 12px 5px 0;vertical-align:top;font:800 15px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#dc981b;">${i + 1}.</td><td style="padding:5px 0;font:400 15px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">${escapeHtml(s)}</td></tr>`).join("");
   const detail = (label, value) => `<tr><td style="padding:5px 14px 5px 0;font:700 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5b6b82;vertical-align:top;">${label}</td><td style="padding:5px 0;font:400 15px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">${value}</td></tr>`;
+  const calBtn = (href, label) => `<a href="${escapeHtml(href)}" style="display:inline-block;margin:0 8px 8px 0;padding:10px 16px;border:1px solid #043370;border-radius:999px;font:700 14px/1 -apple-system,Helvetica,Arial,sans-serif;color:#043370;text-decoration:none;">${label}</a>`;
   return `
     <div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;">
       <div style="background:#043370;color:#ffffff;padding:26px;border-radius:10px 10px 0 0;">
@@ -103,17 +207,20 @@ function confirmationHtml(p) {
         <p style="margin:0;font-size:24px;font-weight:700;line-height:1.2;">You're in, ${escapeHtml(p.firstName)}.</p>
       </div>
       <div style="border:1px solid #e5e1d8;border-top:none;border-radius:0 0 10px 10px;padding:26px;">
-        <p style="margin:0 0 18px;font:400 16px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">We've saved your seat at the Discovery Lunch. No pitch, no pressure. Just a good lunch and an honest conversation.</p>
-        <table style="border-collapse:collapse;margin:0 0 22px;">
+        <p style="margin:0 0 14px;font:400 16px/1.65 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Hey ${escapeHtml(p.firstName)},</p>
+        ${PERSONAL_PARAGRAPHS(p.firstName).map(para).join("")}
+        <p style="margin:0 0 24px;font:400 16px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Heath Haynes<br><span style="color:#5b6b82;font-size:14px;">Houston Forum Facilitator, Iron Forums</span></p>
+        <table style="border-collapse:collapse;margin:0 0 20px;">
           ${detail("Date", "Tuesday, November 17, 2026")}
           ${detail("Time", "11:30 AM – 1:00 PM")}
           ${detail("Place", "1801 Main St., 11th Floor<br>The Exchange Room<br>Houston, TX 77002")}
           ${detail("Cost", "Complimentary, lunch provided")}
         </table>
+        <p style="margin:0 0 8px;font:700 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Add it to your calendar</p>
+        <p style="margin:0 0 8px;font:400 14px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#5b6b82;">The invite attached to this email will show up as an event you can accept. Or use a link:</p>
+        <div style="margin:0 0 22px;">${calBtn(googleCalendarUrl(), "Google Calendar")}${calBtn(outlookCalendarUrl(), "Outlook")}</div>
         <p style="margin:0 0 8px;font:700 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Parking and getting to us</p>
-        <table style="border-collapse:collapse;margin:0 0 22px;">${steps}</table>
-        <p style="margin:0 0 6px;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">A calendar invite is attached so it lands on your schedule.</p>
-        <p style="margin:0;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Need to change something? Just reply to this email.</p>
+        <table style="border-collapse:collapse;margin:0 0 6px;">${steps}</table>
         <p style="margin:22px 0 0;padding-top:14px;border-top:1px solid #e5e1d8;font:400 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">Iron Forums Houston · Connect &raquo; Sharpen &raquo; Grow</p>
       </div>
     </div>`;
@@ -121,19 +228,23 @@ function confirmationHtml(p) {
 
 function confirmationText(p) {
   return [
-    `You're in, ${p.firstName}.`,
+    `Hey ${p.firstName},`,
     "",
-    "We've saved your seat at the Discovery Lunch. No pitch, no pressure. Just a good lunch and an honest conversation.",
+    ...PERSONAL_PARAGRAPHS(p.firstName).flatMap((t) => [t, ""]),
+    "Heath Haynes",
+    "Houston Forum Facilitator, Iron Forums",
     "",
     "Date: Tuesday, November 17, 2026",
     "Time: 11:30 AM - 1:00 PM",
     "Place: 1801 Main St., 11th Floor, The Exchange Room, Houston, TX 77002",
     "Cost: Complimentary, lunch provided",
     "",
+    "Add it to your calendar: the invite attached to this email, or",
+    "Google Calendar: " + googleCalendarUrl(),
+    "Outlook: " + outlookCalendarUrl(),
+    "",
     "Parking and getting to us:",
     ...PARKING_STEPS.map((s, i) => `${i + 1}. ${s}`),
-    "",
-    "A calendar invite is attached. Need to change something? Just reply to this email.",
     "",
     "Iron Forums Houston · Connect >> Sharpen >> Grow"
   ].join("\n");
@@ -145,6 +256,54 @@ async function sendEmail(apiKey, body) {
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
+}
+
+// ── Follow-ups that must never fail the sign-up ────────────────────────────
+
+async function sendConfirmation(apiKey, p) {
+  const confirmation = {
+    from: CONFIRM_FROM,
+    to: [p.email],
+    reply_to: HEATH_ADDRESS,
+    subject: "You're in: Iron Forums Houston Discovery Lunch, Nov 17",
+    html: confirmationHtml(p),
+    text: confirmationText(p)
+  };
+  try {
+    // If the invite attachment is what Resend objects to, retry without it.
+    let res = await sendEmail(apiKey, {
+      ...confirmation,
+      attachments: [{
+        filename: "iron-forums-discovery-lunch.ics",
+        content: Buffer.from(buildIcs(p)).toString("base64"),
+        content_type: "text/calendar; charset=UTF-8; method=REQUEST"
+      }]
+    });
+    if (!res.ok) {
+      console.error("Resend API error (confirmation with invite)", res.status, await res.text());
+      res = await sendEmail(apiKey, confirmation);
+      if (!res.ok) console.error("Resend API error (confirmation)", res.status, await res.text());
+    }
+  } catch (err) {
+    console.error("Iron Forums registration confirmation failed:", err);
+  }
+}
+
+async function addToSheet(p) {
+  const url = process.env.REGISTRATION_SHEET_URL;
+  if (!url) return;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ token: process.env.REGISTRATION_SHEET_TOKEN || "", registeredAt: new Date().toISOString(), ...p }),
+      signal: AbortSignal.timeout(7000)
+    });
+    const answer = (await res.text()).trim();
+    if (!res.ok || answer !== "ok") console.error("Registration sheet did not accept the row:", res.status, answer.slice(0, 200));
+  } catch (err) {
+    console.error("Adding registration to the sheet failed:", err);
+  }
 }
 
 exports.handler = async (event) => {
@@ -179,14 +338,14 @@ exports.handler = async (event) => {
     return { statusCode: 200, body: JSON.stringify({ sent: false, reason: "no-api-key" }) };
   }
 
-  // 1. Notification to the L3 inbox. This is the one that must succeed.
+  // 1. Notification to Heath. This is the one that must succeed.
   try {
     const res = await sendEmail(apiKey, {
-      from: INTERNAL_FROM_ADDRESS,
-      to: [INTERNAL_TO_ADDRESS],
+      from: NOTIFY_FROM,
+      to: [HEATH_ADDRESS],
       reply_to: p.email,
       subject: `Discovery Lunch registration: ${p.firstName} ${p.lastName} (${p.role === ROLES[2] ? "curious" : p.role})`,
-      html: internalHtml(p)
+      html: internalHtml(p, Boolean(process.env.REGISTRATION_SHEET_URL))
     });
     if (!res.ok) {
       console.error("Resend API error (notification)", res.status, await res.text());
@@ -197,30 +356,8 @@ exports.handler = async (event) => {
     return { statusCode: 502, body: JSON.stringify({ error: "Could not register." }) };
   }
 
-  // 2. Confirmation to the registrant. The registration is already captured
-  //    above, so a hiccup here is logged but doesn't fail the sign-up. If the
-  //    calendar attachment is the problem, retry once without it.
-  const confirmation = {
-    from: INTERNAL_FROM_ADDRESS,
-    to: [p.email],
-    reply_to: INTERNAL_TO_ADDRESS,
-    subject: "You're in: Iron Forums Houston Discovery Lunch, Nov 17",
-    html: confirmationHtml(p),
-    text: confirmationText(p)
-  };
-  try {
-    let res = await sendEmail(apiKey, {
-      ...confirmation,
-      attachments: [{ filename: "iron-forums-discovery-lunch.ics", content: Buffer.from(ICS).toString("base64") }]
-    });
-    if (!res.ok) {
-      console.error("Resend API error (confirmation with calendar)", res.status, await res.text());
-      res = await sendEmail(apiKey, confirmation);
-      if (!res.ok) console.error("Resend API error (confirmation)", res.status, await res.text());
-    }
-  } catch (err) {
-    console.error("Iron Forums registration confirmation failed:", err);
-  }
+  // 2. Confirmation and sheet row, together. Both swallow their own errors.
+  await Promise.all([sendConfirmation(apiKey, p), addToSheet(p)]);
 
   return { statusCode: 200, body: JSON.stringify({ sent: true }) };
 };
