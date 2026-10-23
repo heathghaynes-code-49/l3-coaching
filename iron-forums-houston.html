@@ -65,6 +65,7 @@
       --ink: #13233b;
       --muted: #55657d;
       --gold-ink: #a8680a; /* gold darkened to read on light backgrounds */
+      --ease: cubic-bezier(.22, 1, .36, 1);
       --line: rgba(19,35,59,.14);
       --radius: 18px;
     }
@@ -120,34 +121,51 @@
     /* Header */
     /* Header is fixed (not sticky) so shrinking it on scroll never moves the page content;
        the body reserves the full-size header height. */
-    :root { --hdr: 132px; }
+    /* The shrink is pure transform (scale + translate), so scrolling never
+       triggers layout. The numbers are the full-size vs. shrunk (64px) ratios:
+       --bar = 64 / --hdr, --logo = 50px / logo height, --shift = half the lost height. */
+    :root { --hdr: 132px; --bar: .485; --shift: -34px; --logo: .463; --nav-scale: .82; }
     body { padding-top: var(--hdr); }
-    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255,255,255,.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-    .site-header .wrap { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: var(--hdr); transition: min-height .25s ease; }
-    .header-right { display: flex; align-items: center; gap: 2rem; }
-    .site-header.shrunk .wrap { min-height: 64px; }
-    .brand img { height: 108px; width: auto; transition: height .25s ease; }
-    .site-header.shrunk .brand img { height: 50px; }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
+    /* The material: a translucent, blurred layer that content scrolls beneath. */
+    .site-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: var(--hdr); background: rgba(255,255,255,.88); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%); transform-origin: top; transition: transform .3s var(--ease); }
+    .site-header.shrunk::before { transform: scaleY(var(--bar)); }
+    /* Scroll-edge hairline: fades in only once content is actually scrolling under the bar. */
+    .site-header::after { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--hdr) - 1px); height: 1px; background: var(--line); opacity: 0; transition: opacity .3s ease, transform .3s var(--ease); }
+    .site-header.shrunk::after { opacity: 1; transform: translateY(calc(2 * var(--shift))); }
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .site-header::before { background: rgba(255,255,255,.97); } }
+    @media (prefers-reduced-transparency: reduce) { .site-header::before { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+    @media (prefers-contrast: more) { .site-header::before { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; } .site-header::after { opacity: 1; background: var(--ink); } }
+    .site-header .wrap { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: var(--hdr); }
+    .brand { display: block; transform-origin: left center; transition: translate .3s var(--ease), scale .3s var(--ease); }
+    .site-header.shrunk .brand { translate: 0 var(--shift); scale: var(--logo); }
+    .header-right { display: flex; align-items: center; gap: 2rem; transform-origin: right center; transition: translate .3s var(--ease), scale .3s var(--ease); }
+    .site-header.shrunk .header-right { translate: 0 var(--shift); scale: var(--nav-scale); }
+    .brand img { height: 108px; width: auto; }
     .nav { display: flex; align-items: center; gap: 2rem; }
-    .nav a.link { text-decoration: none; font-size: 1.08rem; font-weight: 600; color: var(--ink); opacity: .85; transition: font-size .25s ease; }
+    .nav a.link { text-decoration: none; font-size: 1.08rem; font-weight: 600; color: var(--ink); opacity: .85; }
     .nav a.link:hover { opacity: 1; color: var(--navy); }
-    .header-right .btn { transition: padding .25s ease, font-size .25s ease, transform .2s ease, background .2s ease; }
-    .site-header:not(.shrunk) .header-right .btn-sm { padding: 1rem 1.6rem; font-size: 1rem; }
-    .site-header.shrunk .nav a.link { font-size: .88rem; }
+    .header-right .btn-sm { padding: 1rem 1.6rem; font-size: 1rem; }
     .menu-btn { display: none; position: relative; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--navy); cursor: pointer; }
-    .menu-btn span { position: absolute; left: 12px; right: 12px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .25s ease, top .25s ease; }
+    .menu-btn span { position: absolute; left: 12px; right: 12px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .3s var(--ease); }
     .menu-btn span:nth-child(1) { top: 17px; }
     .menu-btn span:nth-child(2) { top: 25px; }
-    .menu-btn[aria-expanded="true"] span:nth-child(1) { top: 21px; transform: rotate(45deg); }
-    .menu-btn[aria-expanded="true"] span:nth-child(2) { top: 21px; transform: rotate(-45deg); }
+    .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+    .menu-btn[aria-expanded="true"] span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
     @media (max-width: 860px) {
-      :root { --hdr: 96px; }
+      :root { --hdr: 96px; --bar: .667; --shift: -16px; --logo: .676; }
       .brand img { height: 74px; }
       .header-right { gap: .5rem; }
+      /* The dropdown lives inside .header-right, so that wrapper must not carry a transform
+         here (it would become the dropdown's containing block). Shift the two controls instead. */
+      .site-header.shrunk .header-right { translate: none; scale: none; }
+      .site-header.shrunk .menu-btn, .site-header.shrunk .header-right .btn { translate: 0 var(--shift); }
+      .menu-btn, .header-right .btn { transition: translate .3s var(--ease), transform .2s ease, background .2s ease; }
+      .site-header.shrunk .nav { top: calc(100% + 2 * var(--shift)); }
       .menu-btn { display: block; }
       .nav { position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: .3rem clamp(1.25rem, 4vw, 2.5rem) .8rem; background: #fff; border-bottom: 1px solid var(--line); box-shadow: 0 18px 30px -22px rgba(3,36,79,.45); opacity: 0; visibility: hidden; transform: translateY(-8px); transform-origin: top right; transition: opacity .2s ease, transform .25s ease, visibility 0s linear .25s; }
       .nav.open { opacity: 1; visibility: visible; transform: none; transition: opacity .2s ease, transform .25s ease, visibility 0s; }
-      .nav a.link, .site-header.shrunk .nav a.link { display: flex; align-items: center; min-height: 52px; font-size: 1.1rem; opacity: 1; border-top: 1px solid var(--line); }
+      .nav a.link { display: flex; align-items: center; min-height: 52px; font-size: 1.1rem; opacity: 1; border-top: 1px solid var(--line); }
       .nav a.link:first-child { border-top: 0; }
     }
 
@@ -244,13 +262,15 @@
 
     /* Questions */
     .questions .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
-    .faq details { border-bottom: 1px solid var(--line); }
+    .faq details { border-bottom: 1px solid var(--line); overflow: hidden; }
     .faq details:first-of-type { border-top: 1px solid var(--line); }
     .faq summary { cursor: pointer; font-weight: 700; color: var(--navy); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 48px; padding: 1.05rem 0; }
     .faq summary:active { opacity: .7; }
+    .faq summary:focus-visible { outline-offset: -3px; }
     .faq summary::-webkit-details-marker { display: none; }
-    .faq summary::after { content: "+"; font-family: 'League Spartan', sans-serif; font-size: 1.4rem; line-height: 1; color: var(--gold-ink); }
-    .faq details[open] summary::after { content: "\2212"; }
+    /* The + draws itself from two bars; opening shrinks the vertical bar away to leave a −. */
+    .faq summary::after { content: ""; flex: none; width: 14px; height: 14px; margin-right: 2px; background: linear-gradient(var(--gold-ink), var(--gold-ink)) center / 100% 2px no-repeat, linear-gradient(var(--gold-ink), var(--gold-ink)) center / 2px 100% no-repeat; transition: background-size .3s var(--ease); }
+    .faq details.is-open summary::after { background-size: 100% 2px, 2px 0; }
     .faq details p { margin: -.25rem 0 1.05rem; color: var(--muted); font-size: .98rem; }
     .faq details p strong { color: var(--navy); font-weight: 700; }
     /* Emphasis: bold, navy on light backgrounds, white on dark ones (same plain-bold style as ironforums.org) */
@@ -279,12 +299,14 @@
 
     /* Tabs + scheduler (Meet with Heath) */
     [hidden] { display: none !important; }
-    .tabs { display: flex; gap: .35rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: .3rem; margin-bottom: 1.6rem; }
-    .tab { flex: 1; min-height: 44px; padding: .8rem 1rem; border: 0; border-radius: 999px; background: transparent; color: var(--navy); font: 600 .92rem/1 'Poppins', sans-serif; cursor: pointer; transition: background .2s ease, color .2s ease; }
-    .tab:hover { background: rgba(4,51,112,.06); }
+    .tabs { position: relative; display: flex; gap: .35rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: .3rem; margin-bottom: 1.6rem; }
+    .tabs::before { content: ""; position: absolute; top: .3rem; bottom: .3rem; left: .3rem; width: calc((100% - .6rem - .35rem) / 2); border-radius: 999px; background: var(--navy); transition: transform .35s var(--ease); }
+    .tabs.on-meet::before { transform: translateX(calc(100% + .35rem)); }
+    .tab { position: relative; flex: 1; min-height: 44px; padding: .8rem 1rem; border: 0; border-radius: 999px; background: transparent; color: var(--navy); font: 600 .92rem/1 'Poppins', sans-serif; cursor: pointer; transition: background .2s ease, color .3s ease; }
+    .tab:hover:not([aria-selected="true"]) { background: rgba(4,51,112,.06); }
     .tab:active, .pill:active, .time:active { transform: scale(.97); }
     @media (max-width: 480px) { .tab { padding: .8rem .4rem; font-size: .84rem; white-space: nowrap; } }
-    .tab[aria-selected="true"] { background: var(--navy); color: #fff; }
+    .tab[aria-selected="true"] { color: #fff; }
     .pills { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .5rem; margin-bottom: 1.1rem; }
     .pill, .time { padding: .65rem .9rem; border-radius: 12px; border: 1px solid rgba(19,35,59,.2); background: #fff; color: var(--ink); font: 600 .92rem/1 'Quicksand', sans-serif; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
     .pill { flex: none; white-space: nowrap; }
@@ -798,24 +820,54 @@
     });
     if (REGISTRATION_URL && regNote) regNote.hidden = true;
 
-    /* FAQ: only one answer open at a time. Opening a question closes
-       whichever one was open before it. */
-    const faqItems = document.querySelectorAll('.faq details');
+    /* FAQ: one answer open at a time, animated. Opening a question closes
+       the previous one at the same moment; while both move, the question you
+       tapped is pinned in place so it never slides out from under your finger. */
+    const faqItems = [...document.querySelectorAll('.faq details')];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    faqItems.forEach((item) => item.classList.toggle('is-open', item.open));
+
+    function faqAnimate(item, opening) {
+      const from = item.offsetHeight;               // where it is right now, even mid-animation
+      if (item._anim) item._anim.cancel();
+      if (opening) item.open = true;
+      const to = opening
+        ? item.offsetHeight
+        : item.querySelector('summary').offsetHeight + (item.offsetHeight - item.clientHeight);
+      const anim = item.animate({ height: [from + 'px', to + 'px'] }, { duration: 300, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'forwards' });
+      item._anim = anim;
+      anim.onfinish = () => { if (item._anim === anim) { if (!opening) item.open = false; item._anim = null; anim.cancel(); } };
+      return anim;
+    }
+
+    function faqPin(summary, top0, anims) {
+      const tick = () => {
+        const drift = summary.getBoundingClientRect().top - top0;
+        if (drift) window.scrollBy({ top: drift, behavior: 'instant' });
+        if (anims.some((a) => a.playState === 'running' || a.playState === 'pending')) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+
     faqItems.forEach((item) => {
-      /* Closing an answer above the one you tapped would slide it out from
-         under your finger. Close the others first, then scroll by exactly
-         how far the tapped question moved so it stays put on screen. */
-      item.querySelector('summary').addEventListener('click', () => {
-        if (item.open) return;
-        const summary = item.querySelector('summary');
-        const before = summary.getBoundingClientRect().top;
-        faqItems.forEach((other) => { if (other !== item) other.open = false; });
-        const shift = summary.getBoundingClientRect().top - before;
-        if (shift) window.scrollBy({ top: shift, behavior: 'instant' });
-      });
-      item.addEventListener('toggle', () => {
-        if (!item.open) return;
-        faqItems.forEach((other) => { if (other !== item) other.open = false; });
+      const summary = item.querySelector('summary');
+      summary.addEventListener('click', (e) => {
+        e.preventDefault();
+        const opening = !item.classList.contains('is-open');
+        const top0 = summary.getBoundingClientRect().top;
+        const others = opening ? faqItems.filter((o) => o !== item && o.classList.contains('is-open')) : [];
+        others.forEach((o) => o.classList.remove('is-open'));
+        item.classList.toggle('is-open', opening);
+        if (reduceMotion.matches) {
+          others.forEach((o) => { o.open = false; });
+          item.open = opening;
+          const shift = summary.getBoundingClientRect().top - top0;
+          if (shift) window.scrollBy({ top: shift, behavior: 'instant' });
+          return;
+        }
+        const anims = others.map((o) => faqAnimate(o, false));
+        anims.push(faqAnimate(item, opening));
+        faqPin(summary, top0, anims);
       });
     });
 
@@ -948,19 +1000,35 @@
       }
     });
 
+    /* Things that replace each other slide in from the side they logically come
+       from: forward from the right, back from the left. Reduced motion gets a
+       plain cross-fade. */
+    function slideIn(el, dir) {
+      el.getAnimations().forEach((a) => a.cancel());
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.animate(
+        [{ opacity: 0, transform: still ? 'none' : 'translateX(' + (dir * 28) + 'px)' }, { opacity: 1, transform: 'none' }],
+        { duration: still ? 160 : 320, easing: 'cubic-bezier(.22, 1, .36, 1)' }
+      );
+    }
+
     /* Tabs: Send a note / Meet with Heath */
     const tabNote = document.getElementById('tabNote');
     const tabMeet = document.getElementById('tabMeet');
     const panelNote = document.getElementById('panelNote');
     const panelMeet = document.getElementById('panelMeet');
-    function showTab(which) {
+    const tabsEl = tabNote.parentElement;
+    function showTab(which, animate = true) {
       const meet = which === 'meet';
+      const changed = meet !== !panelMeet.hidden;
+      tabsEl.classList.toggle('on-meet', meet);
       tabNote.setAttribute('aria-selected', String(!meet));
       tabMeet.setAttribute('aria-selected', String(meet));
       tabNote.tabIndex = meet ? -1 : 0;
       tabMeet.tabIndex = meet ? 0 : -1;
       panelNote.hidden = meet;
       panelMeet.hidden = !meet;
+      if (animate && changed) slideIn(meet ? panelMeet : panelNote, meet ? 1 : -1);
     }
     tabNote.addEventListener('click', () => showTab('note'));
     tabMeet.addEventListener('click', () => showTab('meet'));
@@ -976,7 +1044,7 @@
       showTab(a.dataset.openTab);
       document.getElementById('meet').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
-    if (location.hash === '#meet') showTab('meet');
+    if (location.hash === '#meet') showTab('meet', false);
 
     /* Meet with Heath: a custom picker over Heath's real calendar, using the
        same two Netlify Functions (calendly-availability, calendly-book) and
@@ -1003,8 +1071,11 @@
     let mtSlot = null;
 
     function mtShow(step) {
+      const MT_ORDER = new Map([[mt.start, 0], [mt.loading, 1], [mt.picker, 2], [mt.details, 3], [mt.success, 4], [mt.fallback, 4]]);
+      const prev = MT_STEPS.find((el) => !el.hidden);
       MT_STEPS.forEach((el) => { el.hidden = true; });
       step.hidden = false;
+      if (prev && prev !== step) slideIn(step, MT_ORDER.get(step) >= MT_ORDER.get(prev) ? 1 : -1);
       if (step !== mt.start) panelMeet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
     const mtDayKey = (d) => new Intl.DateTimeFormat('en-CA', { timeZone: VISITOR_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
