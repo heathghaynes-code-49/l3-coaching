@@ -19,7 +19,7 @@ const HEATH_ADDRESS = "hhaynes@ironforums.org";
 const NOTIFY_FROM = "Iron Forums Houston <diagnostic@l3leadershipcoaching.com>";
 const CONFIRM_FROM = "Heath Haynes <connect@l3leadershipcoaching.com>";
 const SHEET_VIEW_URL = "https://docs.google.com/spreadsheets/d/19qE7wVJd7mAnjNRcGstj_z1ZHsE7rMXgjkGgi_wUVSU/edit";
-const PAGE_URL = "https://l3leadershipcoaching.com/iron-forums-houston";
+const PAGE_URL = "https://l3leadershipcoaching.com/ironforums-houston";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_SUBMIT_MS = 2000;
