@@ -281,7 +281,7 @@
     .form-card .sub { color: var(--muted); font-size: .95rem; margin-bottom: 1.2rem; }
     label.lbl { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); margin: 0 0 .35rem; }
     .field { margin-bottom: 1rem; }
-    input[type="text"], input[type="email"], textarea {
+    input[type="text"], input[type="email"], input[type="tel"], textarea {
       width: 100%; padding: .85rem 1rem; border: 1px solid rgba(19,35,59,.2); border-radius: 12px; background: #fff;
       font: 500 1rem/1.4 'Quicksand', sans-serif; color: var(--ink);
     }
@@ -296,6 +296,34 @@
     .thanks h3 { margin-bottom: .6rem; }
     .questions .grid > * { min-width: 0; }
     @media (max-width: 860px) { .questions .grid { grid-template-columns: minmax(0, 1fr); } }
+
+    /* Discovery Lunch registration */
+    .register { background: var(--paper); scroll-margin-top: 84px; }
+    .register .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+    .register h2 { max-width: 14ch; }
+    .reg-facts { list-style: none; margin: 1.6rem 0 1.4rem; padding: 0; border-top: 1px solid var(--line); }
+    .reg-facts li { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; padding: .8rem 0; border-bottom: 1px solid var(--line); font-size: 1rem; }
+    .reg-facts b { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--navy); opacity: .75; padding-top: .2rem; }
+    .reg-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.4rem, 3vw, 2.2rem); box-shadow: 0 24px 50px -34px rgba(3,36,79,.45); }
+    .reg-card h3 { font-size: 1.8rem; color: var(--navy); margin-bottom: 1.2rem; }
+    .reg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .reg-card .opt { font-weight: 500; opacity: .8; }
+    .reg-card fieldset { border: 0; margin: .2rem 0 1.2rem; padding: 0; min-width: 0; }
+    .reg-card legend { padding: 0; font-size: .78rem; font-weight: 600; color: var(--muted); margin: 0 0 .5rem; }
+    .choices { display: grid; gap: .55rem; }
+    .choice { display: flex; align-items: center; gap: .8rem; min-height: 52px; padding: .7rem 1rem; border: 1px solid rgba(19,35,59,.2); border-radius: 12px; background: #fff; cursor: pointer; font-size: .98rem; line-height: 1.35; transition: border-color .2s ease, background .2s ease; }
+    .choice input { flex: none; width: 1.25rem; height: 1.25rem; accent-color: var(--navy); margin: 0; }
+    .choice:hover { border-color: var(--gold); }
+    .choice:has(input:checked) { border-color: var(--navy); background: #eef3fb; }
+    .choice:active { transform: scale(.985); }
+    .reg-card .btn[type="submit"] { width: 100%; }
+    .reg-card .btn[disabled] { opacity: .6; cursor: default; }
+    .reg-card input[aria-invalid="true"] { border-color: #a12a1a; }
+    .reg-done h3 { margin-bottom: .6rem; }
+    .reg-done p { color: var(--muted); }
+    .reg-done .btn { margin-top: .6rem; }
+    @media (max-width: 860px) { .register .grid { grid-template-columns: minmax(0,1fr); } .register h2 { max-width: none; } }
+    @media (max-width: 520px) { .reg-row { grid-template-columns: 1fr; gap: 0; } .reg-facts li { grid-template-columns: 5.2rem 1fr; } }
 
     /* Tabs + scheduler (Meet with Heath) */
     [hidden] { display: none !important; }
@@ -397,7 +425,7 @@
           <a class="link" href="#leader">Your Facilitator</a>
           <a class="link" href="#questions">Questions</a>
         </nav>
-        <a class="btn btn-navy btn-sm" href="#questions" data-register data-hide-until-live data-live="Register" data-pending="" hidden>Register</a>
+        <a class="btn btn-navy btn-sm" href="#register" data-register data-live="Register">Register</a>
         <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="siteNav"><span></span><span></span></button>
       </div>
     </div>
@@ -417,7 +445,7 @@
           <p class="lede">A community in Houston for <strong>kingdom-minded small business owners who get what you carry.</strong></p>
           <p class="lede">Men and women running real companies, growing in faith, family, and business, together, with people who won't let you coast.</p>
           <div class="cta-row">
-            <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →" data-pending="Get the Discovery Lunch link →">Be Our Guest at the Discovery Lunch →</a>
+            <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →">Be Our Guest at the Discovery Lunch →</a>
             <a class="btn btn-ghost-light" href="#questions">Ask a question</a>
           </div>
         </div>
@@ -509,10 +537,9 @@
             <p class="lede muted">Come see it for yourself. Meet your Forum Facilitator, hear how a Forum works, sit with other Houston owners, and decide whether this is your next community.</p>
             <p class="lede muted"><strong>No pitch. No pressure.</strong> Just a good lunch and an honest conversation.</p>
             <div class="cta-row">
-              <a class="btn btn-gold" href="#questions" data-register data-live="Register for the Discovery Lunch →" data-pending="Get the registration link →">Register for the Discovery Lunch →</a>
+              <a class="btn btn-gold" href="#register" data-register data-live="Register for the Discovery Lunch →">Register for the Discovery Lunch →</a>
               <button class="btn btn-ghost-light" type="button" id="addToCal">Add to calendar</button>
             </div>
-            <p class="reg-note" id="regNote">Online registration is opening soon. Leave your name and email in the form below and we'll send you the link the moment it's live.</p>
           </div>
           <div>
             <ul class="details">
@@ -523,7 +550,68 @@
               <li><b>Cost</b><span>Complimentary</span></li>
               <li><b>Seats</b><span>Limited to 40</span></li>
             </ul>
-            <p class="fineprint"><strong>Registering helps us order the right amount of food.</strong> Parking details are sent with your registration confirmation.</p>
+            <p class="fineprint"><strong>Registering helps us order the right amount of food.</strong> Please register by November 11. Parking details are sent with your registration confirmation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REGISTER -->
+    <section class="section register" id="register" aria-labelledby="regHeading">
+      <div class="wrap">
+        <div class="grid">
+          <div>
+            <p class="eyebrow">Save your seat</p>
+            <h2 id="regHeading">Register for the Discovery Lunch.</h2>
+            <p class="lede">A free lunch and an honest conversation. <strong>No pitch, no pressure.</strong></p>
+            <ul class="reg-facts">
+              <li><b>When</b><span>Tuesday, November 17, 2026<br>11:30 AM – 1:00 PM</span></li>
+              <li><b>Where</b><span>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
+              <li><b>Cost</b><span>Complimentary · Lunch provided</span></li>
+              <li><b>Register by</b><span>Wednesday, November 11</span></li>
+            </ul>
+            <p>Registering helps us order the right amount of food. Your confirmation, with parking instructions, lands in your inbox right away.</p>
+          </div>
+          <div class="reg-card" id="regCard">
+            <form id="regForm" novalidate>
+              <h3>Save my seat</h3>
+              <div class="reg-row">
+                <div class="field">
+                  <label class="lbl" for="regFirst">First name</label>
+                  <input type="text" id="regFirst" name="rg_first" autocomplete="given-name" required />
+                </div>
+                <div class="field">
+                  <label class="lbl" for="regLast">Last name</label>
+                  <input type="text" id="regLast" name="rg_last" autocomplete="family-name" required />
+                </div>
+              </div>
+              <div class="field">
+                <label class="lbl" for="regEmail">Email</label>
+                <input type="email" id="regEmail" name="rg_email" autocomplete="email" inputmode="email" required />
+              </div>
+              <div class="field">
+                <label class="lbl" for="regPhone">Phone <span class="opt">(optional)</span></label>
+                <input type="tel" id="regPhone" name="rg_phone" autocomplete="tel" inputmode="tel" />
+              </div>
+              <fieldset>
+                <legend>What best describes you?</legend>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="rg_role" value="Business Owner" required /><span>Business Owner</span></label>
+                  <label class="choice"><input type="radio" name="rg_role" value="Local Pastor" /><span>Local Pastor</span></label>
+                  <label class="choice"><input type="radio" name="rg_role" value="I want to know what Iron Forums is so I can tell others" /><span>I want to know what Iron Forums is so I can tell others</span></label>
+                </div>
+              </fieldset>
+              <div class="hp" aria-hidden="true">
+                <label>Leave this empty <input type="text" name="rg_leave_blank" id="regHp" tabindex="-1" autocomplete="off" /></label>
+              </div>
+              <button class="btn btn-gold" type="submit" id="regSubmit">Save my seat →</button>
+              <p class="status" id="regStatus" role="status" aria-live="polite"></p>
+            </form>
+            <div class="reg-done" id="regDone" hidden>
+              <h3 id="regDoneTitle">You're on the list.</h3>
+              <p>Check your email for the details and parking instructions. If you don't see it in a few minutes, look in your spam folder. Need to change something? Just reply to that email.</p>
+              <button class="btn btn-navy" type="button" id="regCal">Add to calendar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -627,7 +715,7 @@
             </details>
             <details>
               <summary>Where do we meet, and what about parking?</summary>
-              <p>1801 Main St., 11th Floor, Houston, TX 77002. We'll send parking instructions with your registration confirmation.</p>
+              <p>1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002. We'll send parking instructions with your registration confirmation.</p>
             </details>
             <details>
               <summary>I can't make November 17. What now?</summary>
@@ -683,7 +771,7 @@
               </div>
               <label class="check" for="ifNotify">
                 <input type="checkbox" id="ifNotify" checked />
-                <span>Email me when registration opens for the Discovery Lunch, the Pilot Forum, and the January kickoff.</span>
+                <span>Email me when registration opens for the Pilot Forum and the January kickoff.</span>
               </label>
               <div class="hp" aria-hidden="true">
                 <label for="ifNote">Leave this field blank</label>
@@ -794,31 +882,26 @@
 
   <script>
     /* ──────────────────────────────────────────────
-       REGISTRATION LINK
-       Paste the Discovery Lunch registration link between the quotes
-       below when it's ready. Until then, every "register" button
-       honestly reads "Get the registration link" and points to the
-       form, so no one hits a dead end. The header button stays hidden
-       until then. Once it's set, they all switch to the real link
-       automatically.
+       REGISTRATION
+       Until the Discovery Lunch, every "register" button scrolls to the
+       registration form on this page (#register). After November 17, paste
+       the Iron Forums registration form link between the quotes below: the
+       buttons then open that link in a new tab and the in-page form hides.
        ────────────────────────────────────────────── */
     const REGISTRATION_URL = "";
 
     const regButtons = document.querySelectorAll('[data-register]');
-    const regNote = document.getElementById('regNote');
     regButtons.forEach((el) => {
-      if (el.hasAttribute('data-hide-until-live')) el.hidden = !REGISTRATION_URL;
       if (REGISTRATION_URL) {
         el.href = REGISTRATION_URL;
         el.target = '_blank';
         el.rel = 'noopener';
-        el.textContent = el.dataset.live;
       } else {
-        el.href = '#questions';
-        if (el.dataset.pending) el.textContent = el.dataset.pending;
+        el.href = '#register';
       }
+      el.textContent = el.dataset.live;
     });
-    if (REGISTRATION_URL && regNote) regNote.hidden = true;
+    if (REGISTRATION_URL) document.getElementById('register').hidden = true;
 
     /* FAQ: one answer open at a time, animated. Opening a question closes
        the previous one at the same moment; while both move, the question you
@@ -957,6 +1040,56 @@
       e.preventDefault();
       location.href = 'mailto:?subject=' + encodeURIComponent(EMAIL_SUBJECT) + '&body=' + encodeURIComponent(EMAIL_BODY);
     });
+
+    /* Discovery Lunch registration */
+    const regForm = document.getElementById('regForm');
+    const regStatus = document.getElementById('regStatus');
+    const regSubmit = document.getElementById('regSubmit');
+    regForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      regStatus.className = 'status';
+      regStatus.textContent = '';
+      const first = document.getElementById('regFirst');
+      const last = document.getElementById('regLast');
+      const email = document.getElementById('regEmail');
+      const role = regForm.querySelector('input[name="rg_role"]:checked');
+      [first, last, email].forEach((el) => el.removeAttribute('aria-invalid'));
+      const problem = (el, msg) => { if (el) el.setAttribute('aria-invalid', 'true'); regStatus.className = 'status err'; regStatus.textContent = msg; if (el) el.focus(); };
+      if (!first.value.trim()) return problem(first, 'Please add your first name.');
+      if (!last.value.trim()) return problem(last, 'Please add your last name.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) return problem(email, 'Please add a valid email so we can send your confirmation.');
+      if (!role) return problem(null, 'Please choose what best describes you.');
+      regSubmit.disabled = true;
+      regSubmit.textContent = 'Saving your seat…';
+      try {
+        const res = await fetch('/.netlify/functions/iron-forums-register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: first.value.trim(),
+            lastName: last.value.trim(),
+            email: email.value.trim(),
+            phone: document.getElementById('regPhone').value.trim(),
+            role: role.value,
+            hp: document.getElementById('regHp').value,
+            startedAt: pageLoadedAt
+          })
+        });
+        if (!res.ok) throw new Error('bad response');
+        document.getElementById('regDoneTitle').textContent = "You're on the list, " + first.value.trim() + '.';
+        regForm.hidden = true;
+        const done = document.getElementById('regDone');
+        done.hidden = false;
+        slideIn(done, 1);
+        document.getElementById('regCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (err) {
+        regSubmit.disabled = false;
+        regSubmit.textContent = 'Save my seat →';
+        regStatus.className = 'status err';
+        regStatus.textContent = "That didn't go through. Please try again, or email connect@l3leadershipcoaching.com and we'll save your seat.";
+      }
+    });
+    document.getElementById('regCal').addEventListener('click', () => document.getElementById('addToCal').click());
 
     /* Question / notify-me form */
     const form = document.getElementById('ifForm');

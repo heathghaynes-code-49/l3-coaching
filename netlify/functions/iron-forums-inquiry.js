@@ -31,7 +31,7 @@ function escapeHtml(value) {
 
 function buildHtml(payload) {
   const notifyLine = payload.notify
-    ? `<p style="margin:0 0 16px;padding:12px 14px;background:#fdf3dc;border-left:3px solid #dc981b;font:700 13px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Wants to be emailed when registration opens (Discovery Lunch link, Pilot Forum, and January kickoff).</p>`
+    ? `<p style="margin:0 0 16px;padding:12px 14px;background:#fdf3dc;border-left:3px solid #dc981b;font:700 13px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Wants to be emailed when registration opens (Pilot Forum and January kickoff).</p>`
     : "";
   const messageBlock = payload.message && payload.message.trim()
     ? `<p style="margin:0 0 16px;padding:12px 14px;background:#f4f1ec;border-left:3px solid #043370;font:400 14px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;white-space:pre-wrap;">${escapeHtml(payload.message.trim())}</p>`
