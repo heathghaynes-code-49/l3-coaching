@@ -933,13 +933,14 @@
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
 
-    /* Invitations — Heath's own words, as written */
+    /* Invitations. Built on Iron Forums' own language (ironforums.org), made specific to Houston.
+       The Discovery Lunch sentence in each one goes stale after November 17: remove it then. */
     const pageUrl = location.origin + location.pathname;
     const TEXT_INVITE =
-      "Hey [Name], I want to invite you into something. It's called Iron Forums. It's a community of kingdom-minded business owners who get what you carry: men and women running real companies who take their faith, their family, and their business seriously, and sharpen each other on all three. It's a room where you're known, and where no one lets you coast. I think you'd add a lot to it, and get a lot out of it. Can I tell you more over coffee?\n\nHere's the Houston page if you want a look first: " + pageUrl;
-    const EMAIL_SUBJECT = "An invitation — Iron Forums";
+      "Hey [Name], I thought of you. Iron Forums is coming to Houston: Kingdom-minded small business owners gathering once a month to connect, sharpen, and grow in faith, family, and business. There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works. Can we connect so I can share more?\n\nDetails: " + pageUrl;
+    const EMAIL_SUBJECT = "Iron Forums is coming to Houston";
     const EMAIL_BODY =
-      "Hey [Name],\n\nI wanted to personally invite you into something I think fits you well.\n\nIt's called Iron Forums. It's a community of kingdom-minded business owners who get what you carry — men and women running real companies who take their faith, their family, and their business seriously, and sharpen each other on all three.\n\nIt's not a Bible study, and it's not a networking lunch. It's a room where you're known, where the conversations are honest, and where people won't let you coast.\n\nI think you'd add a lot to it, and get a lot out of it. Could we grab coffee so I can tell you more?\n\nHere's the Houston page if you want a look first: " + pageUrl;
+      "Hey [Name],\n\nWhen was the last time someone asked how you were really doing in your business, at home, in your marriage, in your faith?\n\nThe weight of all of it is connected, and it is hard to carry alone. That's why Iron Forums exists: to bring Christian small business owners around a trusted table to speak honestly about all of it, grow in every area that matters, and discover what God is doing through it all.\n\nIt's coming to Houston. Once a month, members step away from the whirlwind for a half-day Forum to Connect, Sharpen, and Grow together in faith, family, and business. We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor, so you can see it for yourself. No pressure.\n\nI thought of you. Can we connect so I can share more?\n\nHere's the Houston page: " + pageUrl;
 
     const copiedMsg = document.getElementById('copiedMsg');
     async function copy(text, label) {
