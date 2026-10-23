@@ -768,6 +768,16 @@
     });
     if (REGISTRATION_URL && regNote) regNote.hidden = true;
 
+    /* FAQ: only one answer open at a time. Opening a question closes
+       whichever one was open before it. */
+    const faqItems = document.querySelectorAll('.faq details');
+    faqItems.forEach((item) => {
+      item.addEventListener('toggle', () => {
+        if (!item.open) return;
+        faqItems.forEach((other) => { if (other !== item) other.open = false; });
+      });
+    });
+
     /* Start every visit at the top. A link that points at a section
        (e.g. /iron-forums-houston#discovery) is left alone so it still
        lands where it says. 'instant' beats the page's smooth scrolling. */
