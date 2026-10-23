@@ -37,7 +37,7 @@
     "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
     "eventStatus": "https://schema.org/EventScheduled",
     "isAccessibleForFree": true,
-    "description": "A complimentary lunch for kingdom-minded small business owners to meet the Houston Forum Leader and see how an Iron Forum works.",
+    "description": "A complimentary lunch for kingdom-minded small business owners to meet the Houston Forum Facilitator and see how an Iron Forum works.",
     "location": {
       "@type": "Place",
       "name": "1801 Main St., 11th Floor",
@@ -233,6 +233,9 @@
     .faq details[open] summary::after { content: "\2212"; }
     .faq details p { margin: .8rem 0 0; color: var(--muted); font-size: .98rem; }
     .faq details p strong { color: var(--navy); font-weight: 700; }
+    /* Emphasis: bold, navy on light backgrounds, white on dark ones (same plain-bold style as ironforums.org) */
+    p strong { font-weight: 700; color: var(--navy); }
+    .on-dark p strong, .statement p strong, .fineprint strong { color: #fff; }
     .form-card { background: var(--paper); border-radius: var(--radius); padding: 1.9rem 1.7rem; border: 1px solid var(--line); }
     .form-card h3 { font-size: 1.8rem; color: var(--navy); margin-bottom: .5rem; }
     .form-card .sub { color: var(--muted); font-size: .95rem; margin-bottom: 1.2rem; }
@@ -308,7 +311,7 @@
     .l3-host .l3-eyebrow { font: 600 .68rem/1 'Montserrat', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #5a7390; margin: 0; }
     .l3-host .l3-brand img { height: 52px; width: auto; }
     .l3-host .l3-line { margin: 0; max-width: 56ch; line-height: 1.6; color: #344960; }
-    .l3-host .l3-line strong { font-family: 'Syne', Georgia, serif; font-weight: 600; letter-spacing: -0.01em; }
+    .l3-host .l3-line strong { font-family: 'Syne', Georgia, serif; font-weight: 600; letter-spacing: -0.01em; color: inherit; }
     .l3-host .l3-link { color: #344960; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #5a7390; white-space: nowrap; }
     .l3-host .l3-link:hover { color: #5a7390; }
     @media (max-width: 760px) { .l3-host .wrap { flex-direction: column; align-items: flex-start; } }
@@ -342,7 +345,7 @@
       <nav class="nav" aria-label="Page sections">
         <a class="link" href="#discovery">Discovery Lunch</a>
         <a class="link" href="#forum">The Forum</a>
-        <a class="link" href="#leader">Your Leader</a>
+        <a class="link" href="#leader">Your Facilitator</a>
         <a class="link" href="#questions">Questions</a>
         <a class="btn btn-navy btn-sm" href="#questions" data-register data-live="Be Our Guest" data-pending="Get the link">Be Our Guest</a>
       </nav>
@@ -360,7 +363,7 @@
         <div>
           <p class="eyebrow">Coming to Houston, TX</p>
           <h1>You don't have to <em>lead alone.</em></h1>
-          <p class="lede">A community in Houston for kingdom-minded small business owners who get what you carry.</p>
+          <p class="lede">A community in Houston for <strong>kingdom-minded small business owners who get what you carry.</strong></p>
           <p class="lede">Men and women running real companies, growing in faith, family, and business, together, with people who won't let you coast.</p>
           <div class="cta-row">
             <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →" data-pending="Get the Discovery Lunch link →">Be Our Guest at the Discovery Lunch →</a>
@@ -386,7 +389,7 @@
       <div class="wrap">
         <p class="eyebrow">The weight</p>
         <h2>When was the last time someone asked how you're really doing?</h2>
-        <p class="lede">Not how's business. How are <em>you</em>? In the business. At home. In your faith. It's all connected, it's heavy, and most owners carry it alone, in rooms where everyone looks like they've got it together.</p>
+        <p class="lede">Not how's business. How are <em>you</em>? In the business. At home. In your faith. It's all connected, it's heavy, and <strong>most owners carry it alone</strong>, in rooms where everyone looks like they've got it together.</p>
 
         <div class="cards">
           <div class="card">
@@ -409,8 +412,8 @@
         <div class="statement">
           <h3>You can only lead people as far as you've <em>gone yourself.</em></h3>
           <div>
-            <p class="gaps" style="color:rgba(255,255,255,.88)">Every owner carries two kinds of weakness: gaps you can name, and blind spots you can't see until someone who loves you says so out loud.</p>
-            <p style="margin-top:1rem">Most owners swing between holding on too tight and quietly checking out. The goal is to free the people around you to do their best work. That starts with you.</p>
+            <p class="gaps" style="color:rgba(255,255,255,.88)">Every owner carries two kinds of weakness: gaps you can name, and <strong>blind spots you can't see until someone who loves you says so out loud.</strong></p>
+            <p style="margin-top:1rem">Most owners swing between holding on too tight and quietly checking out. The goal is to <strong>free the people around you to do their best work. That starts with you.</strong></p>
           </div>
         </div>
       </div>
@@ -421,24 +424,24 @@
       <div class="wrap">
         <p class="eyebrow">What it is</p>
         <h2>A community for owners who get what you carry.</h2>
-        <p class="lede">An Iron Forum is where kingdom-minded small business owners do the honest work of growing their faith, their family, and their business, together, with people who won't let them coast.</p>
+        <p class="lede">An Iron Forum is where kingdom-minded small business owners do the honest work of growing their faith, their family, and their business, together, with <strong>people who won't let them coast.</strong></p>
         <p class="scripture">"As iron sharpens iron, so one person sharpens another." <br>— Proverbs 27:17</p>
 
         <div class="csg">
           <div>
             <p class="num">01</p>
             <h3>Connect.</h3>
-            <p>Be known. Build real relationships with owners who know you beyond the highlight reel, and who understand what you carry.</p>
+            <p>Be known. Build real relationships with owners who <strong>know you beyond the highlight reel</strong>, and who understand what you carry.</p>
           </div>
           <div>
             <p class="num">02</p>
             <h3>Sharpen.</h3>
-            <p>Get honest perspective on how you actually lead: how you communicate, how you build trust, whether your people are aligned, and whether the work gets done without everything running through you.</p>
+            <p>Get honest perspective on how you actually lead: how you communicate, how you build trust, whether your people are aligned, and whether the work gets done <strong>without everything running through you</strong>.</p>
           </div>
           <div>
             <p class="num">03</p>
             <h3>Grow.</h3>
-            <p>Take the next step in faith, family, and business, with a community of people who'll ask you how it went.</p>
+            <p>Take the next step in faith, family, and business, with a community of people who'll <strong>ask you how it went</strong>.</p>
           </div>
         </div>
       </div>
@@ -451,8 +454,8 @@
           <div>
             <p class="eyebrow">Start here</p>
             <h2>Be our guest at the Discovery Lunch.</h2>
-            <p class="lede muted">Come see it for yourself. Meet your Forum Leader, hear how a Forum works, sit with other Houston owners, and decide whether this is your next community.</p>
-            <p class="lede muted">No pitch. No pressure. Just a good lunch and an honest conversation.</p>
+            <p class="lede muted">Come see it for yourself. Meet your Forum Facilitator, hear how a Forum works, sit with other Houston owners, and decide whether this is your next community.</p>
+            <p class="lede muted"><strong>No pitch. No pressure.</strong> Just a good lunch and an honest conversation.</p>
             <div class="cta-row">
               <a class="btn btn-gold" href="#questions" data-register data-live="Register for the Discovery Lunch →" data-pending="Get the registration link →">Register for the Discovery Lunch →</a>
               <button class="btn btn-ghost-light" type="button" id="addToCal">Add to calendar</button>
@@ -468,7 +471,7 @@
               <li><b>Cost</b><span>Complimentary</span></li>
               <li><b>Seats</b><span>Limited to 40</span></li>
             </ul>
-            <p class="fineprint">Registering helps us order the right amount of food. Parking details are sent with your registration confirmation.</p>
+            <p class="fineprint"><strong>Registering helps us order the right amount of food.</strong> Parking details are sent with your registration confirmation.</p>
           </div>
         </div>
       </div>
@@ -479,7 +482,7 @@
       <div class="wrap">
         <p class="eyebrow">Once a month</p>
         <h2>Step away from the whirlwind.</h2>
-        <p class="lede">Forums meet the second Thursday of every month, 8:00 AM to noon. Half a day, once a month, gathered around one table. You bring what you're carrying, and a room of people who've carried something similar helps you see it, name it, and take the next step.</p>
+        <p class="lede">Forums meet the <strong>second Thursday of every month, 8:00 AM to noon.</strong> <strong>Half a day, once a month,</strong> gathered around one table. You bring what you're carrying, and a room of people who've carried something similar helps you see it, name it, and take the next step.</p>
 
         <div class="timeline">
           <div class="stop">
@@ -512,14 +515,14 @@
       <div class="wrap">
         <div class="grid">
           <div class="portrait">
-            <img src="iron-forums/heath-haynes-square.jpg" alt="Heath Haynes, Houston Forum Leader" width="612" height="612" />
+            <img src="iron-forums/heath-haynes-square.jpg" alt="Heath Haynes, Houston Forum Facilitator" width="612" height="612" />
           </div>
           <div>
-            <p class="eyebrow">Your Houston Forum Leader</p>
+            <p class="eyebrow">Your Houston Forum Facilitator</p>
             <h2>Meet Heath Haynes.</h2>
             <p>Heath has spent thirty years in full-time ministry, starting at 19. He's been a worship pastor, an associate pastor in a multi-site church of over 50,000, and since 2013, a church planter. He leads The Bridge HTX, a network of home churches that started in Montrose, in one of the most diverse cities in America.</p>
-            <p>He coaches church planters, and since 2023 he entered into coaching owners and leaders in the marketplace, so he's carried a business of his own too. His life's work is making leaders worth following.</p>
-            <p>He's not the expert at the front of the room. He's the one saving you a seat at the table. An Atlanta native, Heath lives in Houston with his wife of 20 years, Amber, and their two teenagers, and he's never far from a good coffee shop.</p>
+            <p>He coaches church planters, and since 2023 he entered into coaching owners and leaders in the marketplace, so he's carried a business of his own too. His life's work is making <strong>leaders worth following.</strong></p>
+            <p><strong>He's not the expert at the front of the room. He's the one saving you a seat at the table.</strong> An Atlanta native, Heath lives in Houston with his wife of 20 years, Amber, and their two teenagers, and he's never far from a good coffee shop.</p>
           </div>
         </div>
       </div>
@@ -787,7 +790,7 @@
         'DTEND:20261117T190000Z',
         'SUMMARY:Iron Forums Houston — Discovery Lunch',
         'LOCATION:1801 Main St.\\, 11th Floor\\, Houston\\, TX 77002',
-        'DESCRIPTION:A complimentary lunch for kingdom-minded small business owners. Meet your Forum Leader\\, hear how a Forum works\\, and decide whether this is your next community. Parking details come with your registration confirmation.',
+        'DESCRIPTION:A complimentary lunch for kingdom-minded small business owners. Meet your Forum Facilitator\\, hear how a Forum works\\, and decide whether this is your next community. Parking details come with your registration confirmation.',
         'END:VEVENT',
         'END:VCALENDAR'
       ];
