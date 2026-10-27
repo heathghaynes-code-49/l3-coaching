@@ -45,7 +45,7 @@ const EVENT = {
   endUtc: "20261117T190000Z",
   startIso: "2026-11-17T17:30:00Z",
   endIso: "2026-11-17T19:00:00Z",
-  location: "1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002",
+  location: "Kurio Collective at The Cannon, 1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002",
   description: "Free lunch and an honest conversation. No pitch, no pressure. Parking instructions are in your confirmation email."
 };
 
@@ -213,7 +213,7 @@ function confirmationHtml(p) {
         <table style="border-collapse:collapse;margin:0 0 20px;">
           ${detail("Date", "Tuesday, November 17, 2026")}
           ${detail("Time", "11:30 AM – 1:00 PM")}
-          ${detail("Place", "1801 Main St., 11th Floor<br>The Exchange Room<br>Houston, TX 77002")}
+          ${detail("Place", "Kurio Collective at The Cannon<br>1801 Main St., 11th Floor<br>The Exchange Room<br>Houston, TX 77002")}
           ${detail("Cost", "Complimentary, lunch provided")}
         </table>
         <p style="margin:0 0 8px;font:700 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Add it to your calendar</p>
@@ -236,7 +236,7 @@ function confirmationText(p) {
     "",
     "Date: Tuesday, November 17, 2026",
     "Time: 11:30 AM - 1:00 PM",
-    "Place: 1801 Main St., 11th Floor, The Exchange Room, Houston, TX 77002",
+    "Place: Kurio Collective at The Cannon, 1801 Main St., 11th Floor, The Exchange Room, Houston, TX 77002",
     "Cost: Complimentary, lunch provided",
     "",
     "Add it to your calendar: the invite attached to this email, or",
