@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#043370" />
   <title>Iron Forums Houston | A community for kingdom-minded small business owners</title>
-  <meta name="description" content="Iron Forums is coming to Houston: a community for kingdom-minded small business owners to grow in faith, family, and business. Join us for a complimentary Discovery Lunch on November 17." />
+  <meta name="description" content="Iron Forums is coming to Houston: a community for Christian small business owners to grow in faith, family, and business. Join us for a complimentary Discovery Lunch on November 17." />
   <link rel="canonical" href="https://l3leadershipcoaching.com/ironforums-houston" />
 
   <meta property="og:type" content="website" />
@@ -248,14 +248,37 @@
     /* The forum */
     .forum { background: var(--bone); }
     .forum h2 { max-width: 16ch; }
-    .timeline { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1.2rem; margin: 2.6rem 0 2rem; }
+    .timeline { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1.2rem; margin: 2.6rem 0 2rem; }
+    .stakes { margin: 0 0 3rem; }
+    .stakes h3 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); color: var(--navy); margin-bottom: 1rem; max-width: 22ch; }
+    .stakes ul { list-style: none; display: flex; flex-wrap: wrap; gap: .6rem 1.8rem; margin: 0 0 1rem; padding: 0; }
+    .stakes li { font: 700 1.15rem/1.3 'League Spartan', system-ui, sans-serif; letter-spacing: -.01em; color: var(--ink); }
+    .stakes li::before { content: "»"; color: var(--gold-ink); margin-right: .5rem; }
+    .stakes p { color: var(--muted); max-width: 62ch; margin: 0; }
     .stop { background: #fff; border-radius: var(--radius); padding: 1.6rem 1.4rem; border-top: 6px solid var(--gold); }
     .stop .when { font-family: 'League Spartan', sans-serif; font-weight: 800; font-size: 2rem; color: var(--navy); line-height: 1; margin-bottom: .6rem; }
     .stop h3 { font-size: 1.3rem; margin-bottom: .45rem; color: var(--ink); }
     .stop p { font-size: .92rem; color: var(--muted); margin: 0; }
     .stop.muted-stop { border-top-color: var(--navy); }
-    @media (max-width: 960px) { .timeline { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width: 560px) { .timeline { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) { .timeline { grid-template-columns: 1fr; } }
+    .stop-top { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .9rem; }
+    .stop .step { margin: 0; font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-ink); }
+    .chip { font-size: .75rem; font-weight: 700; letter-spacing: .04em; padding: .25rem .7rem; border-radius: 999px; border: 1px solid rgba(19,35,59,.25); color: var(--muted); white-space: nowrap; }
+    .chip:empty { display: none; }
+    .chip.next { background: var(--gold); border-color: var(--gold); color: var(--navy-deep); }
+    .chip.done { background: rgba(4,51,112,.08); border-color: transparent; color: var(--navy); }
+    .stop.is-next { box-shadow: 0 18px 40px -28px rgba(3,36,79,.6); }
+    .change { background: var(--bone); }
+    .change h2 { max-width: 24ch; }
+    .shifts { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1.2rem; margin-top: 2.6rem; }
+    .shift { background: #fff; border-radius: var(--radius); padding: 1.6rem 1.4rem; border-top: 6px solid var(--navy); }
+    .shift p { margin: 0; }
+    .shift .from { font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
+    .shift .was { font: 700 1.2rem/1.2 'League Spartan', system-ui, sans-serif; color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(85,101,125,.5); text-decoration-thickness: 2px; }
+    .shift .arrow { font: 800 1.6rem/1 'League Spartan', sans-serif; color: var(--gold-ink); margin: .5rem 0; }
+    .shift .now { font: 800 clamp(1.5rem, 2.4vw, 1.9rem)/1.1 'League Spartan', system-ui, sans-serif; letter-spacing: -.02em; color: var(--navy); }
+    @media (max-width: 960px) { .shifts { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 520px) { .shifts { grid-template-columns: 1fr; } }
     .where { font-weight: 600; color: var(--navy); }
 
     /* Leader */
@@ -464,7 +487,7 @@
           <p class="eyebrow badge">Iron Forums Houston<span class="soon"> · Coming soon</span></p>
           <h1>You don't have to <em>lead alone.</em></h1>
           <p class="lede">A community in Houston for <strong>kingdom-minded small business owners who get what you carry.</strong></p>
-          <p class="lede">Men and women running real companies, growing in faith, family, and business, together, with people who won't let you coast.</p>
+          <p class="lede">Men and women running real companies, growing in business, faith, leadership, and family, together, with truth, grace, and accountability.</p>
           <div class="cta-row">
             <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →">Be Our Guest at the Discovery Lunch →</a>
             <a class="btn btn-ghost-light" href="#questions">Ask a question</a>
@@ -490,6 +513,7 @@
         <p class="eyebrow">The weight</p>
         <h2>When was the last time someone asked how you're really doing?</h2>
         <p class="lede">Not how's business. How are <em>you</em>? In the business. At home. In your faith. It's all connected, it's heavy, and <strong>most owners carry it alone</strong>, in rooms where everyone looks like they've got it together.</p>
+        <p class="lede">You're juggling too much, stretched across business, faith, and family. You're tired, and you're not sure how to keep growing.</p>
 
         <div class="cards">
           <div class="card">
@@ -509,11 +533,22 @@
           </div>
         </div>
 
+        <div class="stakes">
+          <h3>Lead alone long enough, and something gives.</h3>
+          <ul>
+            <li>Business clarity fades.</li>
+            <li>Relationships strain.</li>
+            <li>Faith drifts.</li>
+          </ul>
+          <p>And the blind spots you can't see keep widening. There's no neutral ground: we're either moving toward the purpose God has for us, or away from it.</p>
+        </div>
+
         <div class="statement">
-          <h3>You can only lead people as far as you've <em>gone yourself.</em></h3>
+          <h3>We weren't meant to <em>lead alone.</em></h3>
           <div>
-            <p class="gaps" style="color:rgba(255,255,255,.88)">Every owner carries two kinds of weakness: gaps you can name, and <strong>blind spots you can't see until someone who loves you says so out loud.</strong></p>
-            <p style="margin-top:1rem">Most owners swing between holding on too tight and quietly checking out. The goal is to <strong>free the people around you to do their best work. That starts with you.</strong></p>
+            <p class="gaps" style="color:rgba(255,255,255,.88)">Growth happens best in community, with <strong>truth, grace, and accountability</strong>, from alongside, not from above.</p>
+            <p style="margin-top:1rem">Every owner carries gaps they can name, and <strong>blind spots they can't see until someone who loves them says so out loud.</strong></p>
+            <p style="margin-top:1rem"><strong>We get it. We've been there too.</strong> Iron Forums is made up of Christian small business owners who have felt the same pressures and the same loneliness.</p>
           </div>
         </div>
       </div>
@@ -524,24 +559,24 @@
       <div class="wrap">
         <p class="eyebrow">What it is</p>
         <h2>A community for owners who get what you carry.</h2>
-        <p class="lede">An Iron Forum is where kingdom-minded small business owners do the honest work of growing their faith, their family, and their business, together, with <strong>people who won't let them coast.</strong></p>
+        <p class="lede">An Iron Forum is where kingdom-minded small business owners do the honest work of growing their faith, their family, and their business, together, with <strong>truth, grace, and accountability.</strong></p>
         <p class="scripture">"As iron sharpens iron, so one person sharpens another." <br>— Proverbs 27:17</p>
 
         <div class="csg">
           <div>
             <p class="num">01</p>
             <h3>Connect.</h3>
-            <p>Be known. Build real relationships with owners who <strong>know you beyond the highlight reel</strong>, and who understand what you carry.</p>
+            <p>Connect through openness and intentionality. Be known by owners who <strong>know you beyond the highlight reel</strong> and understand what you carry.</p>
           </div>
           <div>
             <p class="num">02</p>
             <h3>Sharpen.</h3>
-            <p>Get honest perspective on how you actually lead: how you communicate, how you build trust, whether your people are aligned, and whether the work gets done <strong>without everything running through you</strong>.</p>
+            <p>Sharpen with truth, grace, and accountability. Honest perspective from people who have walked the same road, offered alongside you, <strong>not from above</strong>.</p>
           </div>
           <div>
             <p class="num">03</p>
             <h3>Grow.</h3>
-            <p>Take the next step in faith, family, and business, with a community of people who'll <strong>ask you how it went</strong>.</p>
+            <p>Grow into God's calling. Take the next step in faith, family, and business, with people who'll <strong>ask you how it went</strong>. Your leadership strengthens, your faith deepens, and the impact multiplies.</p>
           </div>
         </div>
         <p class="talk"><a href="https://www.ironforums.org" target="_blank" rel="noopener">See how Iron Forums works across the country →</a></p>
@@ -556,6 +591,7 @@
             <p class="eyebrow">Start here</p>
             <h2>Be our guest at the Discovery Lunch.</h2>
             <p class="lede muted">Come see it for yourself. Meet your Forum Facilitator, hear how a Forum works, sit with other Houston owners, and decide whether this is your next community.</p>
+            <p class="lede muted">The guidance you need is already in the room. <strong>You just need to take your seat.</strong></p>
             <p class="lede muted"><strong>No pitch. No pressure.</strong> Just a good lunch and an honest conversation.</p>
             <div class="cta-row">
               <a class="btn btn-gold" href="#register" data-register data-live="Register for the Discovery Lunch →">Register for the Discovery Lunch →</a>
@@ -648,25 +684,23 @@
         <p class="lede">You don't have to wait until January to find out if it's for you. Come see it, experience it, and decide before we launch.</p>
 
         <div class="timeline">
-          <div class="stop">
+          <div class="stop" data-phase="discovery">
+            <div class="stop-top"><p class="step">Step 1 · Join</p><span class="chip"></span></div>
             <p class="when">Nov 17</p>
             <h3>Discovery Lunch</h3>
-            <p>Tuesday<br>11:30 AM – 1:00 PM<br>Meet the room. Free.</p>
+            <p>Tuesday, 11:30 AM – 1:00 PM. Take the first step. Meet Christian small business owners who share your faith and values. Free.</p>
           </div>
-          <div class="stop">
+          <div class="stop" data-phase="pilot">
+            <div class="stop-top"><p class="step">Step 2 · Engage</p><span class="chip"></span></div>
             <p class="when">Dec 10</p>
             <h3>Pilot Forum</h3>
-            <p>Thursday<br>8:00 – 11:00 AM<br>A first look at the real thing, before we launch.</p>
+            <p>Thursday, 8:00 – 11:00 AM. Spend a morning in honest community. Pause from the whirlwind, connect deeply, and see the real thing before we launch.</p>
           </div>
-          <div class="stop">
+          <div class="stop" data-phase="launch">
+            <div class="stop-top"><p class="step">Step 3 · Grow</p><span class="chip"></span></div>
             <p class="when">Jan 14</p>
             <h3>The first Forum</h3>
-            <p>Thursday<br>8:00 AM – noon<br>2027. The table is set.</p>
-          </div>
-          <div class="stop muted-stop">
-            <p class="when">Monthly</p>
-            <h3>Second Thursdays</h3>
-            <p>Every month<br>8:00 AM – noon<br>Same community, deeper each month.</p>
+            <p>Thursday, 8:00 AM – noon, then every second Thursday. Your leadership strengthens, your faith deepens, and the impact multiplies.</p>
           </div>
         </div>
         <p class="where">All gatherings: Kurio Collective @ The Cannon, 1801 Main St., 11th Floor, Houston, TX 77002.</p>
@@ -687,6 +721,21 @@
             <p>He coaches church planters, and since 2023 he entered into coaching owners and leaders in the marketplace, so he's carried a business of his own too. His life's work is making <strong>leaders worth following.</strong></p>
             <p><strong>He's not the expert at the front of the room. He's the one saving you a seat at the table.</strong> An Atlanta native, Heath lives in Houston with his wife of 20 years, Amber, and their two teenagers, and he's never far from a good coffee shop.</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT CHANGES -->
+    <section class="section change" aria-labelledby="changeHeading">
+      <div class="wrap">
+        <p class="eyebrow">What changes</p>
+        <h2 id="changeHeading">Here's where this takes you.</h2>
+        <p class="lede">Walk this rhythm with other owners and you'll identify blind spots, stay on track, and be equipped to realize your God-given potential.</p>
+        <div class="shifts">
+          <div class="shift"><p class="from">From</p><p class="was">Isolation</p><p class="arrow" aria-hidden="true">»</p><p class="now">Community</p></div>
+          <div class="shift"><p class="from">From</p><p class="was">Struggle</p><p class="arrow" aria-hidden="true">»</p><p class="now">Strength</p></div>
+          <div class="shift"><p class="from">From</p><p class="was">Survival</p><p class="arrow" aria-hidden="true">»</p><p class="now">Purpose</p></div>
+          <div class="shift"><p class="from">From</p><p class="was">a Moral Company</p><p class="arrow" aria-hidden="true">»</p><p class="now">a Redemptive Company</p></div>
         </div>
       </div>
     </section>
@@ -910,6 +959,28 @@
        buttons then open that link in a new tab and the in-page form hides.
        ────────────────────────────────────────────── */
     const REGISTRATION_URL = "";
+
+    /* ──────────────────────────────────────────────
+       WHERE WE ARE IN THE TIMELINE
+       One setting for the Houston rollout: "discovery" (now, until Nov 17),
+       "pilot" (after the Discovery Lunch, before Dec 10), or "launch"
+       (after Dec 10, once the Forum is meeting). It marks each step as
+       Done / Next up / Coming and updates the hero badge.
+       ────────────────────────────────────────────── */
+    const SITE_PHASE = "discovery";
+    (function () {
+      const order = ['discovery', 'pilot', 'launch'];
+      const at = order.indexOf(SITE_PHASE);
+      document.querySelectorAll('.stop[data-phase]').forEach((stop) => {
+        const i = order.indexOf(stop.dataset.phase);
+        const chip = stop.querySelector('.chip');
+        if (i < at) { chip.textContent = 'Done'; chip.classList.add('done'); }
+        else if (i === at) { chip.textContent = SITE_PHASE === 'launch' ? 'Now meeting' : 'Next up'; chip.classList.add('next'); stop.classList.add('is-next'); }
+        else { chip.textContent = 'Coming'; }
+      });
+      const soon = document.querySelector('.eyebrow.badge .soon');
+      if (soon) soon.textContent = { discovery: ' · Coming soon', pilot: ' · Pilot Forum Dec 10', launch: ' · Now meeting' }[SITE_PHASE];
+    })();
 
     const regButtons = document.querySelectorAll('[data-register]');
     regButtons.forEach((el) => {
