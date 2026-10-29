@@ -9,3 +9,10 @@
 [dev]
   command = "npx @11ty/eleventy --serve"
   targetPort = 8080
+
+# Short address used in the Iron Forums Houston invitations. Temporary (302)
+# so it can be pointed somewhere new after the Discovery Lunch.
+[[redirects]]
+  from = "/ifhouston"
+  to = "/ironforums-houston#register"
+  status = 302
