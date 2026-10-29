@@ -20,6 +20,8 @@ const NOTIFY_FROM = "Iron Forums Houston <diagnostic@l3leadershipcoaching.com>";
 const CONFIRM_FROM = "Heath Haynes <connect@l3leadershipcoaching.com>";
 const SHEET_VIEW_URL = "https://docs.google.com/spreadsheets/d/19qE7wVJd7mAnjNRcGstj_z1ZHsE7rMXgjkGgi_wUVSU/edit";
 const PAGE_URL = "https://l3leadershipcoaching.com/ironforums-houston";
+// A short address that redirects to the registration form (see netlify.toml).
+const SHORT_URL = "https://l3leadershipcoaching.com/ifhouston";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_SUBMIT_MS = 2000;
@@ -190,10 +192,28 @@ function internalHtml(p, sheetWired) {
 }
 
 const PERSONAL_PARAGRAPHS = (first) => [
-  "It's Heath. I'm glad you're coming. You don't have to lead alone, and on November 17 you'll get a chance to see what that looks like.",
-  "Come hungry, bring your questions, and bring whatever you're carrying. No pitch, no pressure. I'm saving you a seat.",
-  "Everything you need is below. If anything comes up before then, just reply to this email. It comes straight to me."
+  "It's Heath. I'm glad you're coming, because you don't have to lead alone. On November 17, you'll get to see what that looks like.",
+  "Come hungry and come curious. Over lunch you'll hear how a Forum works, sit with other Houston owners who get what you carry, and decide for yourself if this is a community where you can connect, sharpen, and grow. I'm saving you a seat.",
+  "Everything you need is below. Seats are limited, so if you can't make it, please reply to this email and let me know so we can open your spot to someone else. And if you have a question before then, reply to that same email. It comes straight to me."
 ];
+
+// The "Invite someone" button opens the attendee's own email app with this
+// message already written, so passing it on takes one tap.
+const INVITE_SUBJECT = "Join me: Iron Forums Discovery Lunch, Nov 17";
+const INVITE_BODY = [
+  "Hey [Name],",
+  "",
+  "I just signed up for something I think you'd get a lot out of. Iron Forums is coming to Houston: a community for kingdom-minded small business owners who want to grow in faith, family, and business, and who know they don't have to lead alone.",
+  "",
+  "There's a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon). You'd hear how a Forum works and meet other Houston owners. Seats are limited, and registration closes November 11.",
+  "",
+  "Here's the link to save a seat: " + SHORT_URL,
+  "",
+  "Want to come with me?"
+].join("\n");
+// encodeURIComponent leaves ' ( ) ! * alone; encode those too so no email app has anything to mangle.
+const mailEncode = (t) => encodeURIComponent(t).replace(/['()!*]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase());
+const inviteMailto = () => "mailto:?subject=" + mailEncode(INVITE_SUBJECT) + "&body=" + mailEncode(INVITE_BODY);
 
 function confirmationHtml(p) {
   const para = (t) => `<p style="margin:0 0 14px;font:400 16px/1.65 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">${escapeHtml(t)}</p>`;
@@ -221,6 +241,12 @@ function confirmationHtml(p) {
         <div style="margin:0 0 22px;">${calBtn(googleCalendarUrl(), "Google Calendar")}${calBtn(outlookCalendarUrl(), "Outlook")}</div>
         <p style="margin:0 0 8px;font:700 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Parking and getting to us</p>
         <table style="border-collapse:collapse;margin:0 0 6px;">${steps}</table>
+        <div style="margin:26px 0 0;padding:20px 22px;background:#fdf3dc;border-left:4px solid #dc981b;border-radius:0 10px 10px 0;">
+          <p style="margin:0 0 8px;font:700 18px/1.3 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Who else do you know that Iron Forums could serve?</p>
+          <p style="margin:0 0 14px;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Think of a business owner in your world who could use a room like this. Send them this link so they can save a seat too. Seats are limited, and registration closes November 11.</p>
+          <a href="${escapeHtml(inviteMailto())}" style="display:inline-block;padding:12px 20px;background:#043370;color:#ffffff;border-radius:999px;font:700 15px/1 -apple-system,Helvetica,Arial,sans-serif;text-decoration:none;">Invite someone &rarr;</a>
+          <p style="margin:12px 0 0;font:400 13px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#5b6b82;">Or share this link: <a href="${SHORT_URL}" style="color:#043370;font-weight:700;">l3leadershipcoaching.com/ifhouston</a></p>
+        </div>
         <p style="margin:22px 0 0;padding-top:14px;border-top:1px solid #e5e1d8;font:400 12px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#8a97a5;">Iron Forums Houston · Connect &raquo; Sharpen &raquo; Grow</p>
       </div>
     </div>`;
@@ -245,6 +271,10 @@ function confirmationText(p) {
     "",
     "Parking and getting to us:",
     ...PARKING_STEPS.map((s, i) => `${i + 1}. ${s}`),
+    "",
+    "Who else do you know that Iron Forums could serve?",
+    "Think of a business owner in your world who could use a room like this. Send them this link so they can save a seat too. Seats are limited, and registration closes November 11.",
+    SHORT_URL,
     "",
     "Iron Forums Houston · Connect >> Sharpen >> Grow"
   ].join("\n");
