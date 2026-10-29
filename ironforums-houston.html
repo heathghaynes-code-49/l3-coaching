@@ -1093,7 +1093,8 @@
 
     /* Invitations. Built on Iron Forums' own language (ironforums.org), made specific to Houston.
        The Discovery Lunch sentence in each one goes stale after November 17: remove it then. */
-    const pageUrl = location.origin + location.pathname;
+    // The short address (see netlify.toml) sends people straight to the registration form.
+    const pageUrl = location.origin + '/ifhouston';
     const TEXT_INVITE =
       "Hey [Name], I thought of you. Iron Forums is coming to Houston: Kingdom-minded small business owners gathering once a month to connect, sharpen, and grow in faith, family, and business. There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works. Can we connect so I can share more?\n\nDetails: " + pageUrl;
     const EMAIL_SUBJECT = "Iron Forums is coming to Houston";
