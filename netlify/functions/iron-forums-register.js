@@ -22,6 +22,8 @@ const SHEET_VIEW_URL = "https://docs.google.com/spreadsheets/d/19qE7wVJd7mAnjNRc
 const PAGE_URL = "https://l3leadershipcoaching.com/ironforums-houston";
 // A short address that redirects to the registration form (see netlify.toml).
 const SHORT_URL = "https://l3leadershipcoaching.com/ifhouston";
+// A hosted copy of the calendar event, for the Apple Calendar button.
+const ICS_FILE_URL = "https://l3leadershipcoaching.com/iron-forums/discovery-lunch.ics";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_SUBMIT_MS = 2000;
@@ -237,8 +239,8 @@ function confirmationHtml(p) {
           ${detail("Cost", "Complimentary, lunch provided")}
         </table>
         <p style="margin:0 0 8px;font:700 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Add it to your calendar</p>
-        <p style="margin:0 0 8px;font:400 14px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#5b6b82;">The invite attached to this email will show up as an event you can accept. Or use a link:</p>
-        <div style="margin:0 0 22px;">${calBtn(googleCalendarUrl(), "Google Calendar")}${calBtn(outlookCalendarUrl(), "Outlook")}</div>
+        <p style="margin:0 0 8px;font:400 14px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#5b6b82;">The invite attached to this email will show up as an event you can accept. Or add it with one tap:</p>
+        <div style="margin:0 0 22px;">${calBtn(ICS_FILE_URL, "Apple Calendar")}${calBtn(googleCalendarUrl(), "Google Calendar")}${calBtn(outlookCalendarUrl(), "Outlook")}</div>
         <p style="margin:0 0 8px;font:700 16px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Parking and getting to us</p>
         <table style="border-collapse:collapse;margin:0 0 6px;">${steps}</table>
         <div style="margin:26px 0 0;padding:20px 22px;background:#fdf3dc;border-left:4px solid #dc981b;border-radius:0 10px 10px 0;">
@@ -266,6 +268,7 @@ function confirmationText(p) {
     "Cost: Complimentary, lunch provided",
     "",
     "Add it to your calendar: the invite attached to this email, or",
+    "Apple Calendar: " + ICS_FILE_URL,
     "Google Calendar: " + googleCalendarUrl(),
     "Outlook: " + outlookCalendarUrl(),
     "",

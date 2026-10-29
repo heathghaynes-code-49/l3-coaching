@@ -1,0 +1,26 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Iron Forums Houston//Discovery Lunch//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:discovery-lunch-20261117@ironforums-houston
+DTSTAMP:20261001T000000Z
+DTSTART:20261117T173000Z
+DTEND:20261117T190000Z
+SEQUENCE:0
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+SUMMARY:Iron Forums Houston: Discovery Lunch
+LOCATION:Kurio Collective @ The Cannon\, 1801 Main St.\, 11th Floor (The E
+ xchange Room)\, Houston\, TX 77002
+DESCRIPTION:Free lunch and an honest conversation. No pitch\, no pressure.
+  Parking instructions are in your confirmation email.
+URL:https://l3leadershipcoaching.com/ironforums-houston
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Iron Forums Houston Discovery Lunch is tomorrow
+END:VALARM
+END:VEVENT
+END:VCALENDAR
