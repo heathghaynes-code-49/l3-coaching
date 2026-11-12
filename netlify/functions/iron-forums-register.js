@@ -207,7 +207,7 @@ const INVITE_BODY = [
   "",
   "I just signed up for something I think you'd get a lot out of. Iron Forums is coming to Houston: a community for kingdom-minded small business owners who want to grow in faith, family, and business, and who know they don't have to lead alone.",
   "",
-  "There's a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon). You'd hear how a Forum works and meet other Houston owners. Seats are limited, and registration closes November 11.",
+  "There's a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon). You'd hear how a Forum works and meet other Houston owners. Seats are limited.",
   "",
   "Here's the link to save a seat: " + SHORT_URL,
   "",
@@ -245,7 +245,7 @@ function confirmationHtml(p) {
         <table style="border-collapse:collapse;margin:0 0 6px;">${steps}</table>
         <div style="margin:26px 0 0;padding:20px 22px;background:#fdf3dc;border-left:4px solid #dc981b;border-radius:0 10px 10px 0;">
           <p style="margin:0 0 8px;font:700 18px/1.3 -apple-system,Helvetica,Arial,sans-serif;color:#043370;">Who else do you know that Iron Forums could serve?</p>
-          <p style="margin:0 0 14px;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Think of a business owner in your world who could use a room like this. Send them this link so they can save a seat too. Seats are limited, and registration closes November 11.</p>
+          <p style="margin:0 0 14px;font:400 15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#13233b;">Think of a business owner in your world who could use a room like this. Send them this link so they can save a seat too. Seats are limited.</p>
           <a href="${escapeHtml(inviteMailto())}" style="display:inline-block;padding:12px 20px;background:#043370;color:#ffffff;border-radius:999px;font:700 15px/1 -apple-system,Helvetica,Arial,sans-serif;text-decoration:none;">Invite someone &rarr;</a>
           <p style="margin:12px 0 0;font:400 13px/1.5 -apple-system,Helvetica,Arial,sans-serif;color:#5b6b82;">Or share this link: <a href="${SHORT_URL}" style="color:#043370;font-weight:700;">l3leadershipcoaching.com/ifhouston</a></p>
         </div>
@@ -276,7 +276,7 @@ function confirmationText(p) {
     ...PARKING_STEPS.map((s, i) => `${i + 1}. ${s}`),
     "",
     "Who else do you know that Iron Forums could serve?",
-    "Think of a business owner in your world who could use a room like this. Send them this link so they can save a seat too. Seats are limited, and registration closes November 11.",
+    "Think of a business owner in your world who could use a room like this. Send them this link so they can save a seat too. Seats are limited.",
     SHORT_URL,
     "",
     "Iron Forums Houston · Connect >> Sharpen >> Grow"
