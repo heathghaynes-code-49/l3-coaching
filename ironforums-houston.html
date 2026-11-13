@@ -4,6 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#043370" />
+  <script>
+    /* THE SWITCH. Until Tuesday, Nov 17, 2026 at 11:45 AM Central the page is the Discovery Lunch page ("lunch").
+       After that moment every visitor sees the Pilot Forum page ("pilot"). It runs before the page paints, so
+       there is no flash. On localhost and Netlify preview links you can add ?phase=pilot or ?phase=lunch to
+       look at either version; that override is ignored on the live site. */
+    (function () {
+      var SWITCH_AT = Date.parse('2026-11-17T11:45:00-06:00');
+      var forced = /[?&]phase=(lunch|pilot)/.exec(location.search);
+      var testing = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^deploy-preview-/.test(location.hostname);
+      var phase = (testing && forced) ? forced[1] : (Date.now() >= SWITCH_AT ? 'pilot' : 'lunch');
+      document.documentElement.setAttribute('data-phase', phase);
+    })();
+  </script>
   <title>Iron Forums Houston | A community for kingdom-minded small business owners</title>
   <meta name="description" content="Iron Forums is coming to Houston: a community for Christian small business owners to grow in faith, family, and business. Join us for a complimentary Discovery Lunch on November 17." />
   <link rel="canonical" href="https://l3leadershipcoaching.com/ironforums-houston" />
@@ -267,8 +280,9 @@
     .stop h3 { font-size: 1.3rem; margin-bottom: .45rem; color: var(--ink); }
     .stop p { font-size: .92rem; color: var(--muted); margin: 0; }
     .stop.muted-stop { border-top-color: var(--navy); }
-    @media (max-width: 960px) { .timeline { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width: 560px) { .timeline { grid-template-columns: 1fr; } }
+    [data-phase="pilot"] .timeline { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    @media (max-width: 960px) { .timeline, [data-phase="pilot"] .timeline { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 560px) { .timeline, [data-phase="pilot"] .timeline { grid-template-columns: 1fr; } }
     .change { background: var(--bone); }
     .change h2 { max-width: 24ch; }
     .shifts { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1.2rem; margin-top: 2.6rem; }
@@ -306,7 +320,9 @@
     /* Questions */
     .questions .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
     .faq details { border-bottom: 1px solid var(--line); overflow: hidden; }
-    .faq details:first-of-type { border-top: 1px solid var(--line); }
+    .faq-list { border-top: 1px solid var(--line); }
+    .faq details ol { margin: -.25rem 0 1.05rem; padding-left: 1.3rem; color: var(--muted); font-size: .98rem; }
+    .faq details li { margin-bottom: .35rem; }
     .faq summary { cursor: pointer; font-weight: 700; color: var(--navy); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 48px; padding: 1.05rem 0; }
     .faq summary:active { opacity: .7; }
     .faq summary:focus-visible { outline-offset: -3px; }
@@ -340,6 +356,23 @@
     .questions .grid > * { min-width: 0; }
     @media (max-width: 860px) { .questions .grid { grid-template-columns: minmax(0, 1fr); } }
 
+    /* Overview videos (YouTube, loaded only when played) */
+    .videos { background: var(--paper); }
+    .videos h2 { max-width: 20ch; }
+    .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.4rem; margin-top: 2.4rem; }
+    .video-grid.one { grid-template-columns: minmax(0, 820px); }
+    .video { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #000; }
+    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    /* The cover: the video's own photo. pointer-events: none means a click goes straight through to YouTube's own play button. */
+    .video-cover { position: absolute; inset: 0; overflow: hidden; border-radius: var(--radius); background: var(--navy-deep); pointer-events: none; transition: opacity .3s ease, visibility 0s linear .3s; }
+    .video.playing .video-cover { opacity: 0; visibility: hidden; }
+    .video-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .video-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(3,36,79,.8), rgba(3,36,79,.04) 55%); }
+    .video-play { position: absolute; z-index: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); width: clamp(52px, 9vw, 78px); height: clamp(52px, 9vw, 78px); border-radius: 50%; background: var(--gold); display: grid; place-items: center; box-shadow: 0 10px 30px -10px rgba(0,0,0,.55); }
+    .video-play::before { content: ""; margin-left: 5px; border-style: solid; border-width: clamp(9px, 1.7vw, 14px) 0 clamp(9px, 1.7vw, 14px) clamp(15px, 2.7vw, 22px); border-color: transparent transparent transparent var(--navy-deep); }
+    .video-title { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; padding: 1rem 1.3rem; color: #fff; text-align: left; font: 700 clamp(1rem, 2.2vw, 1.45rem)/1.2 'League Spartan', system-ui, sans-serif; letter-spacing: -.01em; }
+    @media (max-width: 860px) { .video-grid, .video-grid.one { grid-template-columns: minmax(0,1fr); } }
+
     /* Discovery Lunch registration */
     .register { background: var(--paper); scroll-margin-top: 84px; }
     .register .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
@@ -362,6 +395,8 @@
     .reg-card .btn[type="submit"] { width: 100%; }
     .reg-card .btn[disabled] { opacity: .6; cursor: default; }
     .reg-card input[aria-invalid="true"] { border-color: #a12a1a; }
+    .reg-card p { color: var(--muted); }
+    .reg-card .reg-aside { margin: 1.1rem 0 0; font-size: .92rem; }
     .reg-done h3 { margin-bottom: .6rem; }
     .reg-done p { color: var(--muted); }
     .reg-done .btn { margin-top: .6rem; }
@@ -370,6 +405,7 @@
 
     /* Tabs + scheduler (Connect with Heath) */
     [hidden] { display: none !important; }
+    [data-phase="lunch"] .only-pilot, [data-phase="pilot"] .only-lunch { display: none !important; }
     .tabs { position: relative; display: flex; gap: .35rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: .3rem; margin-bottom: 1.6rem; }
     .tabs::before { content: ""; position: absolute; top: .3rem; bottom: .3rem; left: .3rem; width: calc((100% - .6rem - .35rem) / 2); border-radius: 999px; background: var(--navy); transition: transform .35s var(--ease); }
     .tabs.on-meet::before { transform: translateX(calc(100% + .35rem)); }
@@ -464,7 +500,7 @@
       </a>
       <div class="header-right">
         <nav class="nav" id="siteNav" aria-label="Page sections">
-          <a class="link" href="#discovery">Discovery Lunch</a>
+          <a class="link" href="#discovery"><span class="only-lunch">Discovery Lunch</span><span class="only-pilot">Pilot Forum</span></a>
           <a class="link" href="#forum">The Forum</a>
           <a class="link" href="#leader">Your Facilitator</a>
           <a class="link" href="#questions">Questions</a>
@@ -485,22 +521,33 @@
       </svg>
       <div class="wrap on-dark">
         <div>
-          <p class="eyebrow badge">Iron Forums Houston<span class="soon"> · Coming soon</span></p>
+          <p class="eyebrow badge">Iron Forums Houston<span class="soon only-lunch"> · Coming soon</span><span class="soon only-pilot"> · Pilot Forum Dec 10</span></p>
           <h1>You don't have to <em>lead alone.</em></h1>
           <p class="lede">A community in Houston for <strong>kingdom-minded small business owners who get what you carry.</strong></p>
           <p class="lede">Men and women running real companies, growing in faith, family, and business, together, with people who won't let you coast.</p>
           <div class="cta-row">
-            <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →">Be Our Guest at the Discovery Lunch →</a>
+            <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →" data-live-pilot="Be Our Guest at the Pilot Forum →">Be Our Guest at the Discovery Lunch →</a>
             <a class="btn btn-ghost-light" href="#questions">Ask a question</a>
           </div>
         </div>
-        <aside class="event-card" aria-label="Discovery Lunch details">
+        <aside class="event-card only-lunch" aria-label="Discovery Lunch details">
           <p class="tag">Start here · Discovery Lunch</p>
           <p class="date">Tuesday,<br>November 17</p>
           <ul>
             <li><b>Time</b><span>11:30 AM – 1:00 PM</span></li>
             <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
             <li><b>Cost</b><span>Complimentary · Lunch provided</span></li>
+          </ul>
+          <a class="btn btn-navy" style="width:100%" href="#discovery">See the details →</a>
+        </aside>
+        <aside class="event-card only-pilot" aria-label="Pilot Forum details">
+          <p class="tag">Start here · Pilot Forum</p>
+          <p class="date">Thursday,<br>December 10</p>
+          <ul>
+            <li><b>Time</b><span>8:00 – 11:00 AM</span></li>
+            <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
+            <li><b>Cost</b><span>Complimentary · Registration required</span></li>
+            <li><b>Breakfast</b><span>Provided</span></li>
           </ul>
           <a class="btn btn-navy" style="width:100%" href="#discovery">See the details →</a>
         </aside>
@@ -585,10 +632,20 @@
       </div>
     </section>
 
+    <!-- VIDEOS: appears only after the switch (Pilot Forum phase); filled from the VIDEOS list in the script -->
+    <section class="section videos only-pilot" id="videos" aria-labelledby="videosHeading" hidden>
+      <div class="wrap">
+        <p class="eyebrow">See it first</p>
+        <h2 id="videosHeading">See what it's like.</h2>
+        <p class="lede">A short look at what happens in the room.</p>
+        <div class="video-grid"></div>
+      </div>
+    </section>
+
     <!-- DISCOVERY LUNCH -->
     <section class="section discovery on-dark" id="discovery">
       <div class="wrap">
-        <div class="grid">
+        <div class="grid only-lunch">
           <div>
             <p class="eyebrow">Start here</p>
             <h2>Be our guest at the Discovery Lunch.</h2>
@@ -611,13 +668,36 @@
             <p class="fineprint"><strong>Registering helps us order the right amount of food.</strong> Parking details are sent with your registration confirmation.</p>
           </div>
         </div>
+        <div class="grid only-pilot">
+          <div>
+            <p class="eyebrow">Start here</p>
+            <h2>Experience what makes a Forum transformational.</h2>
+            <p class="lede muted">The Pilot Forum isn't a full Forum. It's a morning that lets you experience the most important pieces of what makes a Forum a transformational community, ahead of the monthly Forums that begin January 14.</p>
+            <p class="lede muted">The guidance you need is already in the room. <strong>You just need to take your seat.</strong></p>
+            <p class="lede muted"><strong>No pitch. No pressure.</strong> Just an honest morning, so you can decide if this is where you want to grow.</p>
+            <div class="cta-row">
+              <a class="btn btn-gold" href="#register" data-register data-live="Register for the Pilot Forum →" data-live-pilot="Register for the Pilot Forum →">Register for the Pilot Forum →</a>
+              <button class="btn btn-ghost-light" type="button" id="addToCalPilot">Add to calendar</button>
+            </div>
+          </div>
+          <div>
+            <ul class="details">
+              <li><b>Date</b><span>Thursday, December 10, 2026</span></li>
+              <li><b>Time</b><span>8:00 – 11:00 AM</span></li>
+              <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
+              <li><b>Breakfast</b><span>Provided</span></li>
+              <li><b>Cost</b><span>Complimentary</span></li>
+            </ul>
+            <p class="fineprint"><strong>Registration is required</strong> so we can save your seat. Parking instructions are in the questions below.</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- REGISTER -->
     <section class="section register" id="register" aria-labelledby="regHeading">
       <div class="wrap">
-        <div class="grid">
+        <div class="grid only-lunch">
           <div>
             <p class="eyebrow">Save your seat</p>
             <h2 id="regHeading">Register for the Discovery Lunch.</h2>
@@ -671,6 +751,25 @@
             </div>
           </div>
         </div>
+        <div class="grid only-pilot">
+          <div>
+            <p class="eyebrow">Save your seat</p>
+            <h2 id="regHeadingPilot">Register for the Pilot Forum.</h2>
+            <p class="lede">A free morning to experience the heart of a Forum. <strong>Registration is required</strong> so we can save your seat.</p>
+            <ul class="reg-facts">
+              <li><b>When</b><span>Thursday, December 10, 2026<br>8:00 – 11:00 AM</span></li>
+              <li><b>Where</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
+              <li><b>Breakfast</b><span>Provided</span></li>
+              <li><b>Cost</b><span>Complimentary</span></li>
+            </ul>
+          </div>
+          <div class="reg-card">
+            <h3>Save my seat</h3>
+            <p>Registration takes about a minute and opens in a new tab on the Iron Forums site.</p>
+            <a class="btn btn-gold" style="width:100%" href="#register" data-register data-live="Register for the Pilot Forum →" data-live-pilot="Register for the Pilot Forum →">Register for the Pilot Forum →</a>
+            <p class="reg-aside">Can't make December 10? Use the question form below to be notified when registration opens for the January 14 kickoff.</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -684,7 +783,7 @@
         <p class="lede">You don't have to wait until January to find out if it's for you. Come see it, experience it, and decide before we launch.</p>
 
         <div class="timeline">
-          <div class="stop">
+          <div class="stop only-lunch">
             <p class="when">Nov 17</p>
             <h3>Discovery Lunch</h3>
             <p>Tuesday<br>11:30 AM – 1:00 PM<br>Meet the room. Free.</p>
@@ -692,7 +791,7 @@
           <div class="stop">
             <p class="when">Dec 10</p>
             <h3>Pilot Forum</h3>
-            <p>Thursday<br>8:00 – 11:00 AM<br>A first look at the real thing, before we launch.</p>
+            <p>Thursday<br>8:00 – 11:00 AM<br>Experience the heart of a Forum, before our monthly Forums begin.</p>
           </div>
           <div class="stop">
             <p class="when">Jan 14</p>
@@ -780,16 +879,42 @@
           <div class="faq">
             <p class="eyebrow">Questions</p>
             <h2>Not ready to register? Ask away.</h2>
+            <div class="faq-list">
+            <!-- Pilot Forum questions (shown after Nov 17, 11:45 AM) -->
+            <details class="only-pilot">
+              <summary>What is the Pilot Forum?</summary>
+              <p>The Pilot Forum isn't a full Forum. It's a morning that lets you experience the most important pieces of what makes a Forum a transformational community, ahead of the monthly Forums that begin January 14. You'll see for yourself whether it's where you want to grow.</p>
+            </details>
+            <details class="only-pilot">
+              <summary>What does the Pilot Forum cost?</summary>
+              <p>Nothing. The Pilot Forum is free, and breakfast is on us. Registration is required so we can save your seat.</p>
+            </details>
+            <details class="only-pilot">
+              <summary>Where do we meet, and what about parking?</summary>
+              <p>Kurio Collective @ The Cannon, 1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002.</p>
+              <ol>
+                <li>Once you arrive at 1801 Main St., enter the parking garage (Amegy Bank Parking Garage) on the Fannin Street side.</li>
+                <li>Grab a ticket, then park on the 3rd floor or higher.</li>
+                <li>Bring your ticket with you, then take the parking elevator down to the first floor.</li>
+                <li>When you come out, walk across the grass to the building with the Cafe.</li>
+                <li>Take the elevator to the 11th floor and go to The Exchange Room.</li>
+                <li>Make sure to pick up your voucher for free parking!!</li>
+              </ol>
+            </details>
+            <details class="only-pilot">
+              <summary>I can't make December 10. What now?</summary>
+              <p>Use the form and check the box to be notified. We'll email you when registration opens for the January 14 kickoff.</p>
+            </details>
             <!-- Discovery Lunch questions: remove these three after November 17 -->
-            <details>
+            <details class="only-lunch">
               <summary>What does the Discovery Lunch cost?</summary>
               <p>Nothing. Lunch is on us. Seats are limited, and registering helps us order the right amount of food.</p>
             </details>
-            <details>
+            <details class="only-lunch">
               <summary>Where do we meet, and what about parking?</summary>
               <p>Kurio Collective @ The Cannon, 1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002. We'll send parking instructions with your registration confirmation.</p>
             </details>
-            <details>
+            <details class="only-lunch">
               <summary>I can't make November 17. What now?</summary>
               <p>Use the form and check the box to be notified. We'll email you when registration opens for the Pilot Forum on December 10 and the January 14 kickoff.</p>
             </details>
@@ -816,6 +941,7 @@
               <summary>How do you define "small business"?</summary>
               <p>We define a small business as a company with 2 to 50 employees. That's not a hard-and-fast rule, and we look at each owner case by case. Why a company is small doesn't matter. Maybe it's brand new, maybe it's small by design, maybe it's something else entirely. If you carry the weight of the company, we'd love to talk about whether this community fits.</p>
             </details>
+            </div>
             <p class="talk"><a href="#meet" data-open-tab="meet">Prefer to talk it through? Book time with Heath →</a></p>
           </div>
 
@@ -843,7 +969,7 @@
               </div>
               <label class="check" for="ifNotify">
                 <input type="checkbox" id="ifNotify" checked />
-                <span>Email me when registration opens for the Pilot Forum and the January kickoff.</span>
+                <span><span class="only-lunch">Email me when registration opens for the Pilot Forum and the January kickoff.</span><span class="only-pilot">Email me when registration opens for the January kickoff.</span></span>
               </label>
               <div class="hp" aria-hidden="true">
                 <label for="ifNote">Leave this field blank</label>
@@ -955,12 +1081,14 @@
   <script>
     /* ──────────────────────────────────────────────
        REGISTRATION
-       Until the Discovery Lunch, every "register" button scrolls to the
-       registration form on this page (#register). After November 17, paste
-       the Iron Forums registration form link between the quotes below: the
-       buttons then open that link in a new tab and the in-page form hides.
+       Before the switch (the Discovery Lunch) every "register" button scrolls
+       to the registration form on this page (#register). After the switch,
+       the buttons open the Iron Forums registration form for the Pilot Forum
+       in a new tab. Paste that link between the quotes below.
        ────────────────────────────────────────────── */
-    const REGISTRATION_URL = "";
+    const PHASE = document.documentElement.dataset.phase;
+    const PILOT_REGISTRATION_URL = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OL5XF-3ZAE-p6-8XcsodoNQYOCCfVQ5EjwHskJ0V87VUMEJRWkNBUDFHNzA4SFdEM1FFN1pFMlpHUi4u";
+    const REGISTRATION_URL = PHASE === 'pilot' ? PILOT_REGISTRATION_URL : "";
 
     const regButtons = document.querySelectorAll('[data-register]');
     regButtons.forEach((el) => {
@@ -971,9 +1099,9 @@
       } else {
         el.href = '#register';
       }
-      el.textContent = el.dataset.live;
+      el.textContent = (PHASE === 'pilot' && el.dataset.livePilot) || el.dataset.live;
     });
-    if (REGISTRATION_URL) document.getElementById('register').hidden = true;
+    document.getElementById('register').setAttribute('aria-labelledby', PHASE === 'pilot' ? 'regHeadingPilot' : 'regHeading');
 
     /* FAQ: one answer open at a time, animated. Opening a question closes
        the previous one at the same moment; while both move, the question you
@@ -1026,6 +1154,52 @@
       });
     });
 
+    /* Overview videos. Add one entry per video: { id: 'YOUTUBE_VIDEO_ID', title: 'Title shown on the cover', thumb: 'optional path to a cover photo' }.
+       The section stays hidden until there is at least one.
+       The YouTube player is on the page from the start, with a branded cover on top that lets clicks pass
+       through, so the first click lands on YouTube's own play button and plays with sound in any browser.
+       The cover fades away as soon as the video starts. */
+    const VIDEOS = [{ id: '3G120Oc4JsU', title: 'What is Iron Forums?', thumb: 'iron-forums/promo-video-thumbnail.jpg' }];
+    (function () {
+      const section = document.getElementById('videos');
+      if (!VIDEOS.length) return;
+      const grid = section.querySelector('.video-grid');
+      grid.classList.toggle('one', VIDEOS.length === 1);
+      const players = [];
+      VIDEOS.forEach((v) => {
+        const box = document.createElement('div');
+        box.className = 'video';
+        const frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+        frame.title = v.title;
+        frame.loading = 'lazy';
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        const cover = document.createElement('div');
+        cover.className = 'video-cover';
+        cover.setAttribute('aria-hidden', 'true');
+        cover.innerHTML = '<img class="video-thumb" alt="" width="1280" height="720" /><span class="video-play"></span><span class="video-title"></span>';
+        cover.querySelector('.video-thumb').src = v.thumb || ('https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg');
+        cover.querySelector('.video-title').textContent = v.title;
+        box.append(frame, cover);
+        grid.appendChild(box);
+        players.push({ frame, hide: () => box.classList.add('playing') });
+      });
+      // Two ways to notice the video has started, so the cover can never get stuck:
+      // 1) clicking into the player moves focus into the iframe
+      window.addEventListener('blur', () => setTimeout(() => {
+        players.forEach((p) => { if (document.activeElement === p.frame) p.hide(); });
+      }, 0));
+      // 2) YouTube's own "now playing" signal
+      window.onYouTubeIframeAPIReady = () => {
+        players.forEach((p) => new YT.Player(p.frame, { events: { onStateChange: (e) => { if (e.data === 1 || e.data === 3) p.hide(); } } }));
+      };
+      const api = document.createElement('script');
+      api.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(api);
+      section.hidden = false;
+    })();
+
     /* Phone menu: opens under the header, closes on a link tap, Escape,
        or a tap outside. */
     const menuBtn = document.getElementById('menuBtn');
@@ -1057,23 +1231,37 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    /* Add to calendar (.ics) — times in UTC so no timezone block is needed.
-       Nov 17, 2026 is Central Standard Time (UTC−6): 11:30 AM = 17:30Z. */
-    document.getElementById('addToCal').addEventListener('click', () => {
+    /* Add to calendar (.ics). Times are in UTC so no timezone block is needed.
+       Nov 17 and Dec 10, 2026 are Central Standard Time (UTC−6). */
+    const CAL_LUNCH = {
+      name: 'Discovery Lunch', uid: 'discovery-lunch-20261117@ironforums-houston',
+      start: '20261117T173000Z', end: '20261117T190000Z',
+      summary: 'Iron Forums Houston — Discovery Lunch',
+      description: 'A complimentary lunch for kingdom-minded small business owners. Meet your Forum Facilitator\\, hear how a Forum works\\, and decide whether this is your next community. Parking details come with your registration confirmation.',
+      file: 'iron-forums-houston-discovery-lunch.ics'
+    };
+    const CAL_PILOT = {
+      name: 'Pilot Forum', uid: 'pilot-forum-20261210@ironforums-houston',
+      start: '20261210T140000Z', end: '20261210T170000Z',
+      summary: 'Iron Forums Houston — Pilot Forum',
+      description: 'A first look at a real Iron Forum, before we launch. Free\\, registration required.',
+      file: 'iron-forums-houston-pilot-forum.ics'
+    };
+    function downloadCalendar(ev) {
       const lines = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//Iron Forums Houston//Discovery Lunch//EN',
+        'PRODID:-//Iron Forums Houston//' + ev.name + '//EN',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        'UID:discovery-lunch-20261117@ironforums-houston',
+        'UID:' + ev.uid,
         'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''),
-        'DTSTART:20261117T173000Z',
-        'DTEND:20261117T190000Z',
-        'SUMMARY:Iron Forums Houston — Discovery Lunch',
+        'DTSTART:' + ev.start,
+        'DTEND:' + ev.end,
+        'SUMMARY:' + ev.summary,
         'LOCATION:Kurio Collective @ The Cannon\\, 1801 Main St.\\, 11th Floor\\, Houston\\, TX 77002',
-        'DESCRIPTION:A complimentary lunch for kingdom-minded small business owners. Meet your Forum Facilitator\\, hear how a Forum works\\, and decide whether this is your next community. Parking details come with your registration confirmation.',
+        'DESCRIPTION:' + ev.description,
         'END:VEVENT',
         'END:VCALENDAR'
       ];
@@ -1081,22 +1269,30 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'iron-forums-houston-discovery-lunch.ics';
+      a.download = ev.file;
       document.body.appendChild(a);
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-    });
+    }
+    document.getElementById('addToCal').addEventListener('click', () => downloadCalendar(CAL_LUNCH));
+    document.getElementById('addToCalPilot').addEventListener('click', () => downloadCalendar(CAL_PILOT));
 
     /* Invitations. Built on Iron Forums' own language (ironforums.org), made specific to Houston.
        The Discovery Lunch sentence in each one goes stale after November 17: remove it then. */
     // The short address (see netlify.toml) sends people straight to the registration form.
     const pageUrl = location.origin + '/ifhouston';
-    const TEXT_INVITE =
+    const TEXT_INVITE_LUNCH =
       "Hey [Name], I thought of you. Iron Forums is coming to Houston: Kingdom-minded small business owners gathering once a month to connect, sharpen, and grow in faith, family, and business. There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works. Can we connect so I can share more?\n\nDetails: " + pageUrl;
     const EMAIL_SUBJECT = "Iron Forums is coming to Houston";
-    const EMAIL_BODY =
+    const EMAIL_BODY_LUNCH =
       "Hey [Name],\n\nWhen was the last time someone asked how you were really doing in your business, at home, in your marriage, in your faith?\n\nThe weight of all of it is connected, and it is hard to carry alone. That's why Iron Forums exists: to bring Christian small business owners around a trusted table to speak honestly about all of it, grow in every area that matters, and discover what God is doing through it all.\n\nIt's coming to Houston. Once a month, members step away from the whirlwind for a half-day Forum to Connect, Sharpen, and Grow together in faith, family, and business. We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), so you can see it for yourself. No pressure.\n\nI thought of you. Can we connect so I can share more?\n\nHere's the Houston page: " + pageUrl;
+
+    // After the switch the invitations point to the Pilot Forum instead of the Discovery Lunch.
+    const TEXT_INVITE_PILOT = TEXT_INVITE_LUNCH.replace('There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works.', 'There\u2019s a free Pilot Forum on Dec 10 if you want a real taste of what it\u2019s like.');
+    const EMAIL_BODY_PILOT = EMAIL_BODY_LUNCH.replace(/We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St\., 11th Floor \(Kurio Collective @ The Cannon\), so you can see it for yourself\. No pressure\./, 'Before our monthly Forums begin in January, there\'s a free Pilot Forum on Thursday, December 10, 8:00 to 11:00 AM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), a morning to experience the most important pieces of what makes a Forum transformational. No pressure.');
+    const TEXT_INVITE = PHASE === 'pilot' ? TEXT_INVITE_PILOT : TEXT_INVITE_LUNCH;
+    const EMAIL_BODY = PHASE === 'pilot' ? EMAIL_BODY_PILOT : EMAIL_BODY_LUNCH;
 
     const copiedMsg = document.getElementById('copiedMsg');
     async function copy(text, label) {

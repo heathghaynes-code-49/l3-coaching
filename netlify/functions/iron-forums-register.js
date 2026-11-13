@@ -21,6 +21,8 @@ const CONFIRM_FROM = "Heath Haynes <connect@l3leadershipcoaching.com>";
 const SHEET_VIEW_URL = "https://docs.google.com/spreadsheets/d/19qE7wVJd7mAnjNRcGstj_z1ZHsE7rMXgjkGgi_wUVSU/edit";
 const PAGE_URL = "https://l3leadershipcoaching.com/ironforums-houston";
 // A short address that redirects to the registration form (see netlify.toml).
+// Tuesday, Nov 17, 2026 at 11:45 AM Central.
+const LUNCH_FORM_CLOSES_AT = Date.parse("2026-11-17T11:45:00-06:00");
 const SHORT_URL = "https://l3leadershipcoaching.com/ifhouston";
 // A hosted copy of the calendar event, for the Apple Calendar button.
 const ICS_FILE_URL = "https://l3leadershipcoaching.com/iron-forums/discovery-lunch.ics";
@@ -342,6 +344,12 @@ async function addToSheet(p) {
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
+  }
+
+  // The Discovery Lunch page switches to the Pilot Forum at this moment (see the clock at the top of
+  // ironforums-houston.html), so this form stops taking lunch registrations then.
+  if (Date.now() >= LUNCH_FORM_CLOSES_AT) {
+    return { statusCode: 410, body: JSON.stringify({ error: "Registration for the Discovery Lunch has closed." }) };
   }
 
   let raw;
