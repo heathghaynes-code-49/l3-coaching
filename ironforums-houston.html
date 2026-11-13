@@ -361,19 +361,19 @@
     .videos h2 { max-width: 20ch; }
     .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.4rem; margin-top: 2.4rem; }
     .video-grid.one { grid-template-columns: minmax(0, 820px); }
-    .video { position: relative; display: grid; align-content: center; justify-items: center; gap: clamp(.7rem, 2.4vw, 1.4rem); width: 100%; aspect-ratio: 16 / 9; padding: 0 0 2.2rem; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; color: var(--navy); text-align: left; cursor: pointer; }
+    .video { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #000; }
+    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    /* The branded cover. pointer-events: none means a click goes straight through to YouTube's own play button. */
+    .video-cover { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: clamp(.7rem, 2.4vw, 1.4rem); padding: 0 0 2.2rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); color: var(--navy); pointer-events: none; transition: opacity .3s ease, visibility 0s linear .3s; }
+    .video.playing .video-cover { opacity: 0; visibility: hidden; }
     .video-poster { display: flex; align-items: center; }
     .video-poster img { height: clamp(52px, 14vw, 150px); width: auto; }
     .video-poster .loc-rule { height: clamp(28px, 6vw, 56px); margin: 0 clamp(10px, 2vw, 22px); }
     .video-poster .loc-name { font-size: clamp(11px, 2.4vw, 22px); }
     .video-poster .loc-name small { font-size: clamp(.6rem, 1.6vw, .95rem); }
-    .video-play { width: clamp(46px, 8vw, 70px); height: clamp(46px, 8vw, 70px); border-radius: 50%; background: var(--gold); display: grid; place-items: center; transition: transform .2s ease; }
+    .video-play { width: clamp(46px, 8vw, 70px); height: clamp(46px, 8vw, 70px); border-radius: 50%; background: var(--gold); display: grid; place-items: center; }
     .video-play::before { content: ""; margin-left: 5px; border-style: solid; border-width: clamp(8px, 1.5vw, 12px) 0 clamp(8px, 1.5vw, 12px) clamp(13px, 2.4vw, 20px); border-color: transparent transparent transparent var(--navy-deep); }
-    @media (hover: hover) { .video:hover .video-play { transform: scale(1.07); } }
-    .video:active .video-play { transform: scale(.95); }
     .video-title { position: absolute; left: 0; right: 0; bottom: 0; padding: .7rem 1.2rem; text-align: center; font: 700 clamp(.9rem, 1.8vw, 1.15rem)/1.2 'League Spartan', system-ui, sans-serif; letter-spacing: -.01em; color: var(--navy); }
-    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-    .video.playing { display: block; padding: 0; background: #000; border: 0; cursor: default; }
     @media (max-width: 860px) { .video-grid, .video-grid.one { grid-template-columns: minmax(0,1fr); } }
 
     /* Discovery Lunch registration */
@@ -674,10 +674,10 @@
         <div class="grid only-pilot">
           <div>
             <p class="eyebrow">Start here</p>
-            <h2>Be our guest at the Pilot Forum.</h2>
-            <p class="lede muted">Come experience a Forum for yourself, before we launch. Spend a morning in honest community, meet your Forum Facilitator, and see whether this is where you want to grow.</p>
+            <h2>Experience a Forum before we launch.</h2>
+            <p class="lede muted">The Pilot Forum is a real Forum morning, a preview of the monthly Forums that begin January 14. Meet your Forum Facilitator and experience what it's like to connect, sharpen, and grow with other Houston owners.</p>
             <p class="lede muted">The guidance you need is already in the room. <strong>You just need to take your seat.</strong></p>
-            <p class="lede muted"><strong>No pitch. No pressure.</strong> Just an honest morning with other Houston owners.</p>
+            <p class="lede muted"><strong>No pitch. No pressure.</strong> Just an honest morning, so you can decide if this is where you want to grow.</p>
             <div class="cta-row">
               <a class="btn btn-gold" href="#register" data-register data-live="Register for the Pilot Forum →" data-live-pilot="Register for the Pilot Forum →">Register for the Pilot Forum →</a>
               <button class="btn btn-ghost-light" type="button" id="addToCalPilot">Add to calendar</button>
@@ -758,7 +758,7 @@
           <div>
             <p class="eyebrow">Save your seat</p>
             <h2 id="regHeadingPilot">Register for the Pilot Forum.</h2>
-            <p class="lede">A free morning in honest community. <strong>Registration is required</strong> so we can save your seat.</p>
+            <p class="lede">A real Forum morning, free to attend. <strong>Registration is required</strong> so we can save your seat.</p>
             <ul class="reg-facts">
               <li><b>When</b><span>Thursday, December 10, 2026<br>8:00 – 11:00 AM</span></li>
               <li><b>Where</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
@@ -794,7 +794,7 @@
           <div class="stop">
             <p class="when">Dec 10</p>
             <h3>Pilot Forum</h3>
-            <p>Thursday<br>8:00 – 11:00 AM<br>A first look at the real thing, before we launch.</p>
+            <p>Thursday<br>8:00 – 11:00 AM<br>A real Forum morning, before our monthly Forums begin.</p>
           </div>
           <div class="stop">
             <p class="when">Jan 14</p>
@@ -884,6 +884,10 @@
             <h2>Not ready to register? Ask away.</h2>
             <div class="faq-list">
             <!-- Pilot Forum questions (shown after Nov 17, 11:45 AM) -->
+            <details class="only-pilot">
+              <summary>What is the Pilot Forum?</summary>
+              <p>The Pilot Forum is a real Forum morning, held before our monthly Forums begin on January 14. You'll experience how a Forum works firsthand and see whether it's where you want to grow.</p>
+            </details>
             <details class="only-pilot">
               <summary>What does the Pilot Forum cost?</summary>
               <p>Nothing. The Pilot Forum is free, and breakfast is on us. Registration is required so we can save your seat.</p>
@@ -1153,34 +1157,48 @@
       });
     });
 
-    /* Overview videos. Add one entry per video: { id: 'YOUTUBE_VIDEO_ID', title: 'Title shown on the card' }.
-       The section stays hidden until there is at least one. */
+    /* Overview videos. Add one entry per video: { id: 'YOUTUBE_VIDEO_ID', title: 'Title shown on the cover' }.
+       The section stays hidden until there is at least one.
+       The YouTube player is on the page from the start, with a branded cover on top that lets clicks pass
+       through, so the first click lands on YouTube's own play button and plays with sound in any browser.
+       The cover fades away as soon as the video starts. */
     const VIDEOS = [{ id: '3G120Oc4JsU', title: 'What is Iron Forums?' }];
     (function () {
       const section = document.getElementById('videos');
       if (!VIDEOS.length) return;
       const grid = section.querySelector('.video-grid');
       grid.classList.toggle('one', VIDEOS.length === 1);
+      const players = [];
       VIDEOS.forEach((v) => {
-        const card = document.createElement('button');
-        card.type = 'button';
-        card.className = 'video';
-        card.setAttribute('aria-label', 'Play video: ' + v.title);
-        card.innerHTML = '<span class="video-poster" aria-hidden="true"><img src="iron-forums/iron-forums-logo.png" alt="" width="900" height="518" /><span class="loc"><span class="loc-rule"></span><span class="loc-name">Houston<small>Texas</small></span></span></span><span class="video-play" aria-hidden="true"></span><span class="video-title"></span>';
-        card.querySelector('.video-title').textContent = v.title;
-        card.addEventListener('click', () => {
-          const box = document.createElement('div');
-          box.className = 'video playing';
-          const frame = document.createElement('iframe');
-          frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?autoplay=1&rel=0';
-          frame.title = v.title;
-          frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-          frame.allowFullscreen = true;
-          box.appendChild(frame);
-          card.replaceWith(box);
-        });
-        grid.appendChild(card);
+        const box = document.createElement('div');
+        box.className = 'video';
+        const frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+        frame.title = v.title;
+        frame.loading = 'lazy';
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        const cover = document.createElement('div');
+        cover.className = 'video-cover';
+        cover.setAttribute('aria-hidden', 'true');
+        cover.innerHTML = '<span class="video-poster"><img src="iron-forums/iron-forums-logo.png" alt="" width="900" height="518" /><span class="loc"><span class="loc-rule"></span><span class="loc-name">Houston<small>Texas</small></span></span></span><span class="video-play"></span><span class="video-title"></span>';
+        cover.querySelector('.video-title').textContent = v.title;
+        box.append(frame, cover);
+        grid.appendChild(box);
+        players.push({ frame, hide: () => box.classList.add('playing') });
       });
+      // Two ways to notice the video has started, so the cover can never get stuck:
+      // 1) clicking into the player moves focus into the iframe
+      window.addEventListener('blur', () => setTimeout(() => {
+        players.forEach((p) => { if (document.activeElement === p.frame) p.hide(); });
+      }, 0));
+      // 2) YouTube's own "now playing" signal
+      window.onYouTubeIframeAPIReady = () => {
+        players.forEach((p) => new YT.Player(p.frame, { events: { onStateChange: (e) => { if (e.data === 1 || e.data === 3) p.hide(); } } }));
+      };
+      const api = document.createElement('script');
+      api.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(api);
       section.hidden = false;
     })();
 
@@ -1273,8 +1291,8 @@
       "Hey [Name],\n\nWhen was the last time someone asked how you were really doing in your business, at home, in your marriage, in your faith?\n\nThe weight of all of it is connected, and it is hard to carry alone. That's why Iron Forums exists: to bring Christian small business owners around a trusted table to speak honestly about all of it, grow in every area that matters, and discover what God is doing through it all.\n\nIt's coming to Houston. Once a month, members step away from the whirlwind for a half-day Forum to Connect, Sharpen, and Grow together in faith, family, and business. We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), so you can see it for yourself. No pressure.\n\nI thought of you. Can we connect so I can share more?\n\nHere's the Houston page: " + pageUrl;
 
     // After the switch the invitations point to the Pilot Forum instead of the Discovery Lunch.
-    const TEXT_INVITE_PILOT = TEXT_INVITE_LUNCH.replace('free Discovery Lunch on Nov 17', 'free Pilot Forum on Dec 10');
-    const EMAIL_BODY_PILOT = EMAIL_BODY_LUNCH.replace('a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM', 'a free Pilot Forum on Thursday, December 10, 8:00 to 11:00 AM');
+    const TEXT_INVITE_PILOT = TEXT_INVITE_LUNCH.replace('There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works.', 'There\u2019s a free Pilot Forum on Dec 10 if you want to experience a Forum firsthand.');
+    const EMAIL_BODY_PILOT = EMAIL_BODY_LUNCH.replace(/We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St\., 11th Floor \(Kurio Collective @ The Cannon\), so you can see it for yourself\. No pressure\./, 'Before our monthly Forums begin in January, there\'s a free Pilot Forum on Thursday, December 10, 8:00 to 11:00 AM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), so you can experience one firsthand. No pressure.');
     const TEXT_INVITE = PHASE === 'pilot' ? TEXT_INVITE_PILOT : TEXT_INVITE_LUNCH;
     const EMAIL_BODY = PHASE === 'pilot' ? EMAIL_BODY_PILOT : EMAIL_BODY_LUNCH;
 
