@@ -544,7 +544,7 @@
             <li><b>Time</b><span>8:00 – 11:00 AM</span></li>
             <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
             <li><b>Cost</b><span>Complimentary · Registration required</span></li>
-            <li><b>Food</b><span>Refreshments provided</span></li>
+            <li><b>Breakfast</b><span>Provided</span></li>
           </ul>
           <a class="btn btn-navy" style="width:100%" href="#discovery">See the details →</a>
         </aside>
@@ -629,11 +629,11 @@
       </div>
     </section>
 
-    <!-- VIDEOS: filled from the VIDEOS list in the script; stays hidden until there is at least one -->
-    <section class="section videos" id="videos" aria-labelledby="videosHeading" hidden>
+    <!-- VIDEOS: appears only after the switch (Pilot Forum phase); filled from the VIDEOS list in the script -->
+    <section class="section videos only-pilot" id="videos" aria-labelledby="videosHeading" hidden>
       <div class="wrap">
         <p class="eyebrow">See it first</p>
-        <h2 id="videosHeading">What is Iron Forums?</h2>
+        <h2 id="videosHeading">See what it's like.</h2>
         <p class="lede">A short look at what happens in the room.</p>
         <div class="video-grid"></div>
       </div>
@@ -682,7 +682,7 @@
               <li><b>Date</b><span>Thursday, December 10, 2026</span></li>
               <li><b>Time</b><span>8:00 – 11:00 AM</span></li>
               <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
-              <li><b>Food</b><span>Refreshments provided</span></li>
+              <li><b>Breakfast</b><span>Provided</span></li>
               <li><b>Cost</b><span>Complimentary</span></li>
             </ul>
             <p class="fineprint"><strong>Registration is required</strong> so we can save your seat. Parking instructions are in the questions below.</p>
@@ -756,7 +756,7 @@
             <ul class="reg-facts">
               <li><b>When</b><span>Thursday, December 10, 2026<br>8:00 – 11:00 AM</span></li>
               <li><b>Where</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
-              <li><b>Food</b><span>Refreshments provided</span></li>
+              <li><b>Breakfast</b><span>Provided</span></li>
               <li><b>Cost</b><span>Complimentary</span></li>
             </ul>
           </div>
@@ -880,7 +880,7 @@
             <!-- Pilot Forum questions (shown after Nov 17, 11:45 AM) -->
             <details class="only-pilot">
               <summary>What does the Pilot Forum cost?</summary>
-              <p>Nothing. The Pilot Forum is free, and refreshments are on us. Registration is required so we can save your seat.</p>
+              <p>Nothing. The Pilot Forum is free, and breakfast is on us. Registration is required so we can save your seat.</p>
             </details>
             <details class="only-pilot">
               <summary>Where do we meet, and what about parking?</summary>
@@ -1080,7 +1080,7 @@
        in a new tab. Paste that link between the quotes below.
        ────────────────────────────────────────────── */
     const PHASE = document.documentElement.dataset.phase;
-    const PILOT_REGISTRATION_URL = "";
+    const PILOT_REGISTRATION_URL = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OL5XF-3ZAE-p6-8XcsodoNQYOCCfVQ5EjwHskJ0V87VUMEJRWkNBUDFHNzA4SFdEM1FFN1pFMlpHUi4u";
     const REGISTRATION_URL = PHASE === 'pilot' ? PILOT_REGISTRATION_URL : "";
 
     const regButtons = document.querySelectorAll('[data-register]');
@@ -1149,7 +1149,7 @@
 
     /* Overview videos. Add one entry per video: { id: 'YOUTUBE_VIDEO_ID', title: 'Title shown on the card' }.
        The section stays hidden until there is at least one. */
-    const VIDEOS = [];
+    const VIDEOS = [{ id: '3G120Oc4JsU', title: 'What is Iron Forums?' }];
     (function () {
       const section = document.getElementById('videos');
       if (!VIDEOS.length) return;
