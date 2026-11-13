@@ -363,17 +363,14 @@
     .video-grid.one { grid-template-columns: minmax(0, 820px); }
     .video { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #000; }
     .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-    /* The branded cover. pointer-events: none means a click goes straight through to YouTube's own play button. */
-    .video-cover { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: clamp(.7rem, 2.4vw, 1.4rem); padding: 0 0 2.2rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); color: var(--navy); pointer-events: none; transition: opacity .3s ease, visibility 0s linear .3s; }
+    /* The cover: the video's own photo. pointer-events: none means a click goes straight through to YouTube's own play button. */
+    .video-cover { position: absolute; inset: 0; overflow: hidden; border-radius: var(--radius); background: var(--navy-deep); pointer-events: none; transition: opacity .3s ease, visibility 0s linear .3s; }
     .video.playing .video-cover { opacity: 0; visibility: hidden; }
-    .video-poster { display: flex; align-items: center; }
-    .video-poster img { height: clamp(52px, 14vw, 150px); width: auto; }
-    .video-poster .loc-rule { height: clamp(28px, 6vw, 56px); margin: 0 clamp(10px, 2vw, 22px); }
-    .video-poster .loc-name { font-size: clamp(11px, 2.4vw, 22px); }
-    .video-poster .loc-name small { font-size: clamp(.6rem, 1.6vw, .95rem); }
-    .video-play { width: clamp(46px, 8vw, 70px); height: clamp(46px, 8vw, 70px); border-radius: 50%; background: var(--gold); display: grid; place-items: center; }
-    .video-play::before { content: ""; margin-left: 5px; border-style: solid; border-width: clamp(8px, 1.5vw, 12px) 0 clamp(8px, 1.5vw, 12px) clamp(13px, 2.4vw, 20px); border-color: transparent transparent transparent var(--navy-deep); }
-    .video-title { position: absolute; left: 0; right: 0; bottom: 0; padding: .7rem 1.2rem; text-align: center; font: 700 clamp(.9rem, 1.8vw, 1.15rem)/1.2 'League Spartan', system-ui, sans-serif; letter-spacing: -.01em; color: var(--navy); }
+    .video-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .video-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(3,36,79,.8), rgba(3,36,79,.04) 55%); }
+    .video-play { position: absolute; z-index: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); width: clamp(52px, 9vw, 78px); height: clamp(52px, 9vw, 78px); border-radius: 50%; background: var(--gold); display: grid; place-items: center; box-shadow: 0 10px 30px -10px rgba(0,0,0,.55); }
+    .video-play::before { content: ""; margin-left: 5px; border-style: solid; border-width: clamp(9px, 1.7vw, 14px) 0 clamp(9px, 1.7vw, 14px) clamp(15px, 2.7vw, 22px); border-color: transparent transparent transparent var(--navy-deep); }
+    .video-title { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; padding: 1rem 1.3rem; color: #fff; text-align: left; font: 700 clamp(1rem, 2.2vw, 1.45rem)/1.2 'League Spartan', system-ui, sans-serif; letter-spacing: -.01em; }
     @media (max-width: 860px) { .video-grid, .video-grid.one { grid-template-columns: minmax(0,1fr); } }
 
     /* Discovery Lunch registration */
@@ -1157,12 +1154,12 @@
       });
     });
 
-    /* Overview videos. Add one entry per video: { id: 'YOUTUBE_VIDEO_ID', title: 'Title shown on the cover' }.
+    /* Overview videos. Add one entry per video: { id: 'YOUTUBE_VIDEO_ID', title: 'Title shown on the cover', thumb: 'optional path to a cover photo' }.
        The section stays hidden until there is at least one.
        The YouTube player is on the page from the start, with a branded cover on top that lets clicks pass
        through, so the first click lands on YouTube's own play button and plays with sound in any browser.
        The cover fades away as soon as the video starts. */
-    const VIDEOS = [{ id: '3G120Oc4JsU', title: 'What is Iron Forums?' }];
+    const VIDEOS = [{ id: '3G120Oc4JsU', title: 'What is Iron Forums?', thumb: 'iron-forums/promo-video-thumbnail.jpg' }];
     (function () {
       const section = document.getElementById('videos');
       if (!VIDEOS.length) return;
@@ -1181,7 +1178,8 @@
         const cover = document.createElement('div');
         cover.className = 'video-cover';
         cover.setAttribute('aria-hidden', 'true');
-        cover.innerHTML = '<span class="video-poster"><img src="iron-forums/iron-forums-logo.png" alt="" width="900" height="518" /><span class="loc"><span class="loc-rule"></span><span class="loc-name">Houston<small>Texas</small></span></span></span><span class="video-play"></span><span class="video-title"></span>';
+        cover.innerHTML = '<img class="video-thumb" alt="" width="1280" height="720" /><span class="video-play"></span><span class="video-title"></span>';
+        cover.querySelector('.video-thumb').src = v.thumb || ('https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg');
         cover.querySelector('.video-title').textContent = v.title;
         box.append(frame, cover);
         grid.appendChild(box);
