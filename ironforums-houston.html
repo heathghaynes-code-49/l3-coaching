@@ -674,8 +674,8 @@
         <div class="grid only-pilot">
           <div>
             <p class="eyebrow">Start here</p>
-            <h2>Experience a Forum before we launch.</h2>
-            <p class="lede muted">The Pilot Forum is a real Forum morning, a preview of the monthly Forums that begin January 14. Meet your Forum Facilitator and experience what it's like to connect, sharpen, and grow with other Houston owners.</p>
+            <h2>Experience what makes a Forum transformational.</h2>
+            <p class="lede muted">The Pilot Forum isn't a full Forum. It's a morning that lets you experience the most important pieces of what makes a Forum a transformational community, ahead of the monthly Forums that begin January 14.</p>
             <p class="lede muted">The guidance you need is already in the room. <strong>You just need to take your seat.</strong></p>
             <p class="lede muted"><strong>No pitch. No pressure.</strong> Just an honest morning, so you can decide if this is where you want to grow.</p>
             <div class="cta-row">
@@ -758,7 +758,7 @@
           <div>
             <p class="eyebrow">Save your seat</p>
             <h2 id="regHeadingPilot">Register for the Pilot Forum.</h2>
-            <p class="lede">A real Forum morning, free to attend. <strong>Registration is required</strong> so we can save your seat.</p>
+            <p class="lede">A free morning to experience the heart of a Forum. <strong>Registration is required</strong> so we can save your seat.</p>
             <ul class="reg-facts">
               <li><b>When</b><span>Thursday, December 10, 2026<br>8:00 – 11:00 AM</span></li>
               <li><b>Where</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
@@ -794,7 +794,7 @@
           <div class="stop">
             <p class="when">Dec 10</p>
             <h3>Pilot Forum</h3>
-            <p>Thursday<br>8:00 – 11:00 AM<br>A real Forum morning, before our monthly Forums begin.</p>
+            <p>Thursday<br>8:00 – 11:00 AM<br>Experience the heart of a Forum, before our monthly Forums begin.</p>
           </div>
           <div class="stop">
             <p class="when">Jan 14</p>
@@ -886,7 +886,7 @@
             <!-- Pilot Forum questions (shown after Nov 17, 11:45 AM) -->
             <details class="only-pilot">
               <summary>What is the Pilot Forum?</summary>
-              <p>The Pilot Forum is a real Forum morning, held before our monthly Forums begin on January 14. You'll experience how a Forum works firsthand and see whether it's where you want to grow.</p>
+              <p>The Pilot Forum isn't a full Forum. It's a morning that lets you experience the most important pieces of what makes a Forum a transformational community, ahead of the monthly Forums that begin January 14. You'll see for yourself whether it's where you want to grow.</p>
             </details>
             <details class="only-pilot">
               <summary>What does the Pilot Forum cost?</summary>
@@ -1291,8 +1291,8 @@
       "Hey [Name],\n\nWhen was the last time someone asked how you were really doing in your business, at home, in your marriage, in your faith?\n\nThe weight of all of it is connected, and it is hard to carry alone. That's why Iron Forums exists: to bring Christian small business owners around a trusted table to speak honestly about all of it, grow in every area that matters, and discover what God is doing through it all.\n\nIt's coming to Houston. Once a month, members step away from the whirlwind for a half-day Forum to Connect, Sharpen, and Grow together in faith, family, and business. We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), so you can see it for yourself. No pressure.\n\nI thought of you. Can we connect so I can share more?\n\nHere's the Houston page: " + pageUrl;
 
     // After the switch the invitations point to the Pilot Forum instead of the Discovery Lunch.
-    const TEXT_INVITE_PILOT = TEXT_INVITE_LUNCH.replace('There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works.', 'There\u2019s a free Pilot Forum on Dec 10 if you want to experience a Forum firsthand.');
-    const EMAIL_BODY_PILOT = EMAIL_BODY_LUNCH.replace(/We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St\., 11th Floor \(Kurio Collective @ The Cannon\), so you can see it for yourself\. No pressure\./, 'Before our monthly Forums begin in January, there\'s a free Pilot Forum on Thursday, December 10, 8:00 to 11:00 AM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), so you can experience one firsthand. No pressure.');
+    const TEXT_INVITE_PILOT = TEXT_INVITE_LUNCH.replace('There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works.', 'There\u2019s a free Pilot Forum on Dec 10 if you want a real taste of what it\u2019s like.');
+    const EMAIL_BODY_PILOT = EMAIL_BODY_LUNCH.replace(/We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St\., 11th Floor \(Kurio Collective @ The Cannon\), so you can see it for yourself\. No pressure\./, 'Before our monthly Forums begin in January, there\'s a free Pilot Forum on Thursday, December 10, 8:00 to 11:00 AM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), a morning to experience the most important pieces of what makes a Forum transformational. No pressure.');
     const TEXT_INVITE = PHASE === 'pilot' ? TEXT_INVITE_PILOT : TEXT_INVITE_LUNCH;
     const EMAIL_BODY = PHASE === 'pilot' ? EMAIL_BODY_PILOT : EMAIL_BODY_LUNCH;
 
