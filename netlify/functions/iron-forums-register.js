@@ -197,7 +197,7 @@ function internalHtml(p, sheetWired) {
 
 const PERSONAL_PARAGRAPHS = (first) => [
   "It's Heath. I'm glad you're coming, because you don't have to lead alone. On December 8, you'll get a real taste of what that looks like.",
-  "Come hungry and come curious. The Pilot Forum isn't a full Forum, but it lets you experience the most important pieces of what makes one a transformational community, and decide for yourself if it's where you want to grow. I'm saving you a seat.",
+  "The Pilot Forum is a chance to experience how we Connect, Sharpen, and Grow together with other kingdom-minded small business owners. It's also how we all find out if this is the right community for you. And yes, we'll feed you. I'm saving you a seat, and I'd love for you to fill the one next to you with someone you'd want to share a table with.",
   "Everything you need is below, including exactly where to go. Seats are limited, so if you can't make it, please reply to this email and let me know so we can open your spot to someone else. And if you have a question before then, reply to that same email. It comes straight to me."
 ];
 
