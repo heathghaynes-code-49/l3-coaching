@@ -4,19 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#043370" />
-  <script>
-    /* THE SWITCH. Until Tuesday, Nov 17, 2026 at 11:45 AM Central the page is the Discovery Lunch page ("lunch").
-       After that moment every visitor sees the Pilot Forum page ("pilot"). It runs before the page paints, so
-       there is no flash. On localhost and Netlify preview links you can add ?phase=pilot or ?phase=lunch to
-       look at either version; that override is ignored on the live site. */
-    (function () {
-      var SWITCH_AT = Date.parse('2026-11-17T11:45:00-06:00');
-      var forced = /[?&]phase=(lunch|pilot)/.exec(location.search);
-      var testing = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^deploy-preview-/.test(location.hostname);
-      var phase = (testing && forced) ? forced[1] : (Date.now() >= SWITCH_AT ? 'pilot' : 'lunch');
-      document.documentElement.setAttribute('data-phase', phase);
-    })();
-  </script>
+  <script>document.documentElement.setAttribute('data-phase', 'pilot');</script>
   <title>Iron Forums Houston | A community for kingdom-minded small business owners</title>
   <meta name="description" content="Iron Forums is coming to Houston: a community for Christian small business owners to grow in faith, family, and business. Experience what makes a Forum transformational." />
   <link rel="canonical" href="https://l3leadershipcoaching.com/ironforums-houston" />
@@ -55,13 +43,11 @@
     "description": "A free morning for kingdom-minded small business owners to experience the most important pieces of what makes an Iron Forum a transformational community.",
     "location": {
       "@type": "Place",
-      "name": "Kurio Collective @ The Cannon, Discovery Green Room (RM 1304)",
+      "name": "Kurio Collective @ The Cannon",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "1801 Main St., 13th Floor",
         "addressLocality": "Houston",
         "addressRegion": "TX",
-        "postalCode": "77002",
         "addressCountry": "US"
       }
     },
@@ -260,7 +246,7 @@
     .csg p { color: var(--muted); font-size: .98rem; margin: 0; }
     @media (max-width: 860px) { .csg { grid-template-columns: 1fr; gap: 1.6rem; } }
 
-    /* Discovery lunch */
+    /* Pilot Forum section */
     .discovery { background: var(--navy); color: #fff; position: relative; overflow: hidden; }
     .discovery h2 { color: #fff; max-width: 16ch; }
     .discovery .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
@@ -373,7 +359,7 @@
     .video-title { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; padding: 1rem 1.3rem; color: #fff; text-align: left; font: 700 clamp(1rem, 2.2vw, 1.45rem)/1.2 'League Spartan', system-ui, sans-serif; letter-spacing: -.01em; }
     @media (max-width: 860px) { .video-grid, .video-grid.one { grid-template-columns: minmax(0,1fr); } }
 
-    /* Discovery Lunch registration */
+    /* Pilot Forum registration */
     .register { background: var(--paper); scroll-margin-top: 84px; }
     .register .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.05fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
     .register h2 { max-width: 14ch; }
@@ -405,7 +391,6 @@
 
     /* Tabs + scheduler (Connect with Heath) */
     [hidden] { display: none !important; }
-    [data-phase="lunch"] .only-pilot, [data-phase="pilot"] .only-lunch { display: none !important; }
     .tabs { position: relative; display: flex; gap: .35rem; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: .3rem; margin-bottom: 1.6rem; }
     .tabs::before { content: ""; position: absolute; top: .3rem; bottom: .3rem; left: .3rem; width: calc((100% - .6rem - .35rem) / 2); border-radius: 999px; background: var(--navy); transition: transform .35s var(--ease); }
     .tabs.on-meet::before { transform: translateX(calc(100% + .35rem)); }
@@ -500,7 +485,7 @@
       </a>
       <div class="header-right">
         <nav class="nav" id="siteNav" aria-label="Page sections">
-          <a class="link" href="#discovery"><span class="only-lunch">Discovery Lunch</span><span class="only-pilot">Pilot Forum</span></a>
+          <a class="link" href="#discovery">Pilot Forum</a>
           <a class="link" href="#forum">The Forum</a>
           <a class="link" href="#leader">Your Facilitator</a>
           <a class="link" href="#questions">Questions</a>
@@ -521,31 +506,21 @@
       </svg>
       <div class="wrap on-dark">
         <div>
-          <p class="eyebrow badge">Iron Forums Houston<span class="soon only-lunch"> · Coming soon</span><span class="soon only-pilot"> · Pilot Forum Dec 8</span></p>
+          <p class="eyebrow badge">Iron Forums Houston<span class="soon"> · Pilot Forum Dec 8</span></p>
           <h1>You don't have to <em>lead alone.</em></h1>
           <p class="lede">A community in Houston for <strong>kingdom-minded small business owners who get what you carry.</strong></p>
           <p class="lede">Men and women running real companies, growing in faith, family, and business, together, with people who won't let you coast.</p>
           <div class="cta-row">
-            <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Discovery Lunch →" data-live-pilot="Be Our Guest at the Pilot Forum →">Be Our Guest at the Discovery Lunch →</a>
+            <a class="btn btn-gold" href="#discovery" data-register data-live="Be Our Guest at the Pilot Forum →">Be Our Guest at the Pilot Forum →</a>
             <a class="btn btn-ghost-light" href="#questions">Ask a question</a>
           </div>
         </div>
-        <aside class="event-card only-lunch" aria-label="Discovery Lunch details">
-          <p class="tag">Start here · Discovery Lunch</p>
-          <p class="date">Tuesday,<br>November 17</p>
-          <ul>
-            <li><b>Time</b><span>11:30 AM – 1:00 PM</span></li>
-            <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
-            <li><b>Cost</b><span>Complimentary · Lunch provided</span></li>
-          </ul>
-          <a class="btn btn-navy" style="width:100%" href="#discovery">See the details →</a>
-        </aside>
-        <aside class="event-card only-pilot" aria-label="Pilot Forum details">
+        <aside class="event-card" aria-label="Pilot Forum details">
           <p class="tag">Start here · Pilot Forum</p>
           <p class="date">Tuesday,<br>December 8</p>
           <ul>
             <li><b>Time</b><span>8:00 – 11:00 AM</span></li>
-            <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 13th Floor<br>Discovery Green Room (RM 1304)<br>Houston, TX 77002</span></li>
+            <li><b>Place</b><span>Kurio Collective @ The Cannon • Downtown Houston<br>(Full details upon registration)</span></li>
             <li><b>Cost</b><span>Complimentary · Registration required</span></li>
             <li><b>Breakfast</b><span>Provided</span></li>
           </ul>
@@ -642,33 +617,10 @@
       </div>
     </section>
 
-    <!-- DISCOVERY LUNCH -->
+    <!-- PILOT FORUM -->
     <section class="section discovery on-dark" id="discovery">
       <div class="wrap">
-        <div class="grid only-lunch">
-          <div>
-            <p class="eyebrow">Start here</p>
-            <h2>Be our guest at the Discovery Lunch.</h2>
-            <p class="lede muted">Come see it for yourself. Meet your Forum Facilitator, hear how a Forum works, sit with other Houston owners, and decide whether this is your next community.</p>
-            <p class="lede muted">The guidance you need is already in the room. <strong>You just need to take your seat.</strong></p>
-            <p class="lede muted"><strong>No pitch. No pressure.</strong> Just a good lunch and an honest conversation.</p>
-            <div class="cta-row">
-              <a class="btn btn-gold" href="#register" data-register data-live="Register for the Discovery Lunch →">Register for the Discovery Lunch →</a>
-              <button class="btn btn-ghost-light" type="button" id="addToCal">Add to calendar</button>
-            </div>
-          </div>
-          <div>
-            <ul class="details">
-              <li><b>Date</b><span>Tuesday, November 17, 2026</span></li>
-              <li><b>Time</b><span>11:30 AM – 1:00 PM</span></li>
-              <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
-              <li><b>Lunch</b><span>Provided</span></li>
-              <li><b>Cost</b><span>Complimentary</span></li>
-            </ul>
-            <p class="fineprint"><strong>Registering helps us order the right amount of food.</strong> Parking details are sent with your registration confirmation.</p>
-          </div>
-        </div>
-        <div class="grid only-pilot">
+        <div class="grid">
           <div>
             <p class="eyebrow">Start here</p>
             <h2>Experience what makes a Forum transformational.</h2>
@@ -684,11 +636,11 @@
             <ul class="details">
               <li><b>Date</b><span>Tuesday, December 8, 2026</span></li>
               <li><b>Time</b><span>8:00 – 11:00 AM</span></li>
-              <li><b>Place</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 13th Floor<br>Discovery Green Room (RM 1304)<br>Houston, TX 77002</span></li>
+              <li><b>Place</b><span>Kurio Collective @ The Cannon • Downtown Houston<br>(Full details upon registration)</span></li>
               <li><b>Breakfast</b><span>Provided</span></li>
               <li><b>Cost</b><span>Complimentary</span></li>
             </ul>
-            <p class="fineprint"><strong>Registration is required</strong> so we can save your seat. Parking and directions are in the questions below.</p>
+            <p class="fineprint"><strong>Registration is required</strong> so we can save your seat. The exact location and parking instructions come with your registration confirmation.</p>
           </div>
         </div>
       </div>
@@ -697,17 +649,18 @@
     <!-- REGISTER -->
     <section class="section register" id="register" aria-labelledby="regHeading">
       <div class="wrap">
-        <div class="grid only-lunch">
+        <div class="grid">
           <div>
             <p class="eyebrow">Save your seat</p>
-            <h2 id="regHeading">Register for the Discovery Lunch.</h2>
-            <p class="lede">A free lunch and an honest conversation. <strong>No pitch, no pressure.</strong></p>
+            <h2 id="regHeading">Register for the Pilot Forum.</h2>
+            <p class="lede">A free morning to experience the heart of a Forum. <strong>Registration is required</strong> so we can save your seat.</p>
             <ul class="reg-facts">
-              <li><b>When</b><span>Tuesday, November 17, 2026<br>11:30 AM – 1:00 PM</span></li>
-              <li><b>Where</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 11th Floor<br>Houston, TX 77002</span></li>
-              <li><b>Cost</b><span>Complimentary · Lunch provided</span></li>
+              <li><b>When</b><span>Tuesday, December 8, 2026<br>8:00 – 11:00 AM</span></li>
+              <li><b>Where</b><span>Kurio Collective @ The Cannon • Downtown Houston<br>(Full details upon registration)</span></li>
+              <li><b>Breakfast</b><span>Provided</span></li>
+              <li><b>Cost</b><span>Complimentary</span></li>
             </ul>
-            <p>Registering helps us order the right amount of food. Your confirmation, with parking instructions, lands in your inbox right away.</p>
+            <p>Registering helps us order the right amount of food. Your confirmation, with the exact location and parking instructions, lands in your inbox right away.</p>
           </div>
           <div class="reg-card" id="regCard">
             <form id="regForm" novalidate>
@@ -751,18 +704,7 @@
             </div>
           </div>
         </div>
-        <div class="grid only-pilot">
-          <div>
-            <p class="eyebrow">Save your seat</p>
-            <h2 id="regHeadingPilot">Register for the Pilot Forum.</h2>
-            <p class="lede">A free morning to experience the heart of a Forum. <strong>Registration is required</strong> so we can save your seat.</p>
-            <ul class="reg-facts">
-              <li><b>When</b><span>Tuesday, December 8, 2026<br>8:00 – 11:00 AM</span></li>
-              <li><b>Where</b><span>Kurio Collective @ The Cannon<br>1801 Main St., 13th Floor<br>Discovery Green Room (RM 1304)<br>Houston, TX 77002</span></li>
-              <li><b>Breakfast</b><span>Provided</span></li>
-              <li><b>Cost</b><span>Complimentary</span></li>
-            </ul>
-          </div>
+      </div>
           <div class="reg-card">
             <h3>Save my seat</h3>
             <p>Registration takes about a minute and opens in a new tab on the Iron Forums site.</p>
@@ -783,11 +725,6 @@
         <p class="lede">You don't have to wait until January to find out if it's for you. Come see it, experience it, and decide before we launch.</p>
 
         <div class="timeline">
-          <div class="stop only-lunch">
-            <p class="when">Nov 17</p>
-            <h3>Discovery Lunch</h3>
-            <p>Tuesday<br>11:30 AM – 1:00 PM<br>Meet the room. Free.</p>
-          </div>
           <div class="stop">
             <p class="when">Dec 8</p>
             <h3>Pilot Forum</h3>
@@ -804,8 +741,7 @@
             <p>Every month<br>8:00 AM – noon<br>Same community, deeper each month.</p>
           </div>
         </div>
-        <p class="where only-lunch">All gatherings: Kurio Collective @ The Cannon, 1801 Main St., 11th Floor, Houston, TX 77002.</p>
-        <p class="where only-pilot">Pilot Forum: Kurio Collective @ The Cannon, 1801 Main St., 13th Floor, Discovery Green Room (RM 1304), Houston, TX 77002.</p>
+        <p class="where">Pilot Forum: Kurio Collective @ The Cannon • Downtown Houston. Full details upon registration.</p>
       </div>
     </section>
 
@@ -881,7 +817,7 @@
             <p class="eyebrow">Questions</p>
             <h2>Not ready to register? Ask away.</h2>
             <div class="faq-list">
-            <!-- Pilot Forum questions (shown after Nov 17, 11:45 AM) -->
+            <!-- Pilot Forum questions -->
             <details class="only-pilot">
               <summary>What is the Pilot Forum?</summary>
               <p>The Pilot Forum isn't a full Forum. It's a morning that lets you experience the most important pieces of what makes a Forum a transformational community, ahead of the monthly Forums that begin January 14. You'll see for yourself whether it's where you want to grow.</p>
@@ -891,35 +827,13 @@
               <p>Nothing. The Pilot Forum is free, and breakfast is on us. Registration is required so we can save your seat.</p>
             </details>
             <details class="only-pilot">
-              <summary>Where do we meet, and what about parking?</summary>
-              <p>Kurio Collective @ The Cannon, 1801 Main St., 13th Floor, Houston, TX 77002. The Pilot Forum is in the Discovery Green Room (RM 1304), behind The Cannon reception desk.</p>
-              <ol>
-                <li>Once you arrive at 1801 Main St., enter the parking garage (Amegy Bank Parking Garage) on the Fannin Street side.</li>
-                <li>Grab a ticket, then park on the 3rd floor or higher.</li>
-                <li>Bring your ticket with you, then take the parking elevator down to the first floor.</li>
-                <li>When you come out, walk across the grass to the building with the Cafe.</li>
-                <li>Take the elevator to the 13th floor. The Discovery Green Room (RM 1304) is behind The Cannon reception desk.</li>
-                <li>Make sure to pick up your voucher for free parking!!</li>
-              </ol>
+              <summary>Where do we meet?</summary>
+              <p>We meet at Kurio Collective @ The Cannon in downtown Houston. Registration is required, and your confirmation email includes the exact location, room, and parking instructions.</p>
             </details>
             <details class="only-pilot">
               <summary>I can't make December 8. What now?</summary>
               <p>Use the form and check the box to be notified. We'll email you when registration opens for the January 14 kickoff.</p>
             </details>
-            <!-- Discovery Lunch questions: remove these three after November 17 -->
-            <details class="only-lunch">
-              <summary>What does the Discovery Lunch cost?</summary>
-              <p>Nothing. Lunch is on us. Seats are limited, and registering helps us order the right amount of food.</p>
-            </details>
-            <details class="only-lunch">
-              <summary>Where do we meet, and what about parking?</summary>
-              <p>Kurio Collective @ The Cannon, 1801 Main St., 11th Floor (The Exchange Room), Houston, TX 77002. We'll send parking instructions with your registration confirmation.</p>
-            </details>
-            <details class="only-lunch">
-              <summary>I can't make November 17. What now?</summary>
-              <p>Use the form and check the box to be notified. We'll email you when registration opens for the Pilot Forum and the January 14 kickoff.</p>
-            </details>
-            <!-- /Discovery Lunch questions -->
             <details>
               <summary>What is Iron Forums?</summary>
               <p>Iron Forums is a community for <strong>Christian business owners</strong> who want to grow—but know they can’t do it alone. We exist to help leaders <strong>Connect relationally, Sharpen each other spiritually and professionally, and Grow</strong> in every area that matters: faith, business, and family.</p>
@@ -970,7 +884,7 @@
               </div>
               <label class="check" for="ifNotify">
                 <input type="checkbox" id="ifNotify" checked />
-                <span><span class="only-lunch">Email me when registration opens for the Pilot Forum and the January kickoff.</span><span class="only-pilot">Email me when registration opens for the January kickoff.</span></span>
+                <span>Email me when registration opens for the January kickoff.</span>
               </label>
               <div class="hp" aria-hidden="true">
                 <label for="ifNote">Leave this field blank</label>
@@ -1082,27 +996,15 @@
   <script>
     /* ──────────────────────────────────────────────
        REGISTRATION
-       Before the switch (the Discovery Lunch) every "register" button scrolls
-       to the registration form on this page (#register). After the switch,
-       the buttons open the Iron Forums registration form for the Pilot Forum
-       in a new tab. Paste that link between the quotes below.
+       Every "register" button scrolls to the Pilot Forum registration form on
+       this page (#register). The form sends each registration to Heath, emails
+       the registrant their confirmation (with the exact location and parking),
+       and adds a row to the "Pilot Forum Registration" tab of the Sheet.
        ────────────────────────────────────────────── */
-    const PHASE = document.documentElement.dataset.phase;
-    const PILOT_REGISTRATION_URL = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OL5XF-3ZAE-p6-8XcsodoNQYOCCfVQ5EjwHskJ0V87VUMEJRWkNBUDFHNzA4SFdEM1FFN1pFMlpHUi4u";
-    const REGISTRATION_URL = PHASE === 'pilot' ? PILOT_REGISTRATION_URL : "";
-
-    const regButtons = document.querySelectorAll('[data-register]');
-    regButtons.forEach((el) => {
-      if (REGISTRATION_URL) {
-        el.href = REGISTRATION_URL;
-        el.target = '_blank';
-        el.rel = 'noopener';
-      } else {
-        el.href = PHASE === 'pilot' ? '#meet' : '#register';
-      }
-      el.textContent = (PHASE === 'pilot' && el.dataset.livePilot) || el.dataset.live;
+    document.querySelectorAll('[data-register]').forEach((el) => {
+      el.href = '#register';
+      el.textContent = el.dataset.livePilot || el.dataset.live;
     });
-    document.getElementById('register').setAttribute('aria-labelledby', PHASE === 'pilot' ? 'regHeadingPilot' : 'regHeading');
 
     /* FAQ: one answer open at a time, animated. Opening a question closes
        the previous one at the same moment; while both move, the question you
@@ -1233,21 +1135,14 @@
     onScroll();
 
     /* Add to calendar (.ics). Times are in UTC so no timezone block is needed.
-       Nov 17 and Dec 8, 2026 are Central Standard Time (UTC−6). */
-    const CAL_LUNCH = {
-      name: 'Discovery Lunch', uid: 'discovery-lunch-20261117@ironforums-houston',
-      start: '20261117T173000Z', end: '20261117T190000Z',
-      summary: 'Iron Forums Houston — Discovery Lunch',
-      description: 'A complimentary lunch for kingdom-minded small business owners. Meet your Forum Facilitator\\, hear how a Forum works\\, and decide whether this is your next community. Parking details come with your registration confirmation.',
-      location: 'Kurio Collective @ The Cannon\\, 1801 Main St.\\, 11th Floor\\, Houston\\, TX 77002',
-      file: 'iron-forums-houston-discovery-lunch.ics'
-    };
+       Dec 8, 2026 is Central Standard Time (UTC-6): 8:00 AM = 14:00Z. The exact room and directions are
+       deliberately left out; registrants get them, with their own invite, in the confirmation email. */
     const CAL_PILOT = {
       name: 'Pilot Forum', uid: 'pilot-forum-20261208@ironforums-houston',
       start: '20261208T140000Z', end: '20261208T170000Z',
       summary: 'Iron Forums Houston — Pilot Forum',
-      description: 'A free morning to experience the heart of a Forum\\, before our monthly Forums begin. Registration required.',
-      location: 'Kurio Collective @ The Cannon\\, 1801 Main St.\\, 13th Floor\\, Discovery Green Room (RM 1304)\\, Houston\\, TX 77002',
+      description: 'A free morning to experience the heart of a Forum\\, before our monthly Forums begin. Full details\\, including the exact location and parking\\, are in your registration confirmation.',
+      location: 'Kurio Collective @ The Cannon\\, Downtown Houston',
       file: 'iron-forums-houston-pilot-forum.ics'
     };
     function downloadCalendar(ev) {
@@ -1278,25 +1173,16 @@
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
-    document.getElementById('addToCal').addEventListener('click', () => downloadCalendar(CAL_LUNCH));
-    const calPilotButton = document.getElementById('addToCalPilot');
-    if (calPilotButton) calPilotButton.addEventListener('click', () => downloadCalendar(CAL_PILOT));
+    document.getElementById('addToCalPilot').addEventListener('click', () => downloadCalendar(CAL_PILOT));
 
     /* Invitations. Built on Iron Forums' own language (ironforums.org), made specific to Houston.
-       The Discovery Lunch sentence in each one goes stale after November 17: remove it then. */
-    // The short address (see netlify.toml) sends people straight to the registration form.
+       The short address (see netlify.toml) sends people straight to the registration form. */
     const pageUrl = location.origin + '/ifhouston';
-    const TEXT_INVITE_LUNCH =
-      "Hey [Name], I thought of you. Iron Forums is coming to Houston: Kingdom-minded small business owners gathering once a month to connect, sharpen, and grow in faith, family, and business. There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works. Can we connect so I can share more?\n\nDetails: " + pageUrl;
+    const TEXT_INVITE =
+      "Hey [Name], I thought of you. Iron Forums is coming to Houston: Kingdom-minded small business owners gathering once a month to connect, sharpen, and grow in faith, family, and business. There’s a free Pilot Forum on Dec 8 if you want a real taste of what it’s like. Can we connect so I can share more?\n\nDetails: " + pageUrl;
     const EMAIL_SUBJECT = "Iron Forums is coming to Houston";
-    const EMAIL_BODY_LUNCH =
-      "Hey [Name],\n\nWhen was the last time someone asked how you were really doing in your business, at home, in your marriage, in your faith?\n\nThe weight of all of it is connected, and it is hard to carry alone. That's why Iron Forums exists: to bring Christian small business owners around a trusted table to speak honestly about all of it, grow in every area that matters, and discover what God is doing through it all.\n\nIt's coming to Houston. Once a month, members step away from the whirlwind for a half-day Forum to Connect, Sharpen, and Grow together in faith, family, and business. We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St., 11th Floor (Kurio Collective @ The Cannon), so you can see it for yourself. No pressure.\n\nI thought of you. Can we connect so I can share more?\n\nHere's the Houston page: " + pageUrl;
-
-    // After the switch the invitations point to the Pilot Forum instead of the Discovery Lunch.
-    const TEXT_INVITE_PILOT = TEXT_INVITE_LUNCH.replace('There\u2019s a free Discovery Lunch on Nov 17 if you want to see how it works.', 'There\u2019s a free Pilot Forum on Dec 8 if you want a real taste of what it\u2019s like.');
-    const EMAIL_BODY_PILOT = EMAIL_BODY_LUNCH.replace(/We're starting with a free Discovery Lunch on Tuesday, November 17, 11:30 AM to 1:00 PM at 1801 Main St\., 11th Floor \(Kurio Collective @ The Cannon\), so you can see it for yourself\. No pressure\./, 'Before our monthly Forums begin in January, there\'s a free Pilot Forum on Tuesday, December 8, 8:00 to 11:00 AM at 1801 Main St., 13th Floor (Kurio Collective @ The Cannon), a morning to experience the most important pieces of what makes a Forum transformational. No pressure.');
-    const TEXT_INVITE = PHASE === 'pilot' ? TEXT_INVITE_PILOT : TEXT_INVITE_LUNCH;
-    const EMAIL_BODY = PHASE === 'pilot' ? EMAIL_BODY_PILOT : EMAIL_BODY_LUNCH;
+    const EMAIL_BODY =
+      "Hey [Name],\n\nWhen was the last time someone asked how you were really doing in your business, at home, in your marriage, in your faith?\n\nThe weight of all of it is connected, and it is hard to carry alone. That's why Iron Forums exists: to bring Christian small business owners around a trusted table to speak honestly about all of it, grow in every area that matters, and discover what God is doing through it all.\n\nIt's coming to Houston. Once a month, members step away from the whirlwind for a half-day Forum to Connect, Sharpen, and Grow together in faith, family, and business. Before our monthly Forums begin in January, there's a free Pilot Forum on Tuesday, December 8, 8:00 to 11:00 AM at Kurio Collective @ The Cannon in downtown Houston, a morning to experience the most important pieces of what makes a Forum transformational. No pressure.\n\nI thought of you. Can we connect so I can share more?\n\nHere's the Houston page: " + pageUrl;
 
     const copiedMsg = document.getElementById('copiedMsg');
     async function copy(text, label) {
@@ -1314,7 +1200,7 @@
       location.href = 'mailto:?subject=' + encodeURIComponent(EMAIL_SUBJECT) + '&body=' + encodeURIComponent(EMAIL_BODY);
     });
 
-    /* Discovery Lunch registration */
+    /* Pilot Forum registration */
     const regForm = document.getElementById('regForm');
     const regStatus = document.getElementById('regStatus');
     const regSubmit = document.getElementById('regSubmit');
@@ -1362,7 +1248,7 @@
         regStatus.textContent = "That didn't go through. Please try again, or email connect@l3leadershipcoaching.com and we'll save your seat.";
       }
     });
-    document.getElementById('regCal').addEventListener('click', () => document.getElementById('addToCal').click());
+    document.getElementById('regCal').addEventListener('click', () => downloadCalendar(CAL_PILOT));
 
     /* Question / notify-me form */
     const form = document.getElementById('ifForm');
@@ -1398,7 +1284,7 @@
         });
         if (!res.ok) throw new Error('bad response');
         document.getElementById('panelNote').innerHTML =
-          '<div class="thanks"><h3>Got it. Thank you.</h3><p class="sub" style="margin:0">Heath will be in touch soon. In the meantime, save the date for the Discovery Lunch: Tuesday, November 17, 11:30 AM.</p></div>';
+          '<div class="thanks"><h3>Got it. Thank you.</h3><p class="sub" style="margin:0">Heath will be in touch soon. In the meantime, save the date for the Pilot Forum: Tuesday, December 8, 8:00 AM.</p></div>';
       } catch (err) {
         statusEl.className = 'status err';
         statusEl.textContent = "That didn't go through. Please try again, or email connect@l3leadershipcoaching.com.";

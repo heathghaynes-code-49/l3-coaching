@@ -1,0 +1,26 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Iron Forums Houston//Pilot Forum//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:pilot-forum-20261208@ironforums-houston
+DTSTAMP:20261118T000000Z
+DTSTART:20261208T140000Z
+DTEND:20261208T170000Z
+SEQUENCE:0
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+SUMMARY:Iron Forums Houston: Pilot Forum
+LOCATION:Kurio Collective @ The Cannon\, Downtown Houston
+DESCRIPTION:A free morning to experience the heart of a Forum. Full detail
+ s\, including the exact location and parking\, are in your confirmation e
+ mail.
+URL:https://l3leadershipcoaching.com/ironforums-houston
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Iron Forums Houston Pilot Forum is tomorrow
+END:VALARM
+END:VEVENT
+END:VCALENDAR
